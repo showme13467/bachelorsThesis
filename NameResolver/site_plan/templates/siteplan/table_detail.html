@@ -1,0 +1,54 @@
+{% extends "siteplan/base.html" %}
+{%block content%}
+	<h1>{{object.name}}</h1>
+	<br><br><br><br>
+	<div class = "container">
+	<div class = "jumbotron">
+	<div class = "row">
+		<div class = "col-lg-2">
+		<strong>
+			Name: <br>
+			Type:<br>
+			Building:<br>
+			Floor:<br>
+			Room: <br>
+			Longitude:<br>
+			Latitude:<br>
+			Height: <br>
+			IP: <br>
+			URL: <br>
+		</strong>	
+		</div>
+		<div class = "col-lg-5" >
+		{{object.name}} <br>
+		{{object.type}} <br>
+		{{object.building}} <br>
+		{{object.floor}}<br>
+		{{object.room}} <br>
+		{{object.longitude}}<br>
+		{{object.latitude}}<br>
+		{{object.height}}<br>
+		{{object.ip}} <br>
+		{{object.url}}<br>
+		</div>
+		<div class="col-lg-2">
+		<div class="media">
+		<img class="img-fluid rounded" src="{{object.image.url}}">
+		</div>
+		</div>
+	</div>
+	<br><br>
+	<a role="button" class="btn btn-primary btn-lg" href="{{object.url}}" >Connect</a>
+	<br><br>
+	{%if object.author == user%}
+	<a type="button" class="btn btn-info btn-small" href="{%url 'device-update' object.id %}">
+ Edit_<i class="fas fa-pen-nib"></i> 
+</a>
+	<a type="button" class="btn btn-outline-danger" href="{%url 'device-delete' object.id %}">
+ Delete<i class="fas fa-trash"></i> 
+</a>
+	{%endif%}
+	</div>
+	</div>
+	
+{%endblock content%}
