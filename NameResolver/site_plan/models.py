@@ -24,3 +24,13 @@ class map(models.Model):
         
     def get_absolute_url(self):
         return reverse('table-detail', kwargs ={'pk': self.pk})
+
+    def save(self, *args, **kawrgs):
+        super.save(*args, **kawrgs)
+        
+        img = Image.open(self.image.path)
+        
+        if img.height > 500 or img.width > 500:
+            output_size = (500,500)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
