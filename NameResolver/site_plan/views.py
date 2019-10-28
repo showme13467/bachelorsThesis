@@ -20,6 +20,17 @@ def tableprint(request):
         'devices' : map.objects.all()
     }
     return render(request, 'siteplan/table_homepage.html',context)
+
+@login_required
+def search(request):
+    template = 'siteplan/table_homepage.html'
+    query = request.GET.get('q')
+    results = map.objects.filter(Q(name__icontains=query) | Q(author__username__icontains=query) | Q(type__icontains=query) | Q(building__icontains=query) | Q(floor__icontains=query) | Q(url__icontains=query) | Q(room__icontains=query))
+    context = {
+        'devices': results,
+    }
+    return render(request, template, context)
+
  
  
 class DevicesListView(LoginRequiredMixin, ListView):
@@ -70,17 +81,3 @@ class DeviceDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
         
-        
-def get_search_bar(query=None):
-    queryset = []
-    queries = query.split(" ")
-    for q in queries:
-        devices = map.objects.filter(
-            Q(title__icontrains=q) |
-            Q(body_iconstains=1)
-        ).distinct()
-        
-        for device in deivices:
-         queryset.append(post)
-         
-    return list(set(queryset))

@@ -6,15 +6,11 @@
 		</div>
 		<div class = "col-lg-8" role="search">
 		<div class = "form-group">
-		<div class="search-bar">
-		<form method = "get" >
-		<input type ="text" class="form-control" placeholder="Search..." name ="q"  id="id_q"
+		<form method = "GET" action = "{% url 'table-search' %}"  >
+		<input type ="text" class="form-control" placeholder="Search..." name ="q"  id="id_q" value = "{{ request.GET.q }}">
+            <button type="submit" class ="btn btn-light">Submit</button>
 		</form>
 		</div>
-		</div>
-		</div>
-		<div class="col-lg-1">
-		<button type="submit" class ="btn btn-light">Submit</button>
 		</div>
 		<div class = "col-lg-1">
 			<a role="button" class="btn btn-primary btn-lg" href="/table" >Table</a>

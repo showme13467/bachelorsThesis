@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import url
 from . import views
 from .views import DeviceDeleteView, DevicesListView, DevicesDetailView, DeviceCreateView, DeviceUpdateView
 
@@ -12,5 +13,6 @@ urlpatterns = [
     path('table/siteplan/', views.home, name='register-at-table-page'), 
     path('table/<int:pk>/update', DeviceUpdateView.as_view(), name='device-update'),
     path('table/<int:pk>/delete', DeviceDeleteView.as_view(), name='device-delete'),
+    path('table/search/', views.search, name = 'table-search' ),
     
 ]
