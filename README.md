@@ -1,6 +1,13 @@
 # bachelorsThesis
 Name Resolver for IoT Devices
 
+[![Python Version](https://img.shields.io/badge/python-3.7.2-brightgreen.svg)](https://python.org)
+[![Django Version](https://img.shields.io/badge/django-2.2.6-brightgreen.svg)](https://djangoproject.com)
+
+
+![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/screenshotHomepage.PNG)
+
+
 ## Running the Project Locally
 
 First, clone the repository to your local machine:
