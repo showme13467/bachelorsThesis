@@ -5,12 +5,13 @@
 	<div class= "col-lg-2"></div>
 	<div class = "col-lg-8">
 		<div class ="content-section">
-			<form method="POST" enctype="multipart/form-data">
+			<form method="POST" enctype="multipart/form-data" id="deviceForm" data-floors-url="{% url 'ajax_load_floors' %}" novalidate>
 				{%csrf_token%}
 				<fieldset class="form-group">
 					<legend class="border-bottom mb-4">Create new Device</legend>
 					{{ form |crispy }}
 				</fieldset>
+
 				<div class="form-group">
 					<button class="btn btn-outline-info" type="submit">Save</button>
 				</div>
@@ -18,5 +19,23 @@
 		</div>
 	</div>
 	<div class="col-lg-2"></div>
-</div>	
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#id_building").change(function () {
+      var url = $("#deviceForm").attr("data-floors-url");  // get the url of the `load_cities` view
+      var buildingId = $(this).val();  // get the selected country ID from the HTML input
+
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+        data: {
+          'building': buildingId       // add the country id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_cities` view function
+          $("#id_floor").html(data);  // replace the contents of the city input with the data that came from the server
+        }
+      });
+
+    });
+  </script>
 {%endblock content%}

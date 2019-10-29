@@ -9,14 +9,23 @@ from django.urls import reverse
 class Building(models.Model):
     name = models.CharField(max_length=100, default = 'unnamed')
 
+    def __str__(self):
+        return self.name
+
 class Floor(models.Model):
     name = models.CharField(max_length=100, default='unnamed')
     building = models.ForeignKey(Building, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 class Room(models.Model):
     name = models.CharField(max_length=100, default='unnamed')
     building = models.ForeignKey(Building, on_delete=models.CASCADE)
     floor = models.ForeignKey(Floor,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 class Device(models.Model):
     TYPE_CHOICES = (
@@ -48,7 +57,7 @@ class Device(models.Model):
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, default='0')
     latitude = models.DecimalField(max_digits=9, decimal_places=6, default='0')
-    height = models.CharField(max_length=4, default='0 m')
+    height = models.CharField(max_length=4, default='0 m', help_text= "Height above sea level")
     url = models.URLField(max_length=200, default='https://www.ipIoTDevice.com/')
     date_added = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
