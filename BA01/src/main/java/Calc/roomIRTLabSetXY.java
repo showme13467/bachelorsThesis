@@ -4,6 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 
 //class for choosing the position (just x and y) in a room, view from above
 public class roomIRTLabSetXY extends JFrame implements MouseListener {
@@ -72,6 +83,5 @@ public int yclick;
     @Override
     public void mouseReleased(MouseEvent e) {
     }
-
 
 }

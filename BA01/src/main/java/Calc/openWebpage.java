@@ -7,6 +7,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 //class for opening a website, later it should be the function of a button to get to the next website
+//according to code from:
+// https://stackoverflow.com/questions/10967451/open-a-link-in-browser-with-java-button
 
 //***we´re thinking about putting this function in the website...
 //is not working yet, probably because the URI is not recognized as one***

@@ -1,4 +1,11 @@
+
+
+//***just a test class I used to paint the geo coords, but they weren´t printed correct***
+
+
+/*
 package Graphic;
+
 
 import Calc.GeoCalc;
 import Calc.Loading;
@@ -19,34 +26,37 @@ public class gui extends JFrame {
         super();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        Readimage Neu = new Readimage();
-        Neu.Reading();
+        Readimage readimageinst = new Readimage();
+        readimageinst.Reading();
 
 
     }
 
     //function for painting the geo coordinates in gui
     public void paint(Graphics g) {
-        GeoCalc test2 = new GeoCalc();
+        GeoCalc geocalcinst = new GeoCalc();
         g.setColor(Color.black);
-        test2.pointfinderGO();
+        geocalcinst.pointfinderGO();
 
-        Loading kkk = new Loading();
-        kkk.loaddata("C:\\Users\\alexa\\Desktop\\Prog Proj\\BA01\\GeoCoords.txt");
-        System.out.println(kkk.store.get(0));
+        Loading loadinginst = new Loading();
+        loadinginst.loaddata("C:\\Users\\alexa\\Desktop\\Prog Proj\\BA01\\GeoCoords.txt");
+        System.out.println(loadinginst.store.get(0));
         int cs = 0;
-        while (cs < kkk.store.size() / 2) {
-            g.drawLine(kkk.store.get(0), kkk.store.get(1), kkk.store.get(0), kkk.store.get(1));
-            kkk.store.remove(0);
-            kkk.store.remove(0);
+        while (cs < loadinginst.store.size() / 2) {
+            g.drawLine(loadinginst.store.get(0), loadinginst.store.get(1),
+            loadinginst.store.get(0), loadinginst.store.get(1));
+            loadinginst.store.remove(0);
+            loadinginst.store.remove(0);
         }
 
-        Pixel Ptest = new Pixel();
+        Pixel pixelinst = new Pixel();
 
 
     }
 
-             /*  test2.gradTocoordGO();
+    //***7 painting executions cause of 7 parts of building***
+
+             /*  geocalcinst.gradTocoordGO();
                 for (int i = 0; i < test2.convcoordM.length; i++) {
                     for (int j = 0; j < test2.convcoordM[0].length; j++) {
                         x1 = (int) test2.convcoordM[i][j][0] - 300; //setting all points near centre of gui
@@ -217,15 +227,12 @@ public class gui extends JFrame {
     //main method
   /*  public static void main(String[] args) {
 
-
-        new sys_windows();
-
-         /*   gui pc =  new gui();
+            gui pc =  new gui();
             pc.setSize(1600, 1200);
             pc.setVisible(true);
 
 */
-    }
+   // }
 
 
 

@@ -2,8 +2,10 @@ package Graphic;
 
 import Calc.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -95,11 +97,36 @@ public class WholeBuildingDraw extends JFrame {//implements MouseListener {
             //main method
             public static void main(String[] args) throws IOException, URISyntaxException {
 
-            //    new WholeBuildingDraw();
-               new floorplan();
-           //     new roomIRTLabSetXY();
+                //    new WholeBuildingDraw();
+                //    new floorplan();
+                //    new roomIRTLabSetXY();
 
-           //    new roomIRTLabSetZ();
+                //    new roomIRTLabSetZ();
 
+                //drag and drop function for floorplan
+                EventQueue.invokeLater(new Runnable(){
+                    @Override
+                    public void run() {
+                        Image img= null;
+                        try {
+                            img = ImageIO.read(new File("C:\\Users\\alexa\\Desktop\\BA\\floor plans\\7th\\coordpainting2.png"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        img = img.getScaledInstance(1500, 900, Image.SCALE_DEFAULT);
+                        ImageIcon icon=new ImageIcon(img);
+                        JFrame frame=new JFrame();
+                        frame.setLayout(new FlowLayout());
+                        frame.setSize(1600,1200);
+                        JLabel lbl=new JLabel();
+                        lbl.setIcon(icon);
+                        frame.add(new floorplan.MouseDragTest());
+                        frame.add(lbl);
+                        frame.setVisible(true);
+                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                        }
+                });
             }
-        }
+}
+
