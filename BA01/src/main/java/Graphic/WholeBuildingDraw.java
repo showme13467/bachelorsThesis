@@ -99,12 +99,13 @@ public class WholeBuildingDraw extends JFrame {//implements MouseListener {
 
                 //    new WholeBuildingDraw();
                 //    new floorplan();
-                //    new roomIRTLabSetXY();
+                    new roomIRTLabSetXY();
+
 
                 //    new roomIRTLabSetZ();
 
                 //drag and drop function for floorplan
-                EventQueue.invokeLater(new Runnable(){
+             /*   EventQueue.invokeLater(new Runnable(){
                     @Override
                     public void run() {
                         Image img= null;
@@ -127,6 +128,6 @@ public class WholeBuildingDraw extends JFrame {//implements MouseListener {
 
                         }
                 });
-            }
+           */ }
 }
 
