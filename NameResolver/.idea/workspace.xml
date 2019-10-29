@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2dfa65a2-1d8e-47ef-87fd-32166a0ab3b4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="2dfa65a2-1d8e-47ef-87fd-32166a0ab3b4" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +123,7 @@
       <workItem from="1572018330593" duration="1861000" />
       <workItem from="1572273679498" duration="9379000" />
       <workItem from="1572283925805" duration="13490000" />
-      <workItem from="1572375389078" duration="5104000" />
+      <workItem from="1572375389078" duration="5321000" />
     </task>
     <servers />
   </component>
