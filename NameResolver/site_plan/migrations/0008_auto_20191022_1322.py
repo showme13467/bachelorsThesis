@@ -11,12 +11,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='map',
+            model_name='Device',
             name='image',
             field=models.ImageField(default='default.jpg', upload_to='device_pics'),
         ),
         migrations.AlterField(
-            model_name='map',
+            model_name='Device',
             name='url',
             field=models.URLField(default='https://www.ipIoTDevice.com/'),
         ),

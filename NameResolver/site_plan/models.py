@@ -4,17 +4,52 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 # Create your models here.
-class map(models.Model):
-    name = models.CharField(max_length=100, default = 'unnamed' )
-    type = models.CharField(max_length=100, default = 'no type')
-    building = models.CharField(max_length=200, default = 'Shapiro')
-    floor = models.CharField(max_length = 2,default = '0')
-    room = models.CharField(max_length=20, default = '0')
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, default= '0')
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, default = '0')
+
+
+class Building(models.Model):
+    name = models.CharField(max_length=100, default = 'unnamed')
+
+class Floor(models.Model):
+    name = models.CharField(max_length=100, default='unnamed')
+    building = models.ForeignKey(Building, on_delete=models.CASCADE)
+
+class Room(models.Model):
+    name = models.CharField(max_length=100, default='unnamed')
+    building = models.ForeignKey(Building, on_delete=models.CASCADE)
+    floor = models.ForeignKey(Floor,on_delete=models.CASCADE)
+
+class Device(models.Model):
+    TYPE_CHOICES = (
+        ('Samsung TV', 'Samsung TV'),
+        ('Router', 'Router'),
+        ('Phillips Hue', 'Phillips Hue'),
+    )
+
+    BUILDING_CHOICES = (
+        ('Schapiro', 'Schapiro Center for Engineering and Physical Science Research'),
+        ('Uris Hall', 'Uris Hall')
+    )
+
+    FLOOR_CHOICES = (
+        ('3', '3th Floor'),
+        ('4', '4th Floor'),
+        ('5', '5th Floor'),
+        ('6', '6th Floor'),
+        ('7', '7th Floor'),
+        ('8', '8th Floor'),
+        ('9', '9th Floor'),
+        ('10', '10th Floor'),
+    )
+
+    name = models.CharField(max_length=100, default='unnamed')
+    type = models.CharField(max_length=100, default='no type', choices=TYPE_CHOICES)
+    building = models.ForeignKey(Building, on_delete=models.SET_NULL, null=True)
+    floor = models.ForeignKey(Floor, on_delete=models.SET_NULL, null=True)
+    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, default='0')
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, default='0')
     height = models.CharField(max_length=4, default='0 m')
-    ip = models.GenericIPAddressField(protocol='both', unpack_ipv4=False, default = '0.0.0.0')
-    url = models.URLField(max_length=200, default = 'https://www.ipIoTDevice.com/')
+    url = models.URLField(max_length=200, default='https://www.ipIoTDevice.com/')
     date_added = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     image = models.ImageField(default='default.jpg', upload_to='device_pics')
@@ -24,13 +59,3 @@ class map(models.Model):
         
     def get_absolute_url(self):
         return reverse('table-detail', kwargs ={'pk': self.pk})
-
-    #def save(self, *args, **kawrgs):
-     #   super.save(*args, **kawrgs)
-        
-      #  img = Image.open(self.image.path)
-        
-       # if img.height > 500 or img.width > 500:
-        #    output_size = (500,500)
-         #   img.thumbnail(output_size)
-          #  img.save(self.image.path)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import map
+from .models import Device
 
-admin.site.register(map)
+admin.site.register(Device)
 

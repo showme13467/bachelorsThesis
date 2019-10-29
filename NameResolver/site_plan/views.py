@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import map
+from .models import Device, Building, Floor, Room
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import DeviceUpdateForm
+from .forms import DeviceUpdateForm, DeviceCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 # Create your views here.
@@ -17,7 +17,7 @@ def room(request):
 @login_required 
 def tableprint(request):
     context ={
-        'devices' : map.objects.all()
+        'devices' : Device.objects.all()
     }
     return render(request, 'siteplan/table_homepage.html',context)
 
@@ -25,16 +25,15 @@ def tableprint(request):
 def search(request):
     template = 'siteplan/table_homepage.html'
     query = request.GET.get('q')
-    results = map.objects.filter(Q(name__icontains=query) | Q(author__username__icontains=query) | Q(type__icontains=query) | Q(building__icontains=query) | Q(floor__icontains=query) | Q(url__icontains=query) | Q(room__icontains=query))
+    results = Device.objects.filter(Q(name__icontains=query) | Q(author__username__icontains=query) | Q(type__icontains=query) | Q(building__icontains=query) | Q(floor__icontains=query) | Q(url__icontains=query) | Q(room__icontains=query))
     context = {
         'devices': results,
     }
     return render(request, template, context)
-
  
  
 class DevicesListView(LoginRequiredMixin, ListView):
-    model = map
+    model = Device
     template_name = 'siteplan/table_homepage.html'
     context_object_name = 'devices'
     ordering = ['building', 'floor']
@@ -42,24 +41,26 @@ class DevicesListView(LoginRequiredMixin, ListView):
     
     
 class DevicesDetailView(LoginRequiredMixin, DetailView):
-    model = map
+    model = Device
     template_name = 'siteplan/table_detail.html'
  
 
 class DeviceCreateView(LoginRequiredMixin, CreateView):
-    model = map
-    fields = ['name', 'type', 'building', 'floor', 'room', 'longitude', 'latitude', 'height', 'ip','url', 'image']
+    model = Device
+    form_class = DeviceCreateForm
     template_name = 'siteplan/registerDevice.html'
-    
+
+
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
- 
+        return  super().form_valid(form)
+
+
 class DeviceUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
-    model = map
-    fields = ['name', 'type', 'building', 'floor', 'room', 'longitude', 'latitude', 'height', 'ip','url', 'image']
+    model = Device
+    fields = ['name', 'type', 'building', 'floor', 'room', 'longitude', 'latitude', 'height','url', 'image']
     template_name = 'siteplan/registerDevice.html'
-    
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
@@ -71,7 +72,7 @@ class DeviceUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
         return False
         
 class DeviceDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = map
+    model = Device
     template_name = 'siteplan/device_confirm_delete.html'
     success_url = '/'
     

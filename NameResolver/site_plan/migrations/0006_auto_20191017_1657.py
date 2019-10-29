@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name='map',
+            model_name='Device',
             old_name='longitute',
             new_name='longitude',
         ),

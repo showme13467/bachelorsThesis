@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='map',
+            model_name='Device',
             name='height',
             field=models.CharField(default='0 m', max_length=4),
         ),

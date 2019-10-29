@@ -11,32 +11,32 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='map',
+            model_name='Device',
             name='building',
             field=models.CharField(default='Shapiro', max_length=200),
         ),
         migrations.AlterField(
-            model_name='map',
+            model_name='Device',
             name='floor',
             field=models.CharField(default='0', max_length=2),
         ),
         migrations.AlterField(
-            model_name='map',
+            model_name='Device',
             name='height',
             field=models.CharField(default='0 m', max_length=4),
         ),
         migrations.AlterField(
-            model_name='map',
+            model_name='Device',
             name='name',
             field=models.CharField(default='unnamed', max_length=100),
         ),
         migrations.AlterField(
-            model_name='map',
+            model_name='Device',
             name='room',
             field=models.CharField(default='0', max_length=20),
         ),
         migrations.AlterField(
-            model_name='map',
+            model_name='Device',
             name='type',
             field=models.CharField(default='no type', max_length=100),
         ),

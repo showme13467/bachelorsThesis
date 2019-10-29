@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='map',
+            model_name='Device',
             name='title',
             field=models.CharField(max_length=200),
         ),
