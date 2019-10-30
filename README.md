@@ -27,7 +27,7 @@ Create MongoDB Cluster and name it *'mongoDB'* or update settings.py:
 `DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': '<your DB name in MongoDB',
+        'NAME': '<your DB name in MongoDB>',
     }
 }`
 
