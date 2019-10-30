@@ -33,10 +33,10 @@ def search(request):
     }
     return render(request, template, context)
 
-
+# TODO dependent dropwdown
 def load_floors(request):
-    building_id = request.GET.get('building')
-    floors = Floor.objects.filter(building_id=building_id).order_by('name')
+    parent_id= request.GET.get('building')
+    floors = Floor.objects.filter(parent_id=parent_id).order_by('name')
     return render(request, 'siteplan/floors_dropwdown.html', {'floors': floors})
 
 class DevicesListView(LoginRequiredMixin, ListView):
@@ -51,7 +51,7 @@ class DevicesDetailView(LoginRequiredMixin, DetailView):
     model = Device
     template_name = 'siteplan/table_detail.html'
  
-
+#TODO dependent dropdown
 class DeviceCreateView(LoginRequiredMixin, CreateView):
     model = Device
     form_class = DeviceCreateForm

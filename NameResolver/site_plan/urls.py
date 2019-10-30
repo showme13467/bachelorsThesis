@@ -3,7 +3,7 @@ from django.conf.urls import url
 from . import views
 from .views import DeviceDeleteView, DevicesListView, DevicesDetailView, DeviceCreateView, DeviceUpdateView
 
-
+#TODO create working ajax for dependent dropdown
 urlpatterns = [
     path('', views.home, name='site-plan-home'),
     path('room/', views.room, name='room-plan'),

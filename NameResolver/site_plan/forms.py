@@ -8,7 +8,7 @@ class DeviceUpdateForm(forms.ModelForm):
         model = Device
         fields = ['image']
 
-
+#TODO dependent dropdown
 class DeviceCreateForm(forms.ModelForm):
     class Meta:
         model = Device

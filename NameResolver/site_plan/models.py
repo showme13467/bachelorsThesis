@@ -21,7 +21,6 @@ class Floor(models.Model):
 
 class Room(models.Model):
     name = models.CharField(max_length=100, default='unnamed')
-    building = models.ForeignKey(Building, on_delete=models.CASCADE)
     floor = models.ForeignKey(Floor,on_delete=models.CASCADE)
 
     def __str__(self):
@@ -49,7 +48,7 @@ class Device(models.Model):
         ('9', '9th Floor'),
         ('10', '10th Floor'),
     )
-
+#TODO implement dependent dropdown list
     name = models.CharField(max_length=100, default='unnamed')
     type = models.CharField(max_length=100, default='no type', choices=TYPE_CHOICES)
     building = models.ForeignKey(Building, on_delete=models.SET_NULL, null=True)

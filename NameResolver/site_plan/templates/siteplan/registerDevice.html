@@ -20,22 +20,10 @@
 	</div>
 	<div class="col-lg-2"></div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script>
-    $("#id_building").change(function () {
-      var url = $("#deviceForm").attr("data-floors-url");  // get the url of the `load_cities` view
-      var buildingId = $(this).val();  // get the selected country ID from the HTML input
-
-      $.ajax({                       // initialize an AJAX request
-        url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
-        data: {
-          'building': buildingId       // add the country id to the GET parameters
-        },
-        success: function (data) {   // `data` is the return of the `load_cities` view function
-          $("#id_floor").html(data);  // replace the contents of the city input with the data that came from the server
-        }
-      });
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script>
+    $.getJSON('data.json', function (data) {
+        console.log('It worked!');
     });
-  </script>
+</script>
 {%endblock content%}
