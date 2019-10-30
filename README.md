@@ -13,7 +13,7 @@ Name Resolver for IoT Devices
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/sibtc/dependent-dropdown-example.git
+git clone https://github.com/showme13467/bachelorsThesis.git
 ```
 
 Install the requirements:
@@ -22,7 +22,7 @@ Install the requirements:
 pip install -r requirements.txt
 ```
 
-Finally, run the development server:
+Finally, run the development server in NameResolver folder:
 
 ```bash
 python manage.py runserver
