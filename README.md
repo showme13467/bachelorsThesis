@@ -22,6 +22,16 @@ Install the requirements:
 pip install -r requirements.txt
 ```
 
+Create MongoDB Cluster and name it *'mongoDB'* or update settings.py:
+
+`DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': '<your DB name in MongoDB',
+    }
+}`
+
+
 Finally, run the development server in NameResolver folder:
 
 ```bash
