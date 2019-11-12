@@ -1,0 +1,339 @@
+{ 
+    "_id" : ObjectId("5db71bcd310853f2f4ba5ff0"), 
+    "name" : "django_migrations", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(31)
+    }, 
+    "fields" : {
+        "app" : {
+            "type_code" : "string"
+        }, 
+        "applied" : {
+            "type_code" : "date"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "name" : {
+            "type_code" : "string"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bcd310853f2f4ba5ff5"), 
+    "name" : "django_content_type", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(11)
+    }, 
+    "fields" : {
+        "app_label" : {
+            "type_code" : "string"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "model" : {
+            "type_code" : "string"
+        }, 
+        "name" : {
+            "type_code" : "string"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bcd310853f2f4ba5fff"), 
+    "name" : "auth_permission", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(44)
+    }, 
+    "fields" : {
+        "codename" : {
+            "type_code" : "string"
+        }, 
+        "content_type_id" : {
+            "type_code" : "int32"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "name" : {
+            "type_code" : "string"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bce310853f2f4ba6005"), 
+    "name" : "auth_group", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(0)
+    }, 
+    "fields" : {
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "name" : {
+            "type_code" : "string"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bce310853f2f4ba600a"), 
+    "name" : "auth_group_permissions", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(0)
+    }, 
+    "fields" : {
+        "group_id" : {
+            "type_code" : "int32"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "permission_id" : {
+            "type_code" : "int32"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bce310853f2f4ba6011"), 
+    "name" : "auth_user", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(2)
+    }, 
+    "fields" : {
+        "date_joined" : {
+            "type_code" : "date"
+        }, 
+        "email" : {
+            "type_code" : "string"
+        }, 
+        "first_name" : {
+            "type_code" : "string"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "is_active" : {
+            "type_code" : "boolean"
+        }, 
+        "is_staff" : {
+            "type_code" : "boolean"
+        }, 
+        "is_superuser" : {
+            "type_code" : "boolean"
+        }, 
+        "last_login" : {
+            "type_code" : "date"
+        }, 
+        "last_name" : {
+            "type_code" : "string"
+        }, 
+        "password" : {
+            "type_code" : "string"
+        }, 
+        "username" : {
+            "type_code" : "string"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bce310853f2f4ba6016"), 
+    "name" : "auth_user_groups", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(0)
+    }, 
+    "fields" : {
+        "group_id" : {
+            "type_code" : "int32"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "user_id" : {
+            "type_code" : "int32"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bce310853f2f4ba601b"), 
+    "name" : "auth_user_user_permissions", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(0)
+    }, 
+    "fields" : {
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "permission_id" : {
+            "type_code" : "int32"
+        }, 
+        "user_id" : {
+            "type_code" : "int32"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bce310853f2f4ba602e"), 
+    "name" : "django_admin_log", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(2)
+    }, 
+    "fields" : {
+        "action_flag" : {
+            "type_code" : "int32"
+        }, 
+        "action_time" : {
+            "type_code" : "date"
+        }, 
+        "change_message" : {
+            "type_code" : "string"
+        }, 
+        "content_type_id" : {
+            "type_code" : "int32"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "object_id" : {
+            "type_code" : "string"
+        }, 
+        "object_repr" : {
+            "type_code" : "string"
+        }, 
+        "user_id" : {
+            "type_code" : "int32"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bce310853f2f4ba6060"), 
+    "name" : "django_session", 
+    "fields" : {
+        "expire_date" : {
+            "type_code" : "date"
+        }, 
+        "session_data" : {
+            "type_code" : "string"
+        }, 
+        "session_key" : {
+            "type_code" : "string"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db71bcf310853f2f4ba6069"), 
+    "name" : "site_plan_map", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(5)
+    }, 
+    "fields" : {
+        "author_id" : {
+            "type_code" : "int32"
+        }, 
+        "content" : {
+            "type_code" : "string"
+        }, 
+        "date_posted" : {
+            "type_code" : "date"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "title" : {
+            "type_code" : "string"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db86ec6310853f2f4ba77c9"), 
+    "name" : "site_plan_building", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(0)
+    }, 
+    "fields" : {
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "name" : {
+            "type_code" : "string"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db86ec6310853f2f4ba77ce"), 
+    "name" : "site_plan_floor", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(0)
+    }, 
+    "fields" : {
+        "building_id" : {
+            "type_code" : "int32"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "name" : {
+            "type_code" : "string"
+        }
+    }
+}
+{ 
+    "_id" : ObjectId("5db86ec6310853f2f4ba77d3"), 
+    "name" : "site_plan_room", 
+    "auto" : {
+        "field_names" : [
+            "id"
+        ], 
+        "seq" : NumberInt(0)
+    }, 
+    "fields" : {
+        "building_id" : {
+            "type_code" : "int32"
+        }, 
+        "floor_id" : {
+            "type_code" : "int32"
+        }, 
+        "id" : {
+            "type_code" : "int32"
+        }, 
+        "name" : {
+            "type_code" : "string"
+        }
+    }
+}

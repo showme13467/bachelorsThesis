@@ -1,0 +1,308 @@
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711341"), 
+    "id" : NumberInt(1), 
+    "name" : "Can add map", 
+    "content_type_id" : NumberInt(1), 
+    "codename" : "add_map"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711342"), 
+    "id" : NumberInt(2), 
+    "name" : "Can change map", 
+    "content_type_id" : NumberInt(1), 
+    "codename" : "change_map"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711343"), 
+    "id" : NumberInt(3), 
+    "name" : "Can delete map", 
+    "content_type_id" : NumberInt(1), 
+    "codename" : "delete_map"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711344"), 
+    "id" : NumberInt(4), 
+    "name" : "Can view map", 
+    "content_type_id" : NumberInt(1), 
+    "codename" : "view_map"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711346"), 
+    "id" : NumberInt(5), 
+    "name" : "Can add log entry", 
+    "content_type_id" : NumberInt(2), 
+    "codename" : "add_logentry"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711347"), 
+    "id" : NumberInt(6), 
+    "name" : "Can change log entry", 
+    "content_type_id" : NumberInt(2), 
+    "codename" : "change_logentry"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711348"), 
+    "id" : NumberInt(7), 
+    "name" : "Can delete log entry", 
+    "content_type_id" : NumberInt(2), 
+    "codename" : "delete_logentry"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711349"), 
+    "id" : NumberInt(8), 
+    "name" : "Can view log entry", 
+    "content_type_id" : NumberInt(2), 
+    "codename" : "view_logentry"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371134d"), 
+    "id" : NumberInt(9), 
+    "name" : "Can add permission", 
+    "content_type_id" : NumberInt(3), 
+    "codename" : "add_permission"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371134e"), 
+    "id" : NumberInt(10), 
+    "name" : "Can change permission", 
+    "content_type_id" : NumberInt(3), 
+    "codename" : "change_permission"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371134f"), 
+    "id" : NumberInt(11), 
+    "name" : "Can delete permission", 
+    "content_type_id" : NumberInt(3), 
+    "codename" : "delete_permission"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711350"), 
+    "id" : NumberInt(12), 
+    "name" : "Can view permission", 
+    "content_type_id" : NumberInt(3), 
+    "codename" : "view_permission"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711351"), 
+    "id" : NumberInt(13), 
+    "name" : "Can add group", 
+    "content_type_id" : NumberInt(4), 
+    "codename" : "add_group"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711352"), 
+    "id" : NumberInt(14), 
+    "name" : "Can change group", 
+    "content_type_id" : NumberInt(4), 
+    "codename" : "change_group"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711353"), 
+    "id" : NumberInt(15), 
+    "name" : "Can delete group", 
+    "content_type_id" : NumberInt(4), 
+    "codename" : "delete_group"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711354"), 
+    "id" : NumberInt(16), 
+    "name" : "Can view group", 
+    "content_type_id" : NumberInt(4), 
+    "codename" : "view_group"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711355"), 
+    "id" : NumberInt(17), 
+    "name" : "Can add user", 
+    "content_type_id" : NumberInt(5), 
+    "codename" : "add_user"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711356"), 
+    "id" : NumberInt(18), 
+    "name" : "Can change user", 
+    "content_type_id" : NumberInt(5), 
+    "codename" : "change_user"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711357"), 
+    "id" : NumberInt(19), 
+    "name" : "Can delete user", 
+    "content_type_id" : NumberInt(5), 
+    "codename" : "delete_user"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711358"), 
+    "id" : NumberInt(20), 
+    "name" : "Can view user", 
+    "content_type_id" : NumberInt(5), 
+    "codename" : "view_user"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371135a"), 
+    "id" : NumberInt(21), 
+    "name" : "Can add content type", 
+    "content_type_id" : NumberInt(6), 
+    "codename" : "add_contenttype"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371135b"), 
+    "id" : NumberInt(22), 
+    "name" : "Can change content type", 
+    "content_type_id" : NumberInt(6), 
+    "codename" : "change_contenttype"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371135c"), 
+    "id" : NumberInt(23), 
+    "name" : "Can delete content type", 
+    "content_type_id" : NumberInt(6), 
+    "codename" : "delete_contenttype"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371135d"), 
+    "id" : NumberInt(24), 
+    "name" : "Can view content type", 
+    "content_type_id" : NumberInt(6), 
+    "codename" : "view_contenttype"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371135f"), 
+    "id" : NumberInt(25), 
+    "name" : "Can add session", 
+    "content_type_id" : NumberInt(7), 
+    "codename" : "add_session"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711360"), 
+    "id" : NumberInt(26), 
+    "name" : "Can change session", 
+    "content_type_id" : NumberInt(7), 
+    "codename" : "change_session"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711361"), 
+    "id" : NumberInt(27), 
+    "name" : "Can delete session", 
+    "content_type_id" : NumberInt(7), 
+    "codename" : "delete_session"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711362"), 
+    "id" : NumberInt(28), 
+    "name" : "Can view session", 
+    "content_type_id" : NumberInt(7), 
+    "codename" : "view_session"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd1"), 
+    "id" : NumberInt(29), 
+    "name" : "Can add building", 
+    "content_type_id" : NumberInt(8), 
+    "codename" : "add_building"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd2"), 
+    "id" : NumberInt(30), 
+    "name" : "Can change building", 
+    "content_type_id" : NumberInt(8), 
+    "codename" : "change_building"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd3"), 
+    "id" : NumberInt(31), 
+    "name" : "Can delete building", 
+    "content_type_id" : NumberInt(8), 
+    "codename" : "delete_building"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd4"), 
+    "id" : NumberInt(32), 
+    "name" : "Can view building", 
+    "content_type_id" : NumberInt(8), 
+    "codename" : "view_building"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd5"), 
+    "id" : NumberInt(33), 
+    "name" : "Can add device", 
+    "content_type_id" : NumberInt(9), 
+    "codename" : "add_device"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd6"), 
+    "id" : NumberInt(34), 
+    "name" : "Can change device", 
+    "content_type_id" : NumberInt(9), 
+    "codename" : "change_device"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd7"), 
+    "id" : NumberInt(35), 
+    "name" : "Can delete device", 
+    "content_type_id" : NumberInt(9), 
+    "codename" : "delete_device"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd8"), 
+    "id" : NumberInt(36), 
+    "name" : "Can view device", 
+    "content_type_id" : NumberInt(9), 
+    "codename" : "view_device"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd9"), 
+    "id" : NumberInt(37), 
+    "name" : "Can add room", 
+    "content_type_id" : NumberInt(10), 
+    "codename" : "add_room"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bda"), 
+    "id" : NumberInt(38), 
+    "name" : "Can change room", 
+    "content_type_id" : NumberInt(10), 
+    "codename" : "change_room"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bdb"), 
+    "id" : NumberInt(39), 
+    "name" : "Can delete room", 
+    "content_type_id" : NumberInt(10), 
+    "codename" : "delete_room"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bdc"), 
+    "id" : NumberInt(40), 
+    "name" : "Can view room", 
+    "content_type_id" : NumberInt(10), 
+    "codename" : "view_room"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bdd"), 
+    "id" : NumberInt(41), 
+    "name" : "Can add floor", 
+    "content_type_id" : NumberInt(11), 
+    "codename" : "add_floor"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bde"), 
+    "id" : NumberInt(42), 
+    "name" : "Can change floor", 
+    "content_type_id" : NumberInt(11), 
+    "codename" : "change_floor"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bdf"), 
+    "id" : NumberInt(43), 
+    "name" : "Can delete floor", 
+    "content_type_id" : NumberInt(11), 
+    "codename" : "delete_floor"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3be0"), 
+    "id" : NumberInt(44), 
+    "name" : "Can view floor", 
+    "content_type_id" : NumberInt(11), 
+    "codename" : "view_floor"
+}

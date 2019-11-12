@@ -1,0 +1,66 @@
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711340"), 
+    "id" : NumberInt(1), 
+    "app_label" : "site_plan", 
+    "model" : "map"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711345"), 
+    "id" : NumberInt(2), 
+    "app_label" : "admin", 
+    "model" : "logentry"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371134a"), 
+    "id" : NumberInt(3), 
+    "app_label" : "auth", 
+    "model" : "permission"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371134b"), 
+    "id" : NumberInt(4), 
+    "app_label" : "auth", 
+    "model" : "group"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371134c"), 
+    "id" : NumberInt(5), 
+    "app_label" : "auth", 
+    "model" : "user"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c63711359"), 
+    "id" : NumberInt(6), 
+    "app_label" : "contenttypes", 
+    "model" : "contenttype"
+}
+{ 
+    "_id" : ObjectId("5db71bcfd6cd368c6371135e"), 
+    "id" : NumberInt(7), 
+    "app_label" : "sessions", 
+    "model" : "session"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bcd"), 
+    "id" : NumberInt(8), 
+    "app_label" : "site_plan", 
+    "model" : "building"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bce"), 
+    "id" : NumberInt(9), 
+    "app_label" : "site_plan", 
+    "model" : "device"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bcf"), 
+    "id" : NumberInt(10), 
+    "app_label" : "site_plan", 
+    "model" : "room"
+}
+{ 
+    "_id" : ObjectId("5db86ec6502613c27c3e3bd0"), 
+    "id" : NumberInt(11), 
+    "app_label" : "site_plan", 
+    "model" : "floor"
+}
