@@ -1,7 +1,5 @@
 from django.shortcuts import render
 from django.db.models import Q
-from django.urls import reverse_lazy
-
 from .models import Device, Building, Floor, Room
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -33,12 +31,6 @@ def search(request):
     }
     return render(request, template, context)
 
-# TODO dependent dropwdown
-def load_floors(request):
-    parent_id= request.GET.get('building')
-    floors = Floor.objects.filter(parent_id=parent_id).order_by('name')
-    return render(request, 'siteplan/floors_dropwdown.html', {'floors': floors})
-
 class DevicesListView(LoginRequiredMixin, ListView):
     model = Device
     template_name = 'siteplan/table_homepage.html'
@@ -56,7 +48,7 @@ class DeviceCreateView(LoginRequiredMixin, CreateView):
     model = Device
     form_class = DeviceCreateForm
     template_name = 'siteplan/registerDevice.html'
-    success_url = reverse_lazy('device-create')
+
 
 
     def form_valid(self, form):

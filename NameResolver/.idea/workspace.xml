@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2dfa65a2-1d8e-47ef-87fd-32166a0ab3b4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/site_plan/templates/siteplan/data.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4c0568b4-aa21-4ee9-881c-90e6f5754ace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4c0568b4-aa21-4ee9-881c-90e6f5754ace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/site_plan/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/site_plan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/views.py" afterDir="false" />
@@ -135,6 +134,10 @@
       <workItem from="1572273679498" duration="9379000" />
       <workItem from="1572283925805" duration="13490000" />
       <workItem from="1572375389078" duration="14951000" />
+      <workItem from="1573506591413" duration="35000" />
+      <workItem from="1573506704384" duration="158000" />
+      <workItem from="1573506888661" duration="2438000" />
+      <workItem from="1573574691582" duration="8230000" />
     </task>
     <servers />
   </component>
@@ -146,7 +149,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

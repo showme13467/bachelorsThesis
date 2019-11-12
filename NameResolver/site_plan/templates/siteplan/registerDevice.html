@@ -5,7 +5,7 @@
 	<div class= "col-lg-2"></div>
 	<div class = "col-lg-8">
 		<div class ="content-section">
-			<form method="POST" enctype="multipart/form-data" id="deviceForm" data-floors-url="{% url 'ajax_load_floors' %}" novalidate>
+			<form method="POST" enctype="multipart/form-data" id="deviceForm">
 				{%csrf_token%}
 				<fieldset class="form-group">
 					<legend class="border-bottom mb-4">Create new Device</legend>
@@ -22,8 +22,30 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script>
-    $.getJSON('data.json', function (data) {
-        console.log('It worked!');
+    $.getJSON('https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/NameResolver/site_plan/templates/siteplan/data.json', function (data) {
+        //alert( data.building[ 0 ].name );
+
+      var x = document.getElementById("deviceForm").innerText; //replace("Router", "Test");
+      //var c = x.indexOf("Building");
+      var y = document.getElementById("id_building");
+
+          var test = y.options[y.selectedIndex].value;
+          if (test == 1) {
+              document.getElementById("id_floor")[0].innerHTML = "test";
+              console.log("it worked");
+          }
+
+
+      var c = document.getElementById("deviceForm").outerHTML;
+
+//var action =;
+console.log(x);
+console.log(y);
+console.log(c);
+console.log(test);
+
+
+
     });
 </script>
 {%endblock content%}

@@ -14,6 +14,5 @@ urlpatterns = [
     path('table/<int:pk>/update', DeviceUpdateView.as_view(), name='device-update'),
     path('table/<int:pk>/delete', DeviceDeleteView.as_view(), name='device-delete'),
     path('table/search/', views.search, name = 'table-search' ),
-    path('ajax/load-floors/', views.load_floors, name='ajax_load_floors'),
     
 ]
