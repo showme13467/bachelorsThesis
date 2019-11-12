@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2dfa65a2-1d8e-47ef-87fd-32166a0ab3b4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/data.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4c0568b4-aa21-4ee9-881c-90e6f5754ace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4c0568b4-aa21-4ee9-881c-90e6f5754ace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NameResolver/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/NameResolver/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/data.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -137,7 +134,7 @@
       <workItem from="1573506591413" duration="35000" />
       <workItem from="1573506704384" duration="158000" />
       <workItem from="1573506888661" duration="2438000" />
-      <workItem from="1573574691582" duration="8230000" />
+      <workItem from="1573574691582" duration="9553000" />
     </task>
     <servers />
   </component>

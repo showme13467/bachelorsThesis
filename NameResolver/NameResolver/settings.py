@@ -25,7 +25,7 @@ SECRET_KEY = 'g*=m*%262(-wzfj^ibn+gy^^@&=@en1qe84(_vy1hay&c9&b9l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['irt-ap.cs.columbia.edu']
 
 
 # Application definition
