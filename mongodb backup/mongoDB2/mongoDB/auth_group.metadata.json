@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"mongoDB.auth_group"},{"v":2,"unique":true,"key":{"id":1},"name":"__primary_key__","ns":"mongoDB.auth_group"},{"v":2,"unique":true,"key":{"name":1},"name":"name_1","ns":"mongoDB.auth_group"}],"uuid":"50e2ed82673a47c8985836050e6c179d"}
