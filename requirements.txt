@@ -3,3 +3,4 @@ django-crispy-forms==1.8.0
 pillow==6.2.1
 dnspython==1.16.0
 djongo==1.2.36
+sqlparse==0.2.4
