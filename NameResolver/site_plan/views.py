@@ -5,9 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import DeviceUpdateForm, DeviceCreateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+import subprocess
 
 # Create your views here.
 def home(request):
+    subprocess.call(['java', '-jar', 'test.jar'])
     return render(request,'siteplan/home.html')
 
 @login_required
@@ -46,10 +48,9 @@ class DevicesDetailView(LoginRequiredMixin, DetailView):
 #TODO dependent dropdown
 class DeviceCreateView(LoginRequiredMixin, CreateView):
     model = Device
-    form_class = DeviceCreateForm
+    #form_class = DeviceCreateForm
     template_name = 'siteplan/registerDevice.html'
-
-
+    fields = ['devicename', 'type', 'longitude', 'latitude', 'height', 'url', 'image']
 
     def form_valid(self, form):
         form.instance.author = self.request.user

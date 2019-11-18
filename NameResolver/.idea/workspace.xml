@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2dfa65a2-1d8e-47ef-87fd-32166a0ab3b4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/site_plan/migrations/0015_auto_20191118_1116.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/site_plan/migrations/0016_auto_20191118_1136.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/site_plan/templates/siteplan/table_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/templates/siteplan/table_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/site_plan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,7 +24,12 @@
     <option name="HIDDEN_KINDS">
       <set />
     </option>
-    <expand />
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="Django default" type="feb32156:DbDataSourceImpl" />
+      </path>
+    </expand>
     <select />
   </component>
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
@@ -143,7 +146,8 @@
       <workItem from="1573691633367" duration="779000" />
       <workItem from="1573746965388" duration="2301000" />
       <workItem from="1574087408783" duration="7362000" />
-      <workItem from="1574097454109" duration="478000" />
+      <workItem from="1574097454109" duration="5714000" />
+      <workItem from="1574106406094" duration="1060000" />
     </task>
     <servers />
   </component>
