@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Device
+from .models import Device, Building
 
 
 class DeviceUpdateForm(forms.ModelForm):
@@ -12,11 +12,14 @@ class DeviceUpdateForm(forms.ModelForm):
 class DeviceCreateForm(forms.ModelForm):
     class Meta:
         model = Device
-        fields = ['name', 'type', 'building', 'floor', 'room', 'longitude', 'latitude', 'height','url', 'image']
+        fields = ['devicename', 'type', 'longitude', 'latitude', 'height','url', 'image']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['floor'].queryset = Device.objects.none()
         self.fields['room'].queryset = Device.objects.none()
+
+class DeviceCreateFormTest(forms.ModelForm):
+    devices = forms.ModelChoiceField(queryset= Building.objects.all())
 
 

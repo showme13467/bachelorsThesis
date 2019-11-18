@@ -5,27 +5,6 @@ from django.urls import reverse
 
 # Create your models here.
 
-
-class Building(models.Model):
-    name = models.CharField(max_length=100, default = 'unnamed')
-
-    def __str__(self):
-        return self.name
-
-class Floor(models.Model):
-    name = models.CharField(max_length=100, default='unnamed')
-    building = models.ForeignKey(Building, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
-class Room(models.Model):
-    name = models.CharField(max_length=100, default='unnamed')
-    floor = models.ForeignKey(Floor,on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
 class Device(models.Model):
     TYPE_CHOICES = (
         ('Samsung TV', 'Samsung TV'),
@@ -33,11 +12,30 @@ class Device(models.Model):
         ('Phillips Hue', 'Phillips Hue'),
     )
 
-    BUILDING_CHOICES = (
-        ('Schapiro', 'Schapiro Center for Engineering and Physical Science Research'),
-        ('Uris Hall', 'Uris Hall')
-    )
+    # TODO implement dependent dropdown list
+    devicename = models.CharField(max_length=100, default='unnamed')
+    type = models.CharField(max_length=100, default='no type', choices=TYPE_CHOICES)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, default='0')
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, default='0')
+    height = models.CharField(max_length=4, default='0 m', help_text="Height above floor level")
+    url = models.URLField(max_length=200, default='https://www.ipIoTDevice.com/')
+    date_added = models.DateTimeField(default=timezone.now)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(default='default.jpg', upload_to='device_pics')
 
+    def __str__(self):
+        return f'{self.name} @ {self.author}'
+
+    def get_absolute_url(self):
+        return reverse('table-detail', kwargs={'pk': self.pk})
+
+class Room(models.Model):
+    roomname = models.CharField(max_length=100, default='unnamed')
+
+    def __str__(self):
+        return self.name
+
+class Floor(models.Model):
     FLOOR_CHOICES = (
         ('3', '3th Floor'),
         ('4', '4th Floor'),
@@ -48,22 +46,27 @@ class Device(models.Model):
         ('9', '9th Floor'),
         ('10', '10th Floor'),
     )
-#TODO implement dependent dropdown list
-    name = models.CharField(max_length=100, default='unnamed')
-    type = models.CharField(max_length=100, default='no type', choices=TYPE_CHOICES)
-    building = models.ForeignKey(Building, on_delete=models.SET_NULL, null=True)
-    floor = models.ForeignKey(Floor, on_delete=models.SET_NULL, null=True)
-    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, default='0')
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, default='0')
-    height = models.CharField(max_length=4, default='0 m', help_text= "Height above floor level")
-    url = models.URLField(max_length=200, default='https://www.ipIoTDevice.com/')
-    date_added = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField(default='default.jpg', upload_to='device_pics')
-    
+    floorname = models.ForeignKey('Room', on_delete=models.CASCADE)
+    floorstructure = models.CharField(max_length=100, default='unnamed', choices=FLOOR_CHOICES)
+
     def __str__(self):
-        return f'{self.name} @ {self.author}'
-        
-    def get_absolute_url(self):
-        return reverse('table-detail', kwargs ={'pk': self.pk})
+        return self.name
+
+class Building(models.Model):
+    BUILDING_CHOICES = (
+        ('Schapiro', 'Schapiro Center for Engineering and Physical Science Research'),
+        ('Uris Hall', 'Uris Hall')
+    )
+
+    buildingname = models.CharField(max_length=100, default='unnamed', choices=BUILDING_CHOICES)
+    buildingstructure = models.ForeignKey('Floor', on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+
+
+
+
+
+
+
+

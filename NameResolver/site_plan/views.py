@@ -58,7 +58,7 @@ class DeviceCreateView(LoginRequiredMixin, CreateView):
 
 class DeviceUpdateView(LoginRequiredMixin,UserPassesTestMixin, UpdateView):
     model = Device
-    fields = ['name', 'type', 'building', 'floor', 'room', 'longitude', 'latitude', 'height','url', 'image']
+    fields = ['devicename', 'type', 'longitude', 'latitude', 'height','url', 'image']
     template_name = 'siteplan/registerDevice.html'
 
     def form_valid(self, form):
