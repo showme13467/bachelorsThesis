@@ -16,8 +16,6 @@ class DeviceCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['floor'].queryset = Device.objects.none()
-        self.fields['room'].queryset = Device.objects.none()
 
 class DeviceCreateFormTest(forms.ModelForm):
     devices = forms.ModelChoiceField(queryset= Building.objects.all())

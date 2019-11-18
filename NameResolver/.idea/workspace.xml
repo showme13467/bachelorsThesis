@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2dfa65a2-1d8e-47ef-87fd-32166a0ab3b4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/site_plan/migrations/0015_auto_20191118_1116.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/site_plan/migrations/0016_auto_20191118_1136.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/site_plan/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/site_plan/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/site_plan/templates/siteplan/table_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/templates/siteplan/table_detail.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -137,7 +142,8 @@
       <workItem from="1573599929831" duration="1331000" />
       <workItem from="1573691633367" duration="779000" />
       <workItem from="1573746965388" duration="2301000" />
-      <workItem from="1574087408783" duration="4251000" />
+      <workItem from="1574087408783" duration="7362000" />
+      <workItem from="1574097454109" duration="478000" />
     </task>
     <servers />
   </component>

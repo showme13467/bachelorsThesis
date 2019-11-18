@@ -24,7 +24,7 @@ class Device(models.Model):
     image = models.ImageField(default='default.jpg', upload_to='device_pics')
 
     def __str__(self):
-        return f'{self.name} @ {self.author}'
+        return f'{self.devicename} @ {self.author}'
 
     def get_absolute_url(self):
         return reverse('table-detail', kwargs={'pk': self.pk})
@@ -33,7 +33,7 @@ class Room(models.Model):
     roomname = models.CharField(max_length=100, default='unnamed')
 
     def __str__(self):
-        return self.name
+        return self.roomname
 
 class Floor(models.Model):
     FLOOR_CHOICES = (
@@ -46,11 +46,11 @@ class Floor(models.Model):
         ('9', '9th Floor'),
         ('10', '10th Floor'),
     )
-    floorname = models.ForeignKey('Room', on_delete=models.CASCADE, default='null')
-    floorstructure = models.CharField(max_length=100, default='unnamed', choices=FLOOR_CHOICES)
+    floorname = models.CharField(max_length=100, default='unnamed', choices=FLOOR_CHOICES)
+    floorstructure = models.ForeignKey('Room', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.floorname
 
 class Building(models.Model):
     BUILDING_CHOICES = (
@@ -59,9 +59,9 @@ class Building(models.Model):
     )
 
     buildingname = models.CharField(max_length=100, default='unnamed', choices=BUILDING_CHOICES)
-    buildingstructure = models.ForeignKey('Floor', on_delete=models.CASCADE, default='null')
+    buildingstructure = models.ForeignKey('Floor', on_delete=models.CASCADE)
     def __str__(self):
-        return self.name
+        return self.buildingname
 
 
 
