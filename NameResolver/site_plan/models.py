@@ -46,7 +46,7 @@ class Floor(models.Model):
         ('9', '9th Floor'),
         ('10', '10th Floor'),
     )
-    floorname = models.ForeignKey('Room', on_delete=models.CASCADE)
+    floorname = models.ForeignKey('Room', on_delete=models.CASCADE, default='null')
     floorstructure = models.CharField(max_length=100, default='unnamed', choices=FLOOR_CHOICES)
 
     def __str__(self):
@@ -59,7 +59,7 @@ class Building(models.Model):
     )
 
     buildingname = models.CharField(max_length=100, default='unnamed', choices=BUILDING_CHOICES)
-    buildingstructure = models.ForeignKey('Floor', on_delete=models.CASCADE)
+    buildingstructure = models.ForeignKey('Floor', on_delete=models.CASCADE, default='null')
     def __str__(self):
         return self.name
 
