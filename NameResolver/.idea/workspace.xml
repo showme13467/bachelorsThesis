@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2dfa65a2-1d8e-47ef-87fd-32166a0ab3b4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../NameResolver-Flask/templates/base.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NameResolver-Flask/templates/home.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../NameResolver-Flask/templates/table_full.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver.py" beforeDir="false" afterPath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/templates/siteplan/registerDevice.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/templates/siteplan/table_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/templates/siteplan/table_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/site_plan/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/site_plan/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -147,7 +148,7 @@
       <workItem from="1573746965388" duration="2301000" />
       <workItem from="1574087408783" duration="7362000" />
       <workItem from="1574097454109" duration="5714000" />
-      <workItem from="1574106406094" duration="1060000" />
+      <workItem from="1574106406094" duration="1789000" />
     </task>
     <servers />
   </component>

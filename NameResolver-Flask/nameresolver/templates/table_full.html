@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+<h1>Table of all IoT Devices</h1>
+{% for device in devices %}
+ <h1> {{device.name}} at {{device.location}}</h1>
+  <p> By {{device.author}} on {{device.date_added}}</p>
+{% endfor %}
+
+</div>
+
+{% endblock content %}

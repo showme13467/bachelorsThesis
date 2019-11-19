@@ -1,0 +1,6 @@
+flask==1.1.1
+flask-wtf==0.14.2
+flask-sqlalchemy==2.4.1
+pymongo==2.8.1
+Flask-MongoAlchemy==0.7.2
+flask-bcrypt==0.7.1
