@@ -4,3 +4,5 @@ flask-sqlalchemy==2.4.1
 pymongo==2.8.1
 Flask-MongoAlchemy==0.7.2
 flask-bcrypt==0.7.1
+flask-login==0.4.1
+pillow==6.2.1
