@@ -2,65 +2,85 @@ from datetime import datetime
 from nameresolver import *
 from flask_login import UserMixin
 
+
+
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return User.query.get(user_id)
 
-class Building(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    buildingname = db.Column(db.String(100), unique=True, nullable=False)
-    floors = db.relationship('Floor', backref='building', lazy=True)
+
+
+
+
+class Building(db.Document):
+   # id = db.IntField(primary_key=True)
+    buildingname = db.StringField()
+  #  floors = db.relationship('Floor', backref='building', lazy=True)
 
     def __repr__(self):
         return f"Building('{self.buildingname}')"
 
 
-class Floor(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    floorname = db.Column(db.String(100), unique=True, nullable=False)
-    rooms = db.relationship('Room', backref='floor', lazy=True)
-    building_id = db.Column(db.Integer, db.ForeignKey('building.id'), nullable=False)
+    def get_id(self):
+        return str(self.mongo_id)
+
+
+class Floor(db.Document):
+   # id = db.IntField(primary_key=True)
+    floorname = db.StringField()
+  #  rooms = db.relationship('Room', backref='floor', lazy=True)
+ #   building_id = db.StringField(db.Integer, db.ForeignKey('building.id'), nullable=False)
 
     def __repr__(self):
         return f"Floor('{self.floorname}')"
 
 
-class Room(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    roomname = db.Column(db.String(100), unique=True, nullable=False)
-    devices = db.relationship('Device', backref='room', lazy=True)
-    floor_id = db.Column(db.Integer, db.ForeignKey('floor.id'), nullable=False)
+    def get_id(self):
+        return str(self.mongo_id)
+
+
+class Room(db.Document):
+    #id = db.IntField( primary_key=True)
+    roomname = db.StringField()
+    #devices = db.relationship('Device', backref='room', lazy=True)
+   # floor_id = db.IntField( db.ForeignKey('floor.id'), nullable=False)
 
     def __repr__(self):
         return f"Room('{self.roomname}')"
 
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    password = db.Column(db.String(60), nullable=False)
+    def get_id(self):
+        return str(self.mongo_id)
+
+class User(db.Document, UserMixin):
+    username = db.StringField()
+    email = db.StringField()
+    image_file = db.StringField(default='default.jpg')
+    password = db.StringField()
+    admin = db.BoolField(default=False)
     #devices = db.relationship('Device', backref='author', lazy=True)
-    #room_id = db.Column(db.Integer, db.ForeignKey('room.id'), nullable=False)
+    #room_id = db.StringField(db.Integer, db.ForeignKey('room.id'), nullable=False)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
+    def get_id(self):
+        return str(self.mongo_id)
 
-
-class Device(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    devicename = db.Column(db.String(100), nullable=False)
-    type = db.Column(db.String(120), nullable=False)
-    longitude = db.Column(db.Integer, nullable=False, default='0')
-    latitude = db.Column(db.Integer, nullable=False, default='0')
-    height = db.Column(db.Integer, nullable=False, default='0')
-    url = db.Column(db.String(120), nullable=True, default='http://NameofTheIotDevice.com')
-    image_file = db.Column(db.String(20), nullable=True, default='default.jpg')
-    date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    room_id = db.Column(db.Integer, db.ForeignKey('room.id'), nullable=False)
+class Device(db.Document):
+   #id = db.IntField(primary_key=True)
+    devicename = db.StringField()
+    type = db.StringField()
+    longitude = db.IntField( default='0')
+    latitude = db.IntField( default='0')
+    height = db.IntField( default='0')
+    url = db.StringField(default='http://NameofTheIotDevice.com')
+    image_file = db.StringField(default='defaultDevice.jpg')
+    date_added = db.DateTimeField(default=datetime.utcnow())
+  #  room_id = db.StringField(db.Integer, db.ForeignKey('room.id'), nullable=False)
 
 
     def __repr__(self):
         return f"Device('{self.devicename}', '{self.type}','{self.url}','{self.image_file}')"
 
+    def get_id(self):
+        return str(self.mongo_id)

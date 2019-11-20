@@ -5,8 +5,9 @@
 <div class="container">
 <h1>Table of all IoT Devices</h1>
 {% for device in devices %}
- <h1> {{device.name}} at {{device.location}}</h1>
-  <p> By {{device.author}} on {{device.date_added}}</p>
+ <a class="mr-2" href="{{ url_for('deviceDetail', device_id=device.mongo_id)}}"> {{device.devicename}} </a>
+ <h1> </h1>
+  <p>  on {{device.date_added.strftime('%Y-%m-%d')}}</p>
 {% endfor %}
 
 </div>

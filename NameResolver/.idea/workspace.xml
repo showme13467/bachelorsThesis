@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2dfa65a2-1d8e-47ef-87fd-32166a0ab3b4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../NameResolver-Flask/templates/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../NameResolver-Flask/templates/home.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../NameResolver-Flask/templates/table_full.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver.py" beforeDir="false" afterPath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver/routes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver/site.db" beforeDir="false" afterPath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver/site.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver/templates/table_full.html" beforeDir="false" afterPath="$PROJECT_DIR$/../NameResolver-Flask/nameresolver/templates/table_full.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../NameResolver-Flask/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../NameResolver-Flask/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -149,6 +149,7 @@
       <workItem from="1574087408783" duration="7362000" />
       <workItem from="1574097454109" duration="5714000" />
       <workItem from="1574106406094" duration="1789000" />
+      <workItem from="1574265599593" duration="323000" />
     </task>
     <servers />
   </component>
