@@ -21,9 +21,6 @@ def home():
 @login_required
 def table_full():
     devices = Device.query.all()
-   # buildings = Building.query.all()
-    #floors = Floor.query.all()
-    #rooms = Room.query.all()
     return render_template('table_full.html', title= 'Table full view', devices=devices )#buildings=buildings, floors=floors, rooms=rooms)
 
 @app.route('/table/<device_id>')
