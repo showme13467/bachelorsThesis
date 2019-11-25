@@ -133,13 +133,13 @@ public class GeoCalc {
                         x1 = x1 + calcparam1;   //new x1-value shifted by calcparam1 factor
                         y1 = y1 + calcparam2;
                     }
-                    System.out.println(x1+"\n"+y1+"\n");    //debug, shows last entries of geo coords arrays
+                 //   System.out.println(x1+"\n"+y1+"\n");    //debug, shows last entries of geo coords arrays
                     x1 = xanf1 + calcparam3;
                     y1 = yanf1 + calcparam4;
                     xanf1 = x1;
                     yanf1 = y1;
                 }
-                System.out.println("Array end!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n \n"); //debug
+             //   System.out.println("Array end!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n \n"); //debug
                 writer.close();
 
 
