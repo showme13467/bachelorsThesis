@@ -58,17 +58,41 @@ api.get('/floor/:id', (req, res) => {
 
 });
 
+api.get('/table/search', (req, res) => {
+
+});
+
+api.get('/back', (req, res) => {
+
+});
 
 
 
-
-
-
+// api to handle all post requests
 api.post('/create_device/', (req, res) => {
 
 	console.log(req.body);
 	res.status(200).send();
 });
+
+api.post('/create_floor/', (req, res) => {
+
+});
+
+api.post('/create_room/', (req, res) => {
+
+});
+
+api.post('/create_building/', (req, res) => {
+
+});
+
+api.post('/create_user/', (req, res) => {
+
+});
+
+
+
 
 //
 // Returns the current state of UT devices as stored in the MongoDB
