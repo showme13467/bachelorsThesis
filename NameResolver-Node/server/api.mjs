@@ -7,17 +7,67 @@ import app from './main.js';
 const { ObjectID } = mongodb;
 const db = app.get('mongo_db').db();
 
+     
 
 let api;
 export default api = express.Router();
 
 
-api.get('/your_get_endpoint/', (req, res) => {
-  // TODO
+api.get('/table', (req, res) => {
+  
 });
 
-api.post('/your_post_endpoint/', async (req, res) => {
-  // TODO
+api.get('/table_detail/:id', (req, res) => {
+
+});
+
+api.get('/get_devices', (req, res) => {
+
+});
+
+api.get('/get_rooms', (req, res) => {
+
+});
+
+api.get('/get_floors', (req, res) => {
+
+});
+
+api.get('/login', (req, res) => {
+
+});
+
+api.get('/register', (req, res) => {
+
+});
+
+api.get('/admin', (req, res) => {
+
+});
+
+api.get('/building/:id', (req, res) => {
+
+});
+
+
+api.get('/room/:id', (req, res) => {
+
+});
+
+api.get('/floor/:id', (req, res) => {
+
+});
+
+
+
+
+
+
+
+api.post('/create_device/', (req, res) => {
+
+	console.log(req.body);
+	res.status(200).send();
 });
 
 //

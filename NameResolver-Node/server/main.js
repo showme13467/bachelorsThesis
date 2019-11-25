@@ -13,7 +13,8 @@ const http      = require('http'),
 const dbg = debug('lmr:main');
 
 const DEFAULT_MONGODB_URL = 'mongodb://127.0.0.1:27017/mongoDB_Node',
-      DEFAULT_SOCK = '3000',
+      DEFAULT_SOCK = '80',
+      DEFAULT_IP = '0.0.0.0',
       devMode = process.env.NODE_ENV === "development",
       ui_dir = path.resolve(__dirname, '..'),
       static_dir = path.resolve(ui_dir, 'static');
@@ -35,13 +36,18 @@ async function main() {
       description: 'MongoDB database URL',
       default: process.env.MONGODB_URL || DEFAULT_MONGODB_URL
     },
-  });
+    ip: {
+      key: 'i',
+      args: 1,
+      description: 'UNIX domain IP adress to listen on for HTTP requests',
+      default: process.env.IP || DEFAULT_IP 
+    }});
 
   const app = express();
 
   module.exports = app;
 
-  nunjucks.configure(path.resolve(ui_dir, 'NameResolver-Node/views'), {
+  nunjucks.configure(path.resolve(ui_dir, 'server/views'), {
     autoescape: true,
     express: app
   });
@@ -158,7 +164,7 @@ async function main() {
   const cfg = fs.readFileSync(path.resolve(static_dir, 'config.json'));
 
   app.get('*', (req, res) => {
-    res.render('index.njk', { config: cfg });
+    res.render('index.html', { config: cfg });
   });
 
 
@@ -169,13 +175,13 @@ async function main() {
       if (!error) fs.unlinkSync(opts.sock);
       http_server.listen(opts.sock, () => {
         fs.chmodSync(opts.sock, '666');
-      });
+      }, opts.ip);
     });
   } else {
     if (sock <= 0 || sock >= 65536)
       throw new Error(`Error: Invalid port number ${opts.sock}`);
-    dbg(`Starting HTTP server on TCP port ${opts.sock}`);
-    http_server.listen(sock);
+    dbg(`Starting HTTP server on TCP port ${opts.sock} `);
+    http_server.listen(sock, opts.ip);
   }
 }
 
@@ -185,4 +191,5 @@ main().catch(err => {
   console.error(err);
   process.exit(1);
 });
+
 
