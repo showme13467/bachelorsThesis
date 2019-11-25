@@ -76,18 +76,26 @@ api.post('/create_device/', (req, res) => {
 });
 
 api.post('/create_floor/', (req, res) => {
+	console.log(req.body);
+        res.status(200).send();
 
 });
 
 api.post('/create_room/', (req, res) => {
+	console.log(req.body);
+        res.status(200).send();
 
 });
 
 api.post('/create_building/', (req, res) => {
+	console.log(req.body);
+        res.status(200).send();
 
 });
 
 api.post('/create_user/', (req, res) => {
+	console.log(req.body);
+        res.status(200).send();
 
 });
 
