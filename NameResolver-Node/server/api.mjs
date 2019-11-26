@@ -209,7 +209,7 @@ function update_building(req,res){
 api.post('/update_floors/', (req,res) => {
   console.log(req.body);
   let col_name = db.collection('floors');
-  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "geometry": { "type": "Polygon", "coordinates": req.body.coordinates} }, function(err, result){
+  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "geometry": { "type": "Polygon", "coordinates": req.body.coordinates}} }, function(err, result){
 if(err){
 console.log(err);
 res.send(err);
@@ -295,7 +295,7 @@ function update_floor(req,res){
 api.post('/update_rooms/', (req,res) => {
   console.log(req.body);
   let col_name = db.collection('rooms');
-  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "geometry": { "type": "Polygon", "coordinates": req.body.coordinates} }, function(err, result){
+  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "geometry": { "type": "Polygon", "coordinates": req.body.coordinates}} }, function(err, result){
 if(err){
 console.log(err);
 res.send(err);
@@ -368,7 +368,7 @@ let obj = {"name": req.body.name, "floors":[] }
 api.post('/update_buildings/', (req,res) => {
   console.log(req.body);
   let col_name = db.collection('buildings');
-  col_name.findOneAndUpdate({"name": req.body.name}, {$set: {"name": req.body.name}} }, function(err, result){
+  col_name.findOneAndUpdate({"name": req.body.name}, {$set: {"name": req.body.name}} , function(err, result){
 if(err){
 console.log(err);
 res.send(err);
