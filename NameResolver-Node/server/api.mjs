@@ -66,6 +66,9 @@ api.get('/back', (req, res) => {
 
 
 // api to handle all post requests
+
+
+//Request for creating a device
 api.post('/create_device/', (req, res) => {
   console.log(req.body);
  let col_name = db.collection('devices');
@@ -113,6 +116,45 @@ function update_room(req,res){
 });
 };
 
+
+//Request for updating all devices
+
+api.post('/update_devices/', (req,res) => {
+  console.log(req.body);
+  let col_name = db.collection('devices');
+  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "location": { "type": "Point", "coordinates": req.body.coordinates} },{"type" = req.body.type} }, function(err, result){
+if(err){
+console.log(err);
+res.send(err);
+}
+else{
+res.send(result.floors);
+}
+});
+});
+
+
+
+//Request for getting all devices in a specific room
+
+api.post('/get_devices/', (req,res) => {
+  console.log(req.body);
+  let col_name = db.collection('rooms')
+  col_name.findOne({"name": req.body.room}, function(err, result){
+if(err){
+console.log(err);
+res.send(err);
+}
+else{
+console.log(result.devices);
+res.send(result.devices);
+}
+});
+});
+
+
+//Request for creating a floor
+
 api.post('/create_floor/', (req, res) => {
   console.log(req.body);
  let col_name = db.collection('floors');
@@ -135,7 +177,7 @@ res.send(doc);
 
 function insert_floor(req,res){
 let col_name = db.collection('floors');
-let obj = {"name": req.body.name, "coordinates": req.body.coordinates, "rooms":[] };
+let obj = {"name": req.body.name, "geometry": { "type": "Polygon", "coordinates": req.body.coordinates}, "rooms":[] };
   col_name.insertOne(obj, function(err, result) {
     if (err) {
       console.error(err.message);
@@ -162,6 +204,44 @@ function update_building(req,res){
 
 
 
+//Request for updating all floors
+
+api.post('/update_floors/', (req,res) => {
+  console.log(req.body);
+  let col_name = db.collection('floors');
+  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "geometry": { "type": "Polygon", "coordinates": req.body.coordinates} }, function(err, result){
+if(err){
+console.log(err);
+res.send(err);
+}
+else{
+res.send(result);
+}
+});
+});
+
+
+//Request for getting all floors in a specific building
+
+api.post('/get_floors/', (req,res) => {
+  console.log(req.body);
+  let col_name = db.collection('buildings');
+  col_name.findOne({"name": req.body.building}, function(err, result){
+if(err){
+console.log(err);
+res.send(err);
+}
+else{
+console.log(result.floors);
+res.send(result.floors);
+}
+});
+});
+
+
+
+//Request for creating a room
+
 api.post('/create_room/', (req, res) => {
   console.log(req.body);
     let col_name = db.collection('rooms');
@@ -184,7 +264,7 @@ res.send(doc);
 
 function insert_room(req,res){
 let col_name = db.collection('rooms');
-let obj = {"name": req.body.name, "coordinates": req.body.coordinates, "devices":[] }
+let obj = {"name": req.body.name, "geometry": { "type": "Polygon", "coordinates": req.body.coordinates}, "devices":[] }
   col_name.insertOne(obj, function(error, result) {
     if (error) {
       console.error(error.message);
@@ -209,23 +289,45 @@ function update_floor(req,res){
 });
 };
 
-api.post('/get_rooms/', (req,res) => {
+
+//Request for updating all rooms
+
+api.post('/update_rooms/', (req,res) => {
   console.log(req.body);
-  let col_name = db.collection('buildings')
-  col_name.findOne({"name": req.body.building}, function(err, result){
+  let col_name = db.collection('rooms');
+  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "geometry": { "type": "Polygon", "coordinates": req.body.coordinates} }, function(err, result){
 if(err){
 console.log(err);
 res.send(err);
 }
 else{
-console.log(result.floors);
-res.send(result.floors);
+res.send(result);
 }
 });
 });
 
 
 
+//Request for getting all rooms on a specific floor
+
+api.post('/get_rooms/', (req,res) => {
+  console.log(req.body);
+  let col_name = db.collection('floors');
+  col_name.findOne({"name": req.body.floor}, function(err, result){
+if(err){
+console.log(err);
+res.send(err);
+}
+else{
+console.log(result.rooms);
+res.send(result.rooms);
+}
+});
+});
+
+
+
+//Request for creating a building
 
 api.post('/create_building/', (req, res) => {
  console.log(req.body);
@@ -259,6 +361,37 @@ let obj = {"name": req.body.name, "floors":[] }
     }
   });
 };
+
+
+//Request for updating all buildings
+
+api.post('/update_buildings/', (req,res) => {
+  console.log(req.body);
+  let col_name = db.collection('buildings');
+  col_name.findOneAndUpdate({"name": req.body.name}, {$set: {"name": req.body.name}} }, function(err, result){
+if(err){
+console.log(err);
+res.send(err);
+}
+else{
+res.send(result);
+}
+});
+});
+
+
+
+//Request for getting all buildings
+
+api.post('/get_buildings/', (req,res) => {
+  let col_name = db.collection('buildings');
+  res.send(col_name);
+});
+
+
+
+
+//Request for creating a user
 
 api.post('/create_user/', (req, res) => {
   console.log(req.body);
