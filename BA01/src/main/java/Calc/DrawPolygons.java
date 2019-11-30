@@ -8,107 +8,61 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import static Calc.DrawPolygons.Drawing.PolygonFinished;
 
 
 public class DrawPolygons {
 
     public static String RoomNameByUserStr = null;
     public static Boolean NewPolyBool = true;
-    public static Boolean RightClickAllowed = false;
-    public static Boolean KeyBoardAllowed = false;
-    public static Boolean FinishedPolygon = false;
-    public static Boolean KeyAllowedSavingPolyong = false;
+    public static Boolean KeyAllowedSavingPolygon = false;
     public static String[] FloorNameByUserStrArray;
     public static String FloorSelectionByUserStr;
     public static String[] BuildingByUserStrArray;
     public static String BuildingByUserStr;
+    public static URL urlfloorplan;
 
-    static List<String> listPolygonPoints = new ArrayList<String>(); //list of coord points of polygons and name of room
-    static List<Integer> IntPolyPoints = new ArrayList<Integer>();
+    public static JFrame frame = new JFrame();
+
+    static List<Integer> IntPolyPoints = new ArrayList<Integer>();//list of coord points of current polygon
 
     public static int Polyboolcnt = 0; //cnt for whether a polygon is drew completely or canceled
-    public static int listcnt = 0; //cnt for list index
+//    public static int listcnt = 0; //cnt for list index
 
 
     private static final int Window_width = 1210;
         private static final int Window_height = 1200;
 
-    public static class Drawing extends JPanel implements KeyListener {
+    public static class Drawing extends JPanel {
 
-        Ellipse2D ellipse = new Ellipse2D.Double();
+
+        static Ellipse2D dellipse = new Ellipse2D.Double();
+        static Ellipse2D ellipse = new Ellipse2D.Double();
+
+        static ArrayList<Ellipse2D> ellipse2DArrayList = new ArrayList<>();
 
         private static final Font FONT = new Font("Arial", Font.BOLD, 18);
 
-            private List<Polygon> polygons = new ArrayList<Polygon>();
+            private static List<Polygon> polygons = new ArrayList<Polygon>();
 
             private static Polygon currentPolygon = new Polygon();
 
 
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (KeyBoardAllowed) {
-                    int key = e.getKeyCode();
-
-                    if (currentPolygon.npoints > 2 && key == KeyEvent.VK_ENTER && KeyAllowedSavingPolyong) {
-                        System.out.println("Pressed Enter");
-                        createWindow(); //new path, but don´t just open window and go to polygon finished
-                    }
-
-
-                    if (key == KeyEvent.VK_BACK_SPACE && currentPolygon.npoints >= 1 && KeyAllowedSavingPolyong) {
-                        System.out.println("Pressed Backspace");
-                        int oldPtx = 0;
-                        int oldPty = 0;
-                        clearCurrentPolygon();
-                        if (Polyboolcnt > 1) {
-                            Polyboolcnt = Polyboolcnt - 2;
-                            for (int i = 0; i < Polyboolcnt; i++) {
-                                oldPtx = IntPolyPoints.get(i);
-                                i += 1;
-                                oldPty = IntPolyPoints.get(i);
-                                currentPolygon.addPoint(oldPtx, oldPty);
-                            }
-                            IntPolyPoints.remove(IntPolyPoints.size() - 1);
-                            IntPolyPoints.remove(IntPolyPoints.size() - 1);
-                            //        listPolygonPoints.remove(listPolygonPoints.size() - 2);
-                            //        listPolygonPoints.remove(listPolygonPoints.size() - 2);
-                        } else {
-                            Polyboolcnt = 0;
-                            IntPolyPoints.clear();
-                            listPolygonPoints.clear();
-                        }
-                    }
-
-                    if (key == KeyEvent.VK_SPACE) {
-                        System.out.println("Pressed Space");
-                        try {
-                            PolygonFinished();
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-
-    public void PolygonFinished() throws IOException {
-        if(FinishedPolygon) {
+    public static void PolygonFinished() throws IOException {
             NewPolyBool = true;
             int helpintx = currentPolygon.xpoints[0];
             int helpinty = currentPolygon.ypoints[0];
@@ -116,121 +70,85 @@ public class DrawPolygons {
             IntPolyPoints.add(helpintx);
             IntPolyPoints.add(helpinty);
             createPolygon();
-        }
     }
-
 
             private MouseAdapter mouseListener = new MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent e) {
-/*
-                    if (ellipse.contains(e.getX(), e.getY())) {
-                        System.out.println("RUUUUUUUUUUUUUUUN");
 
-                        int x = e.getX(); // x-coordinate of point
-                        int y = e.getY(); // y-coordinate of point
-
-                        ellipse.setFrame(e.getX(),e.getY(),);
-
-                        /*ellipse = null;
-                        for (int i = ellipse.size() - 1; i >= 0; i--) { // check shapes from front to back
-                            Ellipse2D s = (Ellipse2D) ellipse.get(i);
-                            if (s.containsPoint(x, y)) {
-                                dragShape = s;
-                                prevDragX = x;
-                                prevDragY = y;
-                                ellipse = s;
-                                break;
-                            }
-
+               /*     for (int ecnt = 0; ecnt < ellipse2DArrayList.size(); ecnt++) {
+                        if (ellipse2DArrayList.get(ecnt).contains(e.getX(), e.getY())) {
+                            dellipse = ellipse2DArrayList.get(ecnt);
+                            ellipsenbool = true;
                         }
-
-                    } else */ {
-
+                    }
+                    if (!ellipsenbool) { */
 
                         //LeftMouseButton handling => draw
-                        if (NewPolyBool == true && SwingUtilities.isLeftMouseButton(e)) {
+                        if (e.getY() < 800 && NewPolyBool == true && SwingUtilities.isLeftMouseButton(e)) {
                             if (e.getClickCount() == 1) {
                                 addPoint(e.getX(), e.getY());
-                                KeyAllowedSavingPolyong = true;
+                                KeyAllowedSavingPolygon = true;
                             }
 
 
                             //RightMouseButton handling => cancel drawing
-                        } else if (RightClickAllowed == true && NewPolyBool == true &&
+                        } else if (NewPolyBool == true &&
                                 SwingUtilities.isRightMouseButton(e)) {
 
                             clearCurrentPolygon();
                             System.out.println("Polygon cleared!");
 
-                            Polyboolcnt = Polyboolcnt + listcnt;
                             //loop for removing already inserted coord points of canceled polygon
                             for (int i = Polyboolcnt; i > 0; i--) {
-                                listPolygonPoints.remove(i - 1);
-                                IntPolyPoints.remove(i-1);
+                                IntPolyPoints.remove(i - 1);
                             }
 
-                            //setting list index to value before adding points of canceled polygon
                             Polyboolcnt = 0; //new polygon
-                            RightClickAllowed = false;
                         }
                     }
-                }
-
             };
 
-            public Drawing() {
-                addMouseListener(mouseListener);
-                addKeyListener(this);
-               }
+    public Drawing(){
+        this.addMouseListener(mouseListener);
+    }
+
         public void addNotify() {
             super.addNotify();
             requestFocus();
         }
 
-            protected void addPoint(int x, int y) {
+            protected static void addPoint(int x, int y) {
 
                 currentPolygon.addPoint(x, y);
                 System.out.println("x + y: " + x + ", " + y);
 
-                listPolygonPoints.add(String.valueOf(x));//x-coord of polygon
-                IntPolyPoints.add(x);
+                IntPolyPoints.add(x); //x-coord of new point of polygon
                 Polyboolcnt += 1;
 
-                listPolygonPoints.add(String.valueOf(y)); //y-coord of polygon
-                IntPolyPoints.add(y);
+                IntPolyPoints.add(y); //y-coord of new point of polygon
                 Polyboolcnt += 1;
                 System.out.println("Polyboolcnt: " + Polyboolcnt);
-                System.out.println("listcnt: " + listcnt);
-                repaint();
-                RightClickAllowed = true;
-                KeyBoardAllowed = true;
+                FrameRepaint();
             }
 
             //canceling to draw polygon
-            protected void clearCurrentPolygon() {
+            protected static void clearCurrentPolygon() {
                 currentPolygon = new Polygon();
-                repaint();
+                FrameRepaint();
             }
 
             //polygon must consist out of at least 3 points minimum
-            public void createPolygon() throws IOException { //protected
+            public static void createPolygon() throws IOException { //protected
                 if (currentPolygon.npoints > 2) {
                     polygons.add(currentPolygon);
                     System.out.println("Polygon finished! \n \n");
-                    listcnt = Polyboolcnt + listcnt;
                     Polyboolcnt = 0; //polygon finished, ready for new one
-                    listcnt += 1;
                    sendPolygon();
-                   listPolygonPoints = new ArrayList<String>();;
-                   IntPolyPoints = new ArrayList<Integer>();
-
-            //        RightClickAllowed = false;
-            //        KeyBoardAllowed = false;
-                    FinishedPolygon = false;
+                   IntPolyPoints = new ArrayList<>();
                   }
                 clearCurrentPolygon();
-                repaint();
+                FrameRepaint();
             }
 
             @Override
@@ -243,7 +161,21 @@ public class DrawPolygons {
                // super.paintComponent(g);
 
                 //setting the floorplan as the background
-                //if clause for seperate floorplans depending on building
+
+                /*      try {
+                    urlfloorplan = new URL("https://www.study-in-bavaria.de/fileadmin/_migrated/pics/Geb33_a_02.jpg");
+                } catch (MalformedURLException e1) {
+                    e1.printStackTrace();
+                }
+
+                try {
+                     BufferedImage image = ImageIO.read(urlfloorplan);
+                     g.drawImage(image,0,0,null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } */
+
+
                 File originalimage = new File("C:\\Users\\alexa\\Desktop\\BA\\floor plans\\7th\\coordpainting3.png");
 
                 BufferedImage img = null;
@@ -284,7 +216,6 @@ public class DrawPolygons {
                 } else {
                     int[] x = polygon.xpoints;
                     int[] y = polygon.ypoints;
-                    //g.drawPolygon(polygon);
 
                     for (int i = 0; i < polygon.npoints - 1; i++)
                         g2.drawLine(x[i], y[i], x[i + 1], y[i + 1]);
@@ -297,20 +228,21 @@ public class DrawPolygons {
             }
 
             //Designation of the corner points of a polygon
-            private void drawNthPoint(Graphics g, Polygon polygon, int nth) {
+            private static void drawNthPoint(Graphics g, Polygon polygon, int nth) {
                 Graphics2D g2 = (Graphics2D) g;
                 // Only works 26 times!
                 String name = Character.toString((char) ('A' + nth));
                 int x = polygon.xpoints[nth];
                 int height = g.getFontMetrics().getHeight();
                 int y = polygon.ypoints[nth] < height ? polygon.ypoints[nth] + height : polygon.ypoints[nth];
-                g.drawString(name, x, y);
-                ellipse = new Ellipse2D.Double(x,y,20,20);
+                g.drawString(name, x+10, y);
+                ellipse = new Ellipse2D.Double(x-10,y-10,20,20);
+                ellipse2DArrayList.add(ellipse);
                 g2.draw(ellipse);
             }
 
 
-            public void drawGivenPolygons(Graphics g, int[] points) {
+            public static void drawGivenPolygons(Graphics g, int[] points) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setStroke(new BasicStroke(3)); //thickness of lines
                 g2.setColor(Color.RED);
@@ -336,7 +268,7 @@ public class DrawPolygons {
                 g2.setColor(Color.green);
             }
 
-            public void sendPolygon() throws IOException {
+            public static void sendPolygon() throws IOException {
 
                 String coordinatesOfPolygon = "";
 
@@ -367,11 +299,10 @@ public class DrawPolygons {
                 System.out.println(response.getStatusLine().getStatusCode());
                 System.out.println(EntityUtils.toString(response.getEntity()));
             }
-
     }
 
     protected static void initUI() {
-        final JFrame frame = new JFrame("DrawPolygons");
+         frame = new JFrame("DrawPolygons");
 
             //DropDown Menu
                 //selection of buildings
@@ -390,11 +321,9 @@ public class DrawPolygons {
                 floorSelectionbox.setVisible(false); //set floorSelection just visible when building is already chosen
 
         //when selecting a building getting the floorselection via http post request
-    /*            buildingSelectionbox.addActionListener(new ActionListener() {
+                buildingSelectionbox.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-
-                        floorSelectionbox.setVisible(false);
                         BuildingByUserStr = "\""+buildingSelectionbox.getItemAt(buildingSelectionbox.getSelectedIndex())+"\"";
 
                         //getting the floors from the database
@@ -422,7 +351,7 @@ public class DrawPolygons {
                         }
                         System.out.println(floorhttpanswer);
 
-
+                        //splitting the String to get only the floor names shown in the dropdown list
                         int j=0;
                         String[] arrOfStrfloors = floorhttpanswer.split("[{+:]",0);
                         j=0;
@@ -440,15 +369,15 @@ public class DrawPolygons {
                             FloorNameByUserStrArray[k] = CopyfloorStr[k];
                         }
 
+                        //deleting the old dropdown list and adding the items from new selection of building
                         floorSelectionbox.removeAllItems();
                         for(int i=0;i<FloorNameByUserStrArray.length;i++) {
                             floorSelectionbox.addItem(FloorNameByUserStrArray[i]);
                         }
 
                         floorSelectionbox.setVisible(true);
-new Drawing();
                     }
-                }); */
+                });
 
 
 
@@ -457,8 +386,6 @@ new Drawing();
             @Override
             public void actionPerformed(ActionEvent e) {
                  FloorSelectionByUserStr ="\""+floorSelectionbox.getItemAt(floorSelectionbox.getSelectedIndex())+"\"";
-
-
 
                       /*  String payloadbuilding = "{"+
                                 "\"building\": "+BuildingByUserStr+
@@ -489,49 +416,107 @@ new Drawing();
                         frame.update(frame.getGraphics());
                     */
 
-new Drawing();
+                       /*      try {
+                    urlfloorplan = new URL("https://www.study-in-bavaria.de/fileadmin/_migrated/pics/Geb33_a_02.jpg");
+                } catch (MalformedURLException e1) {
+                    e1.printStackTrace();
+                } */
+
             }
         });
-
 
         frame.add(buildingSelectionbox);
         frame.add(floorSelectionbox);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.add(new Drawing());
+
+        Drawing Drawinginst = new Drawing();
+        InputMap im= Drawinginst.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        //enter handling
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0,true),"Enter");
+        ActionMap ap = Drawinginst.getActionMap();
+        ap.put("Enter", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (Drawinginst.currentPolygon.npoints > 2 && KeyAllowedSavingPolygon) {
+                    System.out.println("Pressed Enter");
+                    createWindow(); //new path, but don´t just open window and go to polygon finished
+                }
+            }
+        });
+
+        //backspace handling
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE,0,true),"Backspace");
+        ap.put("Backspace", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (Drawinginst.currentPolygon.npoints >= 1 && KeyAllowedSavingPolygon) {
+                    System.out.println("Pressed Backspace");
+                    int oldPtx = 0;
+                    int oldPty = 0;
+                    Drawinginst.clearCurrentPolygon();
+                    if (Polyboolcnt > 1) {
+                        Polyboolcnt = Polyboolcnt - 2;
+                        for (int i = 0; i < Polyboolcnt; i++) {
+                            oldPtx = IntPolyPoints.get(i);
+                            i += 1;
+                            oldPty = IntPolyPoints.get(i);
+                            Drawinginst.currentPolygon.addPoint(oldPtx, oldPty);
+                        }
+                        IntPolyPoints.remove(IntPolyPoints.size() - 1);
+                        IntPolyPoints.remove(IntPolyPoints.size() - 1);
+
+                    } else {
+                        Polyboolcnt = 0;
+                        IntPolyPoints.clear();
+                    }
+                }
+            }
+        });
+
+
+        frame.add(Drawinginst);
 
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
-
-
-    private static void createWindow() {
-        JFrame frame = new JFrame("Name of room");
-        createUI(frame);
-        frame.setSize(560, 200);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+    static void FrameRepaint(){
+        frame.repaint();
     }
 
-    private static void createUI(final JFrame frame) {
+    private static void createWindow() {
+        JFrame wframe = new JFrame("Name of room");
+        createUI(wframe);
+        wframe.setSize(560, 200);
+        wframe.setLocationRelativeTo(null);
+        wframe.setVisible(true);
+    }
+
+    private static void createUI(final JFrame wframe) {
         JPanel panel = new JPanel();
         LayoutManager layout = new FlowLayout();
         panel.setLayout(layout);
+
 
         final JButton CloseBtnW = new JButton("Save this name");
         CloseBtnW.setVisible(false);
         CloseBtnW.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                listPolygonPoints.add(RoomNameByUserStr);
-                System.out.println("String list: "+listPolygonPoints);
+              //  listPolygonPoints.add(RoomNameByUserStr);
+             //   System.out.println("String list: "+listPolygonPoints);
                 System.out.println("Int list: "+IntPolyPoints);
                 NewPolyBool = false;
-                KeyAllowedSavingPolyong = false;
-                FinishedPolygon = true;
-                frame.dispose();
+                KeyAllowedSavingPolygon = false;
+                try {
+                    PolygonFinished();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                wframe.dispose();
             }
         });
 
@@ -543,7 +528,7 @@ new Drawing();
             public void actionPerformed(ActionEvent e) {
                 String result = (String)JOptionPane.showInputDialog(
 
-                        frame,
+                        wframe,
                         "Please type in the name of the room.",
                         "Name of room",
                         JOptionPane.PLAIN_MESSAGE,
@@ -565,7 +550,7 @@ new Drawing();
         panel.add(CloseBtnW);
         panel.add(button);
         panel.add(label);
-        frame.getContentPane().add(panel, BorderLayout.CENTER);
+        wframe.getContentPane().add(panel, BorderLayout.CENTER);
     }
 
 
