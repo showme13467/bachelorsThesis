@@ -15,7 +15,7 @@ public class Httptest {
 
         try {
             // String result = sendPOST("https://httpbin.org/post");
-            String result = sendPOST("https://www.irt-ap.cs.columbia.edu/post");
+            String result = sendPOST("https://www.irt-ap.cs.columbia.edu/api/create_room/");
             System.out.println(result);
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,5 +1,13 @@
 package Calc;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
@@ -17,9 +25,13 @@ public class DrawPolygons {
     public static Boolean NewPolyBool = true;
     public static Boolean RightClickAllowed = false;
     public static Boolean KeyBoardAllowed = false;
-    public static Boolean Actbool = false;
-    
-    
+    public static Boolean FinishedPolygon = false;
+    public static Boolean KeyAllowedSavingPolyong = false;
+    public static String[] FloorNameByUserStrArray;
+    public static String FloorSelectionByUserStr;
+    public static String[] BuildingByUserStrArray;
+    public static String BuildingByUserStr;
+
     static List<String> listPolygonPoints = new ArrayList<String>(); //list of coord points of polygons and name of room
     static List<Integer> IntPolyPoints = new ArrayList<Integer>();
 
@@ -27,24 +39,8 @@ public class DrawPolygons {
     public static int listcnt = 0; //cnt for list index
 
 
-    public static void simulatingkeyfct() {
-        Robot robot = null;
-        try {
-            robot = new Robot();
-        } catch (AWTException e1) {
-            e1.printStackTrace();
-        }
-
-        // Simulate a key press
-        robot.keyPress(KeyEvent.VK_ENTER);
-        robot.keyRelease(KeyEvent.VK_ENTER);
-    }
-
     private static final int Window_width = 1210;
         private static final int Window_height = 1200;
-
-        public static Polygon ContinuePolygon = new Polygon();
-
 
     public static class Drawing extends JPanel implements KeyListener {
 
@@ -56,61 +52,71 @@ public class DrawPolygons {
 
             private static Polygon currentPolygon = new Polygon();
 
-    @Override
-    public void keyTyped(KeyEvent e){
-      }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if(KeyBoardAllowed == true){
-            int key = e.getKeyCode();
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
 
-        if (currentPolygon.npoints > 2 && key == KeyEvent.VK_ENTER) {
-            ContinuePolygon = currentPolygon;
-            System.out.println("Pressed Enter");
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (KeyBoardAllowed) {
+                    int key = e.getKeyCode();
+
+                    if (currentPolygon.npoints > 2 && key == KeyEvent.VK_ENTER && KeyAllowedSavingPolyong) {
+                        System.out.println("Pressed Enter");
+                        createWindow(); //new path, but don´t just open window and go to polygon finished
+                    }
+
+
+                    if (key == KeyEvent.VK_BACK_SPACE && currentPolygon.npoints >= 1 && KeyAllowedSavingPolyong) {
+                        System.out.println("Pressed Backspace");
+                        int oldPtx = 0;
+                        int oldPty = 0;
+                        clearCurrentPolygon();
+                        if (Polyboolcnt > 1) {
+                            Polyboolcnt = Polyboolcnt - 2;
+                            for (int i = 0; i < Polyboolcnt; i++) {
+                                oldPtx = IntPolyPoints.get(i);
+                                i += 1;
+                                oldPty = IntPolyPoints.get(i);
+                                currentPolygon.addPoint(oldPtx, oldPty);
+                            }
+                            IntPolyPoints.remove(IntPolyPoints.size() - 1);
+                            IntPolyPoints.remove(IntPolyPoints.size() - 1);
+                            //        listPolygonPoints.remove(listPolygonPoints.size() - 2);
+                            //        listPolygonPoints.remove(listPolygonPoints.size() - 2);
+                        } else {
+                            Polyboolcnt = 0;
+                            IntPolyPoints.clear();
+                            listPolygonPoints.clear();
+                        }
+                    }
+
+                    if (key == KeyEvent.VK_SPACE) {
+                        System.out.println("Pressed Space");
+                        try {
+                            PolygonFinished();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+
+    public void PolygonFinished() throws IOException {
+        if(FinishedPolygon) {
+            NewPolyBool = true;
             int helpintx = currentPolygon.xpoints[0];
             int helpinty = currentPolygon.ypoints[0];
-            currentPolygon.addPoint(helpintx,helpinty);
+            currentPolygon.addPoint(helpintx, helpinty);
             IntPolyPoints.add(helpintx);
             IntPolyPoints.add(helpinty);
             createPolygon();
         }
-        if (key == KeyEvent.VK_BACK_SPACE) {
-            System.out.println("Pressed Backspace");
-            int oldPtx = 0;
-            int oldPty = 0;
-            clearCurrentPolygon();
-            if(Polyboolcnt > 1) {
-                Polyboolcnt = Polyboolcnt - 2;
-                for (int i = 0; i < Polyboolcnt; i++) {
-                    oldPtx = IntPolyPoints.get(i);
-                    i += 1;
-                    oldPty = IntPolyPoints.get(i);
-                    currentPolygon.addPoint(oldPtx, oldPty);
-                }
-                IntPolyPoints.remove(IntPolyPoints.size() - 1);
-                IntPolyPoints.remove(IntPolyPoints.size() - 1);
-        //        listPolygonPoints.remove(listPolygonPoints.size() - 2);
-        //        listPolygonPoints.remove(listPolygonPoints.size() - 2);
-            }
-            else {
-                Polyboolcnt = 0;
-                IntPolyPoints.clear();
-                listPolygonPoints.clear();
-            }
-        }
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
-
-
-        public void ContinuetoDraw(){
-        clearCurrentPolygon();
-        currentPolygon = ContinuePolygon;
-        repaint();
     }
 
 
@@ -123,7 +129,10 @@ public class DrawPolygons {
 
                         int x = e.getX(); // x-coordinate of point
                         int y = e.getY(); // y-coordinate of point
-                        ellipse = null;
+
+                        ellipse.setFrame(e.getX(),e.getY(),);
+
+                        /*ellipse = null;
                         for (int i = ellipse.size() - 1; i >= 0; i--) { // check shapes from front to back
                             Ellipse2D s = (Ellipse2D) ellipse.get(i);
                             if (s.containsPoint(x, y)) {
@@ -138,17 +147,15 @@ public class DrawPolygons {
 
                     } else */ {
 
+
                         //LeftMouseButton handling => draw
                         if (NewPolyBool == true && SwingUtilities.isLeftMouseButton(e)) {
                             if (e.getClickCount() == 1) {
                                 addPoint(e.getX(), e.getY());
-                            } else if (e.getClickCount() == 2) {
-                                currentPolygon.addPoint(currentPolygon.xpoints[0],currentPolygon.ypoints[0]);
-                                IntPolyPoints.add(e.getX());
-                                IntPolyPoints.add(e.getY());
-                                createPolygon();
-
+                                KeyAllowedSavingPolyong = true;
                             }
+
+
                             //RightMouseButton handling => cancel drawing
                         } else if (RightClickAllowed == true && NewPolyBool == true &&
                                 SwingUtilities.isRightMouseButton(e)) {
@@ -175,7 +182,7 @@ public class DrawPolygons {
             public Drawing() {
                 addMouseListener(mouseListener);
                 addKeyListener(this);
-            }
+               }
         public void addNotify() {
             super.addNotify();
             requestFocus();
@@ -207,17 +214,20 @@ public class DrawPolygons {
             }
 
             //polygon must consist out of at least 3 points minimum
-            public void createPolygon() { //protected
+            public void createPolygon() throws IOException { //protected
                 if (currentPolygon.npoints > 2) {
                     polygons.add(currentPolygon);
                     System.out.println("Polygon finished! \n \n");
                     listcnt = Polyboolcnt + listcnt;
                     Polyboolcnt = 0; //polygon finished, ready for new one
                     listcnt += 1;
-                    createWindow();
-                    NewPolyBool = false;
-                    RightClickAllowed = false;
-                    KeyBoardAllowed = false;
+                   sendPolygon();
+                   listPolygonPoints = new ArrayList<String>();;
+                   IntPolyPoints = new ArrayList<Integer>();
+
+            //        RightClickAllowed = false;
+            //        KeyBoardAllowed = false;
+                    FinishedPolygon = false;
                   }
                 clearCurrentPolygon();
                 repaint();
@@ -230,10 +240,12 @@ public class DrawPolygons {
 
             @Override
             protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
+               // super.paintComponent(g);
 
                 //setting the floorplan as the background
+                //if clause for seperate floorplans depending on building
                 File originalimage = new File("C:\\Users\\alexa\\Desktop\\BA\\floor plans\\7th\\coordpainting3.png");
+
                 BufferedImage img = null;
                 try {
                     img = ImageIO.read(originalimage);
@@ -324,62 +336,166 @@ public class DrawPolygons {
                 g2.setColor(Color.green);
             }
 
+            public void sendPolygon() throws IOException {
+
+                String coordinatesOfPolygon = "";
+
+                for(int i=0;i<currentPolygon.npoints;i++){
+                    coordinatesOfPolygon +="["+currentPolygon.xpoints[i]+", "+currentPolygon.ypoints[i]+"],";
+                }
+                coordinatesOfPolygon = coordinatesOfPolygon.substring(0,coordinatesOfPolygon.length()-1);
+
+                RoomNameByUserStr = "\""+RoomNameByUserStr+"\"";
+
+                //setting up a room through sending a finished polygon to the database
+                String payload = "{" +
+                        "\"coordinates\": [[" +
+                        coordinatesOfPolygon +
+                        "]]"+ ","+
+                        "\"name\": "+ RoomNameByUserStr+ ", " +
+                        "\"floor\": "+ FloorSelectionByUserStr+ ", "+
+                        "\"building\": "+ BuildingByUserStr+
+                        "}";
+                StringEntity entity = new StringEntity(payload,
+                        ContentType.APPLICATION_JSON);
+
+                HttpClient httpClient = HttpClientBuilder.create().build();
+                HttpPost request = new HttpPost("http://irt-ap.cs.columbia.edu/api/create_room/");
+                request.setEntity(entity);
+
+                HttpResponse response = httpClient.execute(request);
+                System.out.println(response.getStatusLine().getStatusCode());
+                System.out.println(EntityUtils.toString(response.getEntity()));
+            }
+
     }
-
-
-
-
-
-    final static Font Btnfont = new Font("Serif", Font.BOLD, 20);
 
     protected static void initUI() {
         final JFrame frame = new JFrame("DrawPolygons");
 
-        final JButton UndoBtn = new JButton("Undo");
-        UndoBtn.setFont(Btnfont);
-        UndoBtn.setBackground(Color.LIGHT_GRAY);
-        UndoBtn.setForeground(Color.black);
-        UndoBtn.setBounds(800,810, 200,100);
-        UndoBtn.setVisible(true);
-        UndoBtn.addActionListener(new ActionListener() {
+            //DropDown Menu
+                //selection of buildings
+                String[] buildings = BuildingByUserStrArray; //array for buildings from database
+                final JComboBox buildingSelectionbox = new JComboBox(buildings);
+                buildingSelectionbox.setBounds(100, 830, 200, 40);
+                buildingSelectionbox.setFont(new Font("Arial",Font.BOLD,16));
+
+                //selection of floors
+                String[] floors = FloorNameByUserStrArray; //array for floors from database depending on building
+                final JComboBox floorSelectionbox = new JComboBox(floors);
+                floorSelectionbox.setBounds(350,830, 200, 40);
+                floorSelectionbox.setFont(new Font("Arial",Font.BOLD,16));
+
+
+                floorSelectionbox.setVisible(false); //set floorSelection just visible when building is already chosen
+
+        //when selecting a building getting the floorselection via http post request
+    /*            buildingSelectionbox.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        floorSelectionbox.setVisible(false);
+                        BuildingByUserStr = "\""+buildingSelectionbox.getItemAt(buildingSelectionbox.getSelectedIndex())+"\"";
+
+                        //getting the floors from the database
+                        String payloadbuilding = "{"+
+                                "\"building\": "+BuildingByUserStr+
+                                "}";
+                        StringEntity entityfloor = new StringEntity(payloadbuilding,
+                                ContentType.APPLICATION_JSON);
+
+                        HttpClient httpClientfloor = HttpClientBuilder.create().build();
+                        HttpPost requestfloor = new HttpPost("http://irt-ap.cs.columbia.edu/api/get_floors/");
+                        requestfloor.setEntity(entityfloor);
+
+                        HttpResponse responsefloor = null;
+                        try {
+                            responsefloor = httpClientfloor.execute(requestfloor);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        String floorhttpanswer = null;
+                        try {
+                            floorhttpanswer = EntityUtils.toString(responsefloor.getEntity());
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        System.out.println(floorhttpanswer);
+
+
+                        int j=0;
+                        String[] arrOfStrfloors = floorhttpanswer.split("[{+:]",0);
+                        j=0;
+                        int floorarraylength = arrOfStrfloors.length-1;
+                        FloorNameByUserStrArray = new String[floorarraylength/2];
+                        String[] CopyfloorStr = new String[floorarraylength];
+                        for(int i=1;i<floorarraylength;i++){
+                            arrOfStrfloors[i] = arrOfStrfloors[i].substring(1,arrOfStrfloors[i].length()-1);
+                            CopyfloorStr[j] = arrOfStrfloors[i];
+                            j+=1;
+                            i=i+1;
+                        }
+
+                        for(int k=0;k<floorarraylength/2;k++) {
+                            FloorNameByUserStrArray[k] = CopyfloorStr[k];
+                        }
+
+                        floorSelectionbox.removeAllItems();
+                        for(int i=0;i<FloorNameByUserStrArray.length;i++) {
+                            floorSelectionbox.addItem(FloorNameByUserStrArray[i]);
+                        }
+
+                        floorSelectionbox.setVisible(true);
+new Drawing();
+                    }
+                }); */
+
+
+
+        //when selecting a floor getting the floorplan via http post request
+        floorSelectionbox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                 FloorSelectionByUserStr ="\""+floorSelectionbox.getItemAt(floorSelectionbox.getSelectedIndex())+"\"";
 
 
+
+                      /*  String payloadbuilding = "{"+
+                                "\"building\": "+BuildingByUserStr+
+                                "\"floor\": "+FloorSelectionByUserStr+
+                                "}";
+                        StringEntity entityfloor = new StringEntity(payloadbuilding,
+                                ContentType.APPLICATION_JSON);
+
+                        HttpClient httpClientfloor = HttpClientBuilder.create().build();
+                        HttpPost requestfloor = new HttpPost("http://irt-ap.cs.columbia.edu/api/get_floorplan/");
+                        requestfloor.setEntity(entityfloor);
+
+                        HttpResponse responsefloor = null;
+                        try {
+                            responsefloor = httpClientfloor.execute(requestfloor);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        String floorhttpanswer = null;
+                        try {
+                            floorhttpanswer = EntityUtils.toString(responsefloor.getEntity());
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        System.out.println(floorhttpanswer);
+
+                        //showing floorplan
+                        frame.update(frame.getGraphics());
+                    */
+
+new Drawing();
             }
         });
 
-        final JButton CloseBtn = new JButton("Close");
-        CloseBtn.setFont(Btnfont);
-        CloseBtn.setBackground(Color.LIGHT_GRAY);
-        CloseBtn.setForeground(Color.black);
-        CloseBtn.setBounds(500,810, 200,100);
-        CloseBtn.setVisible(true);
-        CloseBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
 
-        final JButton SavePolygonBtn = new JButton("Save Polygon");
-        SavePolygonBtn.setFont(Btnfont);
-        SavePolygonBtn.setBackground(Color.LIGHT_GRAY);
-        SavePolygonBtn.setForeground(Color.black);
-        SavePolygonBtn.setBounds(200,810, 200,100);
-        SavePolygonBtn.setVisible(true);
-        SavePolygonBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                DrawPolygons.simulatingkeyfct();
-
-            }
-        });
-
-        frame.add(UndoBtn);
-        frame.add(SavePolygonBtn);
-        frame.add(CloseBtn);
+        frame.add(buildingSelectionbox);
+        frame.add(floorSelectionbox);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(new Drawing());
@@ -387,9 +503,9 @@ public class DrawPolygons {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-
-
     }
+
+
 
     private static void createWindow() {
         JFrame frame = new JFrame("Name of room");
@@ -404,28 +520,6 @@ public class DrawPolygons {
         LayoutManager layout = new FlowLayout();
         panel.setLayout(layout);
 
-        final JButton ContinueDrawingBtn = new JButton("Continue Drawing");
-        ContinueDrawingBtn.setVisible(true);
-        ContinueDrawingBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                int oldPtx = 0;
-                int oldPty = 0;
-                    Polyboolcnt = Polyboolcnt - 2;
-                    for (int i = 0; i < Polyboolcnt; i++) {
-                        oldPtx = IntPolyPoints.get(i);
-                        i += 1;
-                        oldPty = IntPolyPoints.get(i);
-                        ContinuePolygon.addPoint(oldPtx, oldPty);
-                    }
-                    IntPolyPoints.remove(IntPolyPoints.size() - 1);
-                    IntPolyPoints.remove(IntPolyPoints.size() - 1);
-           //     Drawing.ContinuetoDraw();
-                frame.dispose();
-            }
-        });
-
         final JButton CloseBtnW = new JButton("Save this name");
         CloseBtnW.setVisible(false);
         CloseBtnW.addActionListener(new ActionListener() {
@@ -434,12 +528,14 @@ public class DrawPolygons {
                 listPolygonPoints.add(RoomNameByUserStr);
                 System.out.println("String list: "+listPolygonPoints);
                 System.out.println("Int list: "+IntPolyPoints);
-                NewPolyBool = true;
+                NewPolyBool = false;
+                KeyAllowedSavingPolyong = false;
+                FinishedPolygon = true;
                 frame.dispose();
             }
         });
 
-        JButton button = new JButton("Type in the name of the room.");
+        JButton button = new JButton("Please type in the name of the room.");
         final JLabel label = new JLabel();
 
         button.addActionListener(new ActionListener() {
@@ -448,7 +544,7 @@ public class DrawPolygons {
                 String result = (String)JOptionPane.showInputDialog(
 
                         frame,
-                        "Type in the name of the room.",
+                        "Please type in the name of the room.",
                         "Name of room",
                         JOptionPane.PLAIN_MESSAGE,
                         null,
@@ -459,55 +555,174 @@ public class DrawPolygons {
                     label.setText("You selected: " + result);
                     RoomNameByUserStr = result;
                     CloseBtnW.setVisible(true);
+
                 }else {
                     label.setText("None selected");
                 }
             }
         });
 
-        panel.add(ContinueDrawingBtn);
         panel.add(CloseBtnW);
         panel.add(button);
         panel.add(label);
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.getContentPane().add(panel, BorderLayout.CENTER);
     }
 
 
-    public static void main(String[] args) {
-            SwingUtilities.invokeLater(new Runnable() {
+    public static void main(String[] args) throws IOException {
 
-                @Override
-                public void run() {
-                    initUI();
-                   }
-            });
+        //getting the buildings from the database
+        String payloadempty = "{"+
+                "}";
+        StringEntity entitybuilding = new StringEntity(payloadempty,
+                ContentType.APPLICATION_JSON);
 
+        HttpClient httpClientbuilding = HttpClientBuilder.create().build();
+        HttpPost requestbuilding = new HttpPost("http://irt-ap.cs.columbia.edu/api/get_buildings/");
+        requestbuilding.setEntity(entitybuilding);
+
+        HttpResponse responsebuilding = httpClientbuilding.execute(requestbuilding);
+        String buildinghttpanswer = EntityUtils.toString(responsebuilding.getEntity());
+        System.out.println(buildinghttpanswer);
+
+        String[] arrOfStrbuilding = buildinghttpanswer.split("[?+?]",0);
+        int j=0;
+
+        char letter = '?';
+        String str = buildinghttpanswer.toLowerCase();
+        letter = Character.toLowerCase(letter);
+        int buildingarraylength = 0;
+
+        for (int i = 0; i < str.length(); i++) {
+            char currentLetter = str.charAt(i);
+            if (currentLetter == letter)
+                buildingarraylength++;
         }
+
+        buildingarraylength = buildingarraylength/2;
+        BuildingByUserStrArray = new String[buildingarraylength];
+        buildingarraylength=buildingarraylength*2;
+        for(int i=0;i<buildingarraylength;i++){
+            i+=1;
+            BuildingByUserStrArray[j] = arrOfStrbuilding[i];
+            j+=1;
+        }
+
+
+
+        //getting the floors from the database
+        String payloadbuilding = "{"+
+                "\"building\": "+"\"Schapiro\""+
+                "}";
+        StringEntity entityfloor = new StringEntity(payloadbuilding,
+                ContentType.APPLICATION_JSON);
+
+        HttpClient httpClientfloor = HttpClientBuilder.create().build();
+        HttpPost requestfloor = new HttpPost("http://irt-ap.cs.columbia.edu/api/get_floors/");
+        requestfloor.setEntity(entityfloor);
+
+        HttpResponse responsefloor = null;
+        try {
+            responsefloor = httpClientfloor.execute(requestfloor);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        String floorhttpanswer = null;
+        try {
+            floorhttpanswer = EntityUtils.toString(responsefloor.getEntity());
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        System.out.println(floorhttpanswer);
+
+
+        j=0;
+        String[] arrOfStrfloors = floorhttpanswer.split("[{+:]",0);
+        int floorarraylength = arrOfStrfloors.length-1;
+        FloorNameByUserStrArray = new String[floorarraylength/2];
+        String[] CopyfloorStr = new String[floorarraylength];
+        for(int i=1;i<floorarraylength;i++){
+            arrOfStrfloors[i] = arrOfStrfloors[i].substring(1,arrOfStrfloors[i].length()-1);
+            CopyfloorStr[j] = arrOfStrfloors[i];
+            j+=1;
+            i=i+1;
+        }
+
+        for(int k=0;k<floorarraylength/2;k++) {
+            FloorNameByUserStrArray[k] = CopyfloorStr[k];
+        }
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                initUI();
+            }
+        });
+
+
+
+
+        //open floor menu
+       // new ComboBoxExample();
+
+        /*
+//--------------------------------------------------------------------------------
+
+
+
+//---------------------------------------------------------------------------------
+
+*/
+ //       String emergencytest = "[{\"7th Floor\":\"5ddda3799c5b6a511bd792aa\"},{\"8th Floor\":\"5dddab9264f41a53379cc52d\"},{\"9th Floor\":\"5dddbb609a15f3595a8ce980\"},{\"10th Floor\":\"5dddbb659a15f3595a8ce981\"},{\"11th Floor\":\"5dddbb769a15f3595a8ce982\"}]\n"
+
+
+
+
+
+
+
+
+
     }
+    }
+
 
 
 
     //TODO
 /*
-Show already written polygons *[finished]*
+Show already written polygons                                       *[finished]*
 
-keyboard enter and backspace *[finished]*
+keyboard enter and backspace                                        *[finished]*
 
-drag and drop ***[PROGRESS, stuck]*** maybe JavaFx
+drag and drop                                                       **********[PROGRESS, stuck]**********
 
-buttons disappear when mouse is moving
+undo function, delete current and paint new with 2 points less      *[finished]*
 
-undo function *[finished]* delete current and paint new with 2 points less
+line to line not first point and last point connect to new point    *[finished]*
 
-buttons function  ***[PROGRESS, stuck]*** simulate pressing enter key
+just one name in Array                                              *[finished]*
 
-line to line not first point and last point connect to new point *[finished]*
+split Array into int Arrays for correct data                        *[finished]*
 
-multiple polygons for one name => hallway contains different rooms
+no buttons! let the "x" lead to continue                            *[finished]*
 
-just one name in Array *[finished]*
+send array to server and delete local one
 
-split Array into int Arrays for correct data *[finished]*
+convert function for int array to json format
+
+create json object with one array for each room
+
+dropdown list with floor, building
+
+ */
+
+
+
+/*
+
+node --experimental-modules main.js
+
 
  */
