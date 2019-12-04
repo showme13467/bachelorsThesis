@@ -14,7 +14,7 @@ export default api = express.Router();
 
 
 api.get('/table', (req, res) => {
-  
+ res.render('table_full_view.html');
 });
 
 api.get('/table_detail/:id', (req, res) => {
@@ -72,9 +72,9 @@ api.get('/back', (req, res) => {
 api.post('/create_device/', (req, res) => {
   console.log(req.body);
  let col_name = db.collection('devices');
-col_name.findOne({$and:[{"name": req.body.name},{"room": req.body.room}]}, function(err,doc){
-if(err){
-console.log(err);
+col_name.findOne({$and:[{"name": req.body.name},{"room": req.body.room}]}, function(error,doc){
+if(error){
+console.log(error);
 res.send(error.message);
 }
 else{
@@ -106,9 +106,9 @@ let obj = {"name": req.body.name, "type": req.body.type, "building": req.body.bu
 function update_room(req,res){
       let col_name = db.collection('rooms');
       let room_name = req.body.room;
-      col_name.findOneAndUpdate({"name": room_name}, {$push: {devices: {[req.body.name]: res.ops[0]._id}}} , function(err, doc){
-        if(err){
-          console.log(err);
+      col_name.findOneAndUpdate({"name": room_name}, {$push: {devices: {[req.body.name]: res.ops[0]._id}}} , function(error, doc){
+        if(error){
+          console.log(error);
 }
         else{
           console.log(doc);
@@ -122,10 +122,10 @@ function update_room(req,res){
 api.post('/update_devices/', (req,res) => {
   console.log(req.body);
   let col_name = db.collection('devices');
-  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "location": { "type": "Point", "coordinates": req.body.coordinates} },{"type" = req.body.type} }, function(err, result){
-if(err){
-console.log(err);
-res.send(err);
+  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name , "location": { "type": "Point", "coordinates": req.body.coordinates} ,"type" : req.body.type} }, function(error, result){
+if(error){
+console.log(error);
+res.send(error);
 }
 else{
 res.send(result.floors);
@@ -140,10 +140,10 @@ res.send(result.floors);
 api.post('/get_devices/', (req,res) => {
   console.log(req.body);
   let col_name = db.collection('rooms')
-  col_name.findOne({"name": req.body.room}, function(err, result){
-if(err){
-console.log(err);
-res.send(err);
+  col_name.findOne({"name": req.body.room}, function(error, result){
+if(error){
+console.log(error);
+res.send(error);
 }
 else{
 console.log(result.devices);
@@ -158,10 +158,10 @@ res.send(result.devices);
 api.post('/create_floor/', (req, res) => {
   console.log(req.body);
  let col_name = db.collection('floors');
-col_name.findOne({"name": req.body.name}, function(err,doc){
-if(err){
-console.log(er);
-res.send(err.message);
+col_name.findOne({"name": req.body.name}, function(error,doc){
+if(error){
+console.log(error);
+res.send(error.message);
 }
 else{
 if(doc==null){
@@ -178,10 +178,10 @@ res.send(doc);
 function insert_floor(req,res){
 let col_name = db.collection('floors');
 let obj = {"name": req.body.name, "geometry": { "type": "Polygon", "coordinates": req.body.coordinates}, "rooms":[] };
-  col_name.insertOne(obj, function(err, result) {
-    if (err) {
-      console.error(err.message);
-      res.send(err.message);
+  col_name.insertOne(obj, function(error, result) {
+    if (error) {
+      console.error(error.message);
+      res.send(error.message);
     } else {
       update_building(req,result);
       res.send(result);
@@ -209,7 +209,7 @@ function update_building(req,res){
 api.post('/update_floors/', (req,res) => {
   console.log(req.body);
   let col_name = db.collection('floors');
-  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "geometry": { "type": "Polygon", "coordinates": req.body.coordinates}} }, function(err, result){
+  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name , "geometry": { "type": "Polygon", "coordinates": req.body.coordinates}} }, function(err, result){
 if(err){
 console.log(err);
 res.send(err);
@@ -233,7 +233,7 @@ res.send(err);
 }
 else{
 console.log(result.floors);
-res.send(result.floors);
+res.send(result);
 }
 });
 });
@@ -290,12 +290,13 @@ function update_floor(req,res){
 };
 
 
+
 //Request for updating all rooms
 
 api.post('/update_rooms/', (req,res) => {
   console.log(req.body);
   let col_name = db.collection('rooms');
-  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name },{ "geometry": { "type": "Polygon", "coordinates": req.body.coordinates}} }, function(err, result){
+  col_name.findOneAndUpdate({"name": req.body.name},{$set: {"name": req.body.name , "geometry": { "type": "Polygon", "coordinates": req.body.coordinates}} }, function(err, result){
 if(err){
 console.log(err);
 res.send(err);
@@ -312,6 +313,19 @@ res.send(result);
 
 api.post('/get_rooms/', (req,res) => {
   console.log(req.body);
+ let col_name = db.collection('rooms');
+col_name.find().toArray(function(err,docs){
+if(err){
+console.log(err);
+res.send(err);
+}
+else{
+console.log(docs);
+res.send(docs);
+//betterStrings(req,res,docs)
+}
+});
+/*
   let col_name = db.collection('floors');
   col_name.findOne({"name": req.body.floor}, function(err, result){
 if(err){
@@ -320,11 +334,71 @@ res.send(err);
 }
 else{
 console.log(result.rooms);
-res.send(result.rooms);
+getRoomsbyId(req,result.rooms,res);
 }
 });
+*/
 });
 
+function betterStrings(req,res,docs){
+let start;
+let end;
+let string;
+let coord;
+let erg = [];
+for(let i = 0; i < docs.length; i++ ){
+string = JSON.stringify(docs[i]);
+start = string.indexOf("coordinates");
+end = string.indexOf("devices");
+coord = string.slice(start+15,end-5 );
+for(let v = 0; v < coord.length; v++){
+switch(coord.charAt(v)){
+case "[":
+coord = coord.replace("[","");
+break;
+
+case "]":
+coord = coord.replace("]","");
+break;
+
+case " ":
+coord = coord.replace(" ","");
+
+}
+}
+coord = "?" + coord + "?"
+erg += coord;
+}
+console.log(erg);
+res.send(erg);
+}
+
+function getRoomsbyId(req,rooms,res){
+let col_name = db.collection('rooms');
+let name = "";
+let id = "";
+let erg = [];
+let string;
+let index;
+for(let i = 0; i < rooms.length; i++){
+string = JSON.stringify(rooms[i]);
+index = string.indexOf(":");
+name = string.slice(2,index-1);
+id = string.slice(index+2,string.length-2);
+col_name.findOne({name: name}, function(err,doc){
+if (err){
+console.log(err);
+res.send(err);
+}
+else{
+console.log(doc);
+erg.push(doc);
+}
+});
+}
+console.log(erg);
+res.send(erg);
+};
 
 
 //Request for creating a building
@@ -385,7 +459,20 @@ res.send(result);
 
 api.post('/get_buildings/', (req,res) => {
   let col_name = db.collection('buildings');
-  res.send(col_name);
+ let buildings = [];
+ col_name.find().toArray(function(err,docs){
+if(err){
+console.log(err);
+res.send(err);
+}
+else{
+
+for(let i  =  0; i < docs.length ; i++){
+buildings +="?"+ docs[i].name + "?";
+}
+res.send(docs);
+}
+});
 });
 
 
