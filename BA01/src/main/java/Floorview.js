@@ -1,3 +1,4 @@
+
 window.open('', 'test', 'height=480,width=640', false);
 function showCoords(event) {
     var x = event.clientX;

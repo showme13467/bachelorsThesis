@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.*;
 
 
-class Requests {
+class PostRequest {
     public static String executePost(String targetURL, String urlParameters, String PostType) {
         HttpURLConnection connection = null;
 
@@ -53,7 +53,7 @@ class Requests {
     }
 
     public static void main(String[] args){
-        Requests x = new Requests();
+        PostRequest x = new PostRequest();
         String Response =
                 x.executePost(
                         "http://irt-ap.cs.columbia.edu/api/buildings",

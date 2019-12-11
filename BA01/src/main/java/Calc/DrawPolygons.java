@@ -1,23 +1,18 @@
 package Calc;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.parser.ParseException;
-
+import com.sun.javafx.iio.ImageStorage;
+import javafx.scene.transform.Scale;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Ellipse2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -31,29 +26,43 @@ import static Calc.DrawPolygons.Drawing.*;
 public class DrawPolygons {
 
     public static String RoomNameByUserStr;
-    public static String[] RoomNameByUserStrArray;
+    public static Boolean firstdrawing = true;
+    public static Boolean containsbool = false;
+
     public static String[] FloorNameByUserStrArray;
     public static String FloorNameByUserStr;
     public static String[] FloorIDArray;
+    public static String FloorID;
+
     public static String[] BuildingNameByUserStrArray;
     public static String BuildingNameByUserStr;
     public static String[] BuildingIDArray;
+    public static String BuildingID;
 
-    static JsonParser jsonParser = new JsonParser();
-    static Gson googleJson = new Gson();
+    public static String PolygonID = "";
+    private static List<String> PolygonIDArray = new ArrayList<String>();
+    public static int polygonIDcnt;
+    public static ArrayList<String> PolygonnameArray = new ArrayList<String>();
+    public static String[][] PolygonGeoCoords = new String[][]{};
 
-    public static URL urlfloorplan;
+    public static Boolean updatebool = false;
+    public static Boolean updateboolM = false;
 
+    public static File urlfloorplan;
+
+    protected static int xpos =0;
+    protected static int ypos =0;
 
     public static Boolean NewPolyBool = true;
     public static Boolean KeyAllowedSavingPolygon = false;
     public static Boolean Fillpolygon = false;
 
-    public static Boolean ellipsenbool = false;
+/*    public static Boolean ellipsenbool = false;
     public static int ellipsecnt = 0;
     public static int dellipsecnt = 0;
-    public static Boolean dellipsebool = false;
+    public static Boolean dellipsebool = false; */
 
+    static int txtcnt = 1;
 
     public static JFrame frame = new JFrame();
 
@@ -62,21 +71,22 @@ public class DrawPolygons {
     public static int Polyboolcnt = 0; //cnt for whether a polygon is drew completely or canceled
 
 
-    private static final int Window_width = 1210;
-    private static final int Window_height = 1200;
+    protected static final int Window_width = 1210;
+    protected static final int Window_height = 1200;
 
     public static class Drawing extends JPanel {
 
-        static Ellipse2D dellipse = new Ellipse2D.Double();
+     /*   static Ellipse2D dellipse = new Ellipse2D.Double();
         static Ellipse2D ellipse = new Ellipse2D.Double();
-        static ArrayList<Ellipse2D> ellipse2DArrayList = new ArrayList<>();
+        static ArrayList<Ellipse2D> ellipse2DArrayList = new ArrayList<>(); */
 
-        private static final Font FONT = new Font("Arial", Font.BOLD, 18);
+        protected static final Font FONT = new Font("Arial", Font.BOLD, 18);
 
-        private static List<Polygon> polygons = new ArrayList<Polygon>();
+        protected static List<Polygon> polygons = new ArrayList<Polygon>();
 
         protected static Polygon currentPolygon = new Polygon();
         protected static Polygon updatepolygon = new Polygon();
+        protected static Polygon fillpolygon = new Polygon();
 
 
         public static void PolygonFinished() throws IOException {
@@ -96,36 +106,46 @@ public class DrawPolygons {
 
                 //LeftMouseButton handling => draw
                 if (e.getY() < 800 && NewPolyBool == true && SwingUtilities.isLeftMouseButton(e)) {
-                    updatepolygon = null;
+                    if(e.getClickCount() ==2){
+                    for(int i=0;i<polygons.size();i++) {
+                        if (polygons.get(i).contains(e.getX(), e.getY())) {
 
-                    for(int i=0;i<polygons.size();i++){
-                        if(polygons.get(i).contains(e.getX(),e.getY())){
-                        updatepolygon = polygons.get(i);
-                        clearCurrentPolygon();
-                        Polyboolcnt = 0;
-                        IntPolyPoints.removeAll(IntPolyPoints);
+                            updatebool = true;
+                            updatepolygon = polygons.get(i);
+                            polygonIDcnt = i;
+                            clearCurrentPolygon();
+                            Polyboolcnt = 0;
+                            IntPolyPoints = new ArrayList<Integer>();
+                            if(!updateboolM) {
+                                updateboolM = true;
+                            }
                         }
                     }
-
                     //giving currentpolygon the points of the restored polygon
-                    if(updatepolygon != null){
+                    if(updateboolM){
                         for(int j=0;j<updatepolygon.npoints;j++){
                             addPoint(updatepolygon.xpoints[j],updatepolygon.ypoints[j]);
+                             }
+                             updateboolM = false;
                         }
                     }
 
                     else if (e.getClickCount() == 1) {
-                        addPoint(e.getX(), e.getY());
-                        KeyAllowedSavingPolygon = true;
+                                    containsbool = true;
+                                    xpos = e.getX();
+                                    ypos = e.getY();
+
+                            addPoint(e.getX(), e.getY());
+                            KeyAllowedSavingPolygon = true;
                     }
 
                     //RightMouseButton handling => cancel drawing
-                } else if (NewPolyBool == true && SwingUtilities.isRightMouseButton(e)) {
+                } else if (NewPolyBool && SwingUtilities.isRightMouseButton(e)) {
                     clearCurrentPolygon();
                     System.out.println("Polygon cleared!");
-             /*       ellipse2DArrayList.removeAll(ellipse2DArrayList);
-                    ellipse = null;
-                    dellipse = null;
+   /*                 ellipse2DArrayList.clear();
+                    ellipse = new Ellipse2D.Double();
+                    dellipse = new Ellipse2D.Double();
                     ellipsecnt = 0;
                     dellipsecnt = 0; */
 
@@ -138,15 +158,15 @@ public class DrawPolygons {
                 }
             }
 
-            @Override
+         /*   @Override
             public void mousePressed(MouseEvent e) {
                 System.out.println("Mouse Pressed");
                 FrameRepaint();
-            }
+            } */
         };
 
 
-       /*         private MouseMotionListener mouseMotionListener = new MouseMotionAdapter() {
+             /*   private MouseMotionListener mouseMotionListener = new MouseMotionAdapter() {
                     @Override
                     public void mouseDragged(MouseEvent e) {
                         for (int ecnt = 0; ecnt < ellipse2DArrayList.size(); ecnt++) {
@@ -179,12 +199,12 @@ public class DrawPolygons {
                     public void mouseMoved(MouseEvent e) {
                     }
                 };
-
 */
+
 
         public Drawing() {
             this.addMouseListener(mouseListener);
-            //  this.addMouseMotionListener(mouseMotionListener);
+        //      this.addMouseMotionListener(mouseMotionListener);
         }
 
         public void addNotify() {
@@ -192,8 +212,9 @@ public class DrawPolygons {
             requestFocus();
         }
 
+        //adding a point to the current poylgon
         protected void addPoint(int x, int y) {
-            // ellipsenbool = true;
+          //   ellipsenbool = true;
 
             currentPolygon.addPoint(x, y);
             System.out.println("x + y: " + x + ", " + y);
@@ -211,17 +232,33 @@ public class DrawPolygons {
         //canceling to draw polygon
         protected static void clearCurrentPolygon() {
             currentPolygon = new Polygon();
+            containsbool = false;
             FrameRepaint();
         }
 
         //polygon must consist out of at least 3 points minimum
         public static void createPolygon() throws IOException { //protected
             if (currentPolygon.npoints > 2) {
-                polygons.add(currentPolygon);
-                System.out.println("Polygon finished! \n \n");
-                Polyboolcnt = 0; //polygon finished, ready for new one
-                sendPolygon();
-                IntPolyPoints = new ArrayList<>();
+                if(updatebool){
+                    System.out.println("CURRENTPOLYGON POINTS: "+currentPolygon.npoints);
+                    updaterequest();
+                    polygons.add(polygonIDcnt,currentPolygon);
+                    PolygonnameArray.add(polygonIDcnt,RoomNameByUserStr);
+                    IntPolyPoints = new ArrayList<Integer>();
+                    Polyboolcnt = 0;
+                    polygons.remove(polygonIDcnt+1);
+                    PolygonnameArray.remove(polygonIDcnt+1);
+                    GetGivenPolygons();
+                }
+                else {
+                    polygons.add(currentPolygon);
+                    PolygonnameArray.add(RoomNameByUserStr);
+                    System.out.println("Polygon finished! \n \n");
+                    Polyboolcnt = 0; //polygon finished, ready for new one
+                    sendPolygon();
+                    IntPolyPoints = new ArrayList<>();
+                }
+                updatebool = false;
             }
             clearCurrentPolygon();
             FrameRepaint();
@@ -232,20 +269,79 @@ public class DrawPolygons {
             return new Dimension(Window_width, Window_height);
         }
 
+
+        private void getimage(String name) {
+
+
+            String filename = "https://www.study-in-bavaria.de/fileadmin/_migrated/pics/Geb33_a_02";//+"/"+name;
+
+            name = name + ".jpg";
+
+            BufferedImage image = null;
+            try {
+
+                URL url = new URL(filename + ".jpg");
+                image = ImageIO.read(url);
+
+                BufferedImage blackwhiteImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+                for (int i = 0; i < image.getWidth(); i++) {
+                    for (int j = 0; j < image.getHeight(); j++) {
+                        Color c = new Color(image.getRGB(i, j));
+                        Color myWhite = new Color(255, 255, 255);
+                        Color myBlack = new Color(0, 0, 0);
+
+                        //if the pixel is black(wall), set as black in new image
+                        if (c.getRed() < 135 && c.getGreen() < 135 && c.getBlue() < 135) {
+                            blackwhiteImage.setRGB(i, j, myBlack.getRGB());
+
+                        } else {
+                            blackwhiteImage.setRGB(i, j, myWhite.getRGB());
+                        }
+                    }
+                }
+
+                BufferedImage scaledImage = new BufferedImage(1211,800, BufferedImage.TYPE_INT_ARGB);
+                final AffineTransform at = AffineTransform.getScaleInstance(2.0, 2.0);
+                final AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
+                scaledImage = ato.filter(blackwhiteImage, scaledImage);
+
+                BufferedImage newimage= scaledImage;
+
+
+
+                File imagefile = new File(name);
+                if(imagefile.exists() && !imagefile.isDirectory()) {}
+                else {
+                    ImageIO.write(newimage, "jpg", imagefile);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+         urlfloorplan = new File(name);
+
+
+        }
+
         @Override
         protected void paintComponent(Graphics g) {
             // super.paintComponent(g);
 
+//convertCoords();
+
             //setting the floorplan as the background
 
-             /*   try {
-                     BufferedImage image = ImageIO.read(urlfloorplan);
-                     g.drawImage(image,0,0,null);
+            getimage(FloorID);
+
+                try {
+                    BufferedImage image = ImageIO.read(urlfloorplan);
+                    g.drawImage(image,0,0,null);
                 } catch (IOException e) {
                     e.printStackTrace();
-                } */
+                }
 
-
+/*
             File originalimage = new File("C:\\Users\\alexa\\Desktop\\BA\\floor plans\\7th\\coordpainting3.png");
 
             BufferedImage img = null;
@@ -254,19 +350,23 @@ public class DrawPolygons {
                 g.drawImage(img, 0, 0, null);
             } catch (IOException e) {
                 e.printStackTrace();
+            } */
+
+            if(firstdrawing){
+                try {
+                    GetGivenPolygons();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
-            g.setColor(Color.RED);
-            g.setFont(FONT);
-
+           g.setFont(FONT);
 
             for (Polygon polygon : polygons) {
-                drawPolygon(g, polygon);
-            }
-            g.setColor(Color.GREEN);
+                g.setColor(Color.RED);
+                drawPolygon(g, polygon); }
 
-            int[] testPPP = new int[]{138, 449, 284, 450, 284, 585, 136, 584, 138, 449};
-            //  drawGivenPolygons(g);
+            g.setColor(Color.GREEN);
 
             drawPolygon(g, currentPolygon);
         }
@@ -287,8 +387,10 @@ public class DrawPolygons {
                 int[] x = polygon.xpoints;
                 int[] y = polygon.ypoints;
 
-                for (int i = 0; i < polygon.npoints - 1; i++)
+
+                for (int i = 0; i < polygon.npoints - 1; i++) {
                     g2.drawLine(x[i], y[i], x[i + 1], y[i + 1]);
+                }
             }
 
             //calling the function for the letters
@@ -296,15 +398,15 @@ public class DrawPolygons {
                 drawNthPoint(g2, polygon, i);
             }
 
-            for (int i = 0; i < polygons.size(); i++) {
+        /*    for (int i = 0; i < polygons.size(); i++) {
                 g2.setColor(Color.RED);
                 g2.fill(polygons.get(i));
-            }
+            } */
             g2.setColor(Color.GREEN);
 
 
             //when point added to current polygon, calling function to set up ellipse
-       /*         if(ellipsenbool) {
+    /*            if(ellipsenbool) {
                     setDellipse(g2, currentPolygon, ellipsecnt);
                 }
 
@@ -312,7 +414,7 @@ public class DrawPolygons {
                 for(int i=0;i<ellipsecnt;i++){
                     g2.draw(ellipse2DArrayList.get(i));
                 }
-                ellipsenbool = false; */
+                ellipsenbool = false;  */
         }
 
         //Designation of the corner points of a polygon
@@ -326,7 +428,7 @@ public class DrawPolygons {
             g2.drawString(name, x + 10, y);
         }
 
-       /*     private static void setDellipse(Graphics g, Polygon polygon, int nth){
+    /*        private static void setDellipse(Graphics g, Polygon polygon, int nth){
                 Graphics2D g2 = (Graphics2D) g;
                 int x = polygon.xpoints[nth];
                 int height = g2.getFontMetrics().getHeight();
@@ -338,233 +440,284 @@ public class DrawPolygons {
                 ellipsecnt +=1;
                 }
 */
+        public void convertCoords(){
+            Point2D.Double ref1 = new Point2D.Double(40.809855, -73.961014); //45,113
+            Point2D.Double ref2 = new Point2D.Double(40.809445, -73.960636); //1174,690
+            Double stretchx1 = 0.0;
+            Double stretchy = 0.0;
+            Double rotation = 0.0;
+        }
 
-        public static void drawGivenPolygons(Graphics g) { //, int[] points) {
+        public void PolygonContains(Graphics g) throws InterruptedException {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setColor(Color.GREEN);
 
-            JsonObject AlreadyGivenPolygonsRequestJsonobj = new JsonObject();
-            AlreadyGivenPolygonsRequestJsonobj.addProperty("floor", FloorNameByUserStr);
-
-        /*    String FloorSelectionByUserStrCopy = "\"" + FloorNameByUserStr + "\"";
-
-            String payloadbuilding = "{" +
-                    "\"floor\": " + FloorSelectionByUserStrCopy +
-                    "}";
-            StringEntity entityfloor = new StringEntity(payloadbuilding,
-                    ContentType.APPLICATION_JSON);
-*/
-            StringEntity entityfloorAlreadyGivenPolygons = new StringEntity(AlreadyGivenPolygonsRequestJsonobj.toString(),
-                    ContentType.APPLICATION_JSON);
-
-            HttpClient httpClientroom = HttpClientBuilder.create().build();
-            HttpPost requestroom = new HttpPost("http://irt-ap.cs.columbia.edu/api/get_rooms/");
-        //    requestroom.setEntity(entityfloor);
-            requestroom.setEntity(entityfloorAlreadyGivenPolygons);
-
-            HttpResponse responseroomalreadygivenpolygons = null;
-            try {
-                responseroomalreadygivenpolygons = httpClientroom.execute(requestroom);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            String roomhttpansweralreadygivenpolygons = null;
-            try {
-                roomhttpansweralreadygivenpolygons =
-                        EntityUtils.toString(responseroomalreadygivenpolygons.getEntity());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            System.out.println(roomhttpansweralreadygivenpolygons);
+            containspointrequest();
+            g2.fill(fillpolygon);
+            g2.setColor(Color.GREEN);
+            fillpolygon = new Polygon();
+        }
 
 
-            char letter = '?';
-            String str = roomhttpansweralreadygivenpolygons.toLowerCase();
-            letter = Character.toLowerCase(letter);
-            int roomarraylength = 0;
+        public static void GetGivenPolygons() throws IOException{
+            polygons.clear();
+            PolygonnameArray.clear();
+            PolygonIDArray.clear();
 
-            for (int i = 0; i < str.length(); i++) {
-                char currentLetter = str.charAt(i);
-                if (currentLetter == letter)
-                    roomarraylength++;
-            }
+            PostRequest x = new PostRequest();
+
+                //drawing the polygons which are already in the database
+                String Response =
+                        x.executePost(
+                              "http://irt-ap.cs.columbia.edu/api/roomsByFloor",
+                              "{\n"
+                                      + " \"floor\" :" + "\"" + FloorID + "\"" + "\n"
+                                      + "}", "POST");
 
 
-            int[] points = new int[]{};
+            System.out.println("GETGIVENPOLYGONSREQ: "+Response);
+            JsonObject jsonObjectgivenpolygonsreq = new JsonParser().parse(Response).getAsJsonObject();
+            JsonArray jsonarraygivenpolygonsreq = jsonObjectgivenpolygonsreq.getAsJsonArray("data");
 
 
-            for (int k = 0; k < roomarraylength; k++) {
+    for (int i = 0; i < jsonarraygivenpolygonsreq.size(); i++) {
+        String response = jsonarraygivenpolygonsreq.get(i).getAsJsonObject().get("name").toString();
+        PolygonnameArray.add(response.substring(1, response.length() - 1));
+    }
+    for (int i = 0; i < jsonarraygivenpolygonsreq.size(); i++) {
+        String response = jsonarraygivenpolygonsreq.get(i).getAsJsonObject().get("_id").toString();
+        PolygonIDArray.add(response.substring(1, response.length() - 1));
+    }
 
-                System.out.println("point array: " + points[k]);
-
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setStroke(new BasicStroke(3)); //thickness of lines
-                g2.setColor(Color.RED);
-
-                int n = points.length;
-                int[] x = new int[n / 2];
-                int[] y = new int[n / 2];
-                int xcnt = 0;
-                int ycnt = 0;
-                for (int i = 0; i < n; i++) {
-                    if (i % 2 == 0) {
-                        x[xcnt] = points[i];
-                        xcnt += 1;
-                    } else {
-                        y[ycnt] = points[i];
-                        ycnt += 1;
+    for (int i = 0; i < jsonarraygivenpolygonsreq.size(); i++) {
+        JsonArray pixeljsonarray = jsonarraygivenpolygonsreq.get(i).getAsJsonObject().get("pixel").getAsJsonArray();
+        int[] points = new int[pixeljsonarray.size()];
+        for(int h=0;h<pixeljsonarray.size();h++){
+            points[h] = pixeljsonarray.get(h).getAsInt();
+        }
+                    int n = points.length;
+                    int[] xp = new int[n / 2];
+                    int[] yp = new int[n / 2];
+                    int xcnt = 0;
+                    int ycnt = 0;
+                    for (int z = 0; z < n; z++) {
+                        if (z % 2 == 0) {
+                            xp[xcnt] = points[z];
+                            xcnt += 1;
+                        } else {
+                            yp[ycnt] = points[z];
+                            ycnt += 1;
+                        }
                     }
-                }
 
-                Polygon poly = new Polygon(x, y, n / 2);
-                g2.drawPolygon(poly);
-                g2.setColor(Color.green);
+                    Polygon poly = new Polygon(xp, yp, n / 2);
+                    polygons.add(poly);
             }
+            firstdrawing = false;
         }
 
+        //updating a polygon
+        public static void updaterequest() throws IOException {
 
+            PostRequest x = new PostRequest();
 
-        public static void sendPolygon() throws IOException {
+            System.out.println("CURRENTPOLYGONS POINTS: "+currentPolygon.npoints);
 
-
-   /*         String coordinatesOfPolygon = "";
-
-                for(int i=0;i<currentPolygon.npoints;i++){
-                    coordinatesOfPolygon +="["+currentPolygon.xpoints[i]+", "+currentPolygon.ypoints[i]+"],";
-                }
-                coordinatesOfPolygon = coordinatesOfPolygon.substring(0,coordinatesOfPolygon.length()-1);
-
-                RoomNameByUserStr = "\""+RoomNameByUserStr+"\"";
-
-                //setting up a room through sending a finished polygon to the database
-                String payload = "{" +
-                        "\"coordinates\": [[" +
-                        coordinatesOfPolygon +
-                        "]]"+ ","+
-                        "\"name\": "+ RoomNameByUserStr+ ", " +
-                        "\"floor\": "+ FloorNameByUserStr+ ", "+
-                        "\"building\": "+ BuildingNameByUserStr+
-                        "}";
-                StringEntity entity = new StringEntity(payload,
-                        ContentType.APPLICATION_JSON); */
-
-
-
-            JsonObject SendPolygonJsonObj = new JsonObject();
-            String coordinatesOfPolygon = "[";
+            String pixelcoordsOfPolygon = "";
             for (int i = 0; i < currentPolygon.npoints; i++) {
-                coordinatesOfPolygon += "["+currentPolygon.xpoints[i] + ", " + currentPolygon.ypoints[i] + "],";
+                pixelcoordsOfPolygon += currentPolygon.xpoints[i] + ", " + currentPolygon.ypoints[i] + ",";
             }
-            coordinatesOfPolygon = coordinatesOfPolygon.substring(0, coordinatesOfPolygon.length() - 1);
-            coordinatesOfPolygon += "]";
+            pixelcoordsOfPolygon = pixelcoordsOfPolygon.substring(0, pixelcoordsOfPolygon.length() - 1);
 
-            SendPolygonJsonObj.addProperty("coordinates", coordinatesOfPolygon);
-            SendPolygonJsonObj.addProperty("name", RoomNameByUserStr);
-            SendPolygonJsonObj.addProperty("floor", FloorNameByUserStr);
+            String geocoordsOfPolygon ="";
+            for (int i = 0; i < currentPolygon.npoints; i++) {
+                geocoordsOfPolygon += "["+currentPolygon.xpoints[i] + ", " + currentPolygon.ypoints[i] + "],";
+            }
+            geocoordsOfPolygon = geocoordsOfPolygon.substring(0, geocoordsOfPolygon.length() - 1);
 
-            StringEntity sendpolygonentityJson = new StringEntity(SendPolygonJsonObj.toString(),
-                    ContentType.APPLICATION_JSON);
+            PolygonID = PolygonIDArray.get(polygonIDcnt);
 
-            HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost request = new HttpPost("http://irt-ap.cs.columbia.edu/api/room/");
-            request.setEntity(sendpolygonentityJson);
+            String Response =
+                    x.executePost(
+                            "http://irt-ap.cs.columbia.edu/api/room/"+PolygonID,
+                            "{\n"
+                                    + "\"geometry\": {"+"\n"
+                                    + "\"type\": "+"\"Polygon\""+",\n"
+                                    + "\"coordinates\":"+"[["+geocoordsOfPolygon+"]]" +"\n},"
+                                    + "\"pixel\":"+"["+pixelcoordsOfPolygon+"]"+",\n"
+                                    + "\"name\" :"+"\""+RoomNameByUserStr+"\"" +"\n,"
+                                    + "\"floor\" :"+"\""+FloorID+"\""+"\n"
+                                    + "}", "PUT");
 
-            HttpResponse response = httpClient.execute(request);
-            System.out.println(response.getStatusLine().getStatusCode());
-            System.out.println(EntityUtils.toString(response.getEntity()));
+            JsonObject jsonObjectdeletereq = new JsonParser().parse(Response).getAsJsonObject();
+            System.out.println("UPDATEREQ: "+jsonObjectdeletereq.getAsJsonObject().get("success"));
+
         }
+
+        public static void sendPolygon(){
+
+            String pixelcoordsOfPolygon = "";
+            for (int i = 0; i < currentPolygon.npoints; i++) {
+                pixelcoordsOfPolygon += currentPolygon.xpoints[i] + "," + currentPolygon.ypoints[i] + ",";
+            }
+            pixelcoordsOfPolygon = pixelcoordsOfPolygon.substring(0, pixelcoordsOfPolygon.length() - 1);
+
+            String geocoordsOfPolygon = "";
+            for (int i = 0; i < currentPolygon.npoints; i++) {
+                geocoordsOfPolygon += "["+currentPolygon.xpoints[i]/10 + "," + currentPolygon.ypoints[i]/10 + "],";
+            }
+            geocoordsOfPolygon = geocoordsOfPolygon.substring(0,geocoordsOfPolygon.length()-1);
+
+            PostRequest x = new PostRequest();
+            //getting the buildings from the database
+            String Response =
+                    x.executePost(
+                            "http://irt-ap.cs.columbia.edu/api/room",
+                            "{\n"
+                                    + "\"geometry\": {"+"\n"
+                                    + "\"type\": "+"\"Polygon\""+",\n"
+                                    + "\"coordinates\":"+"[["+geocoordsOfPolygon+"]]" +"\n},"
+                                    + "\"pixel\":"+"["+pixelcoordsOfPolygon+"]"+"\n,"
+                                    + "\"name\" :"+"\""+RoomNameByUserStr+"\"" +"\n,"
+                                    + "\"floor\" :"+"\""+FloorID+"\""+"\n"
+                                    + "}", "POST");
+
+            System.out.println("SENDPOLYGONREQ"+Response);
+            JsonObject jsonObjectsendpolygonreq = new JsonParser().parse(Response).getAsJsonObject();
+
+            PolygonID = jsonObjectsendpolygonreq.getAsJsonObject().get("id").toString();
+            PolygonIDArray.add(PolygonID.substring(1,PolygonID.length()-1));
+        }
+
     }
 
-    public static void buildingrequest(){
+    public static void containsroomrequest(){
+        PostRequest x = new PostRequest();
 
+        String geocoordsOfPolygon ="";
+        for (int i = 0; i < fillpolygon.npoints; i++) {
+            geocoordsOfPolygon += "["+fillpolygon.xpoints[i]/10 + ", " + fillpolygon.ypoints[i]/10 + "],";
+        }
+        geocoordsOfPolygon = geocoordsOfPolygon.substring(0, geocoordsOfPolygon.length() - 1);
+
+        String Response =
+                x.executePost(
+                        "http://irt-ap.cs.columbia.edu/api/roomsByPolygon",
+                        "{\n"
+                                + "\"geometry\": {"+"\n"
+                                + "\"type\": "+"\"Polygon\""+",\n"
+                                + "\"coordinates\":"+"[["+geocoordsOfPolygon+"]]" +"\n}"
+                                + "}", "POST");
+
+        JsonObject jsonObjectdeletereq = new JsonParser().parse(Response).getAsJsonObject();
+        System.out.println("CONTAINSROOMREQ: "+jsonObjectdeletereq.getAsJsonObject().get("success"));
+
+    }
+
+    public static void containspointrequest(){
+        PostRequest x = new PostRequest();
+
+        String coordinatesMousePos = xpos/10 + "," + ypos/10;
+
+        String Response =
+                x.executePost(
+                        "http://irt-ap.cs.columbia.edu/api/roomsByMouse",
+                        "{\n"
+                                + "\"location\": {"+"\n"
+                                + "\"type\": "+"\"Point\""+",\n"
+                                + "\"coordinates\": ["+coordinatesMousePos+"]\n}"
+                                + "}", "POST");
+
+        JsonObject jsonObjectcontainsreq = new JsonParser().parse(Response).getAsJsonObject();
+        System.out.println("CONTAINSPOINTREQ: "+jsonObjectcontainsreq.getAsJsonObject().get("success"));
+
+        JsonObject jsonarrayIDreq = jsonObjectcontainsreq.getAsJsonObject("data");
+        String IDresponse = jsonarrayIDreq.getAsJsonObject().get("_id").toString();
+        IDresponse = IDresponse.substring(1,IDresponse.length()-1);
+
+        int IDcnt = 0;
+        for(int i=0;i<PolygonIDArray.size();i++){
+            if(PolygonIDArray.get(i).equals(IDresponse)){
+                IDcnt = i;
+               }
+        }
+        fillpolygon = polygons.get(IDcnt);
+    }
+
+    public static void buildingrequest() throws IOException {
+
+        GetRequest x = new GetRequest();
         //getting the buildings from the database
-        JsonObject BuildingRequestJsonObj = new JsonObject();
+        String Response =
+                x.sendGET(
+                        "http://irt-ap.cs.columbia.edu/api/buildings",
+                        "{"
+                                + "}","GET");
 
-        StringEntity entitybuildingJson = new StringEntity(BuildingRequestJsonObj.toString(),
-                ContentType.APPLICATION_JSON);
+        System.out.println("BUILDINGREQ: "+Response);
+        JsonObject jsonObjectbuildingreq = new JsonParser().parse(Response).getAsJsonObject();
+        JsonArray jsonarraybuildingreq = jsonObjectbuildingreq.getAsJsonArray("data");
 
-        HttpClient httpClientbuilding = HttpClientBuilder.create().build();
-        HttpPost requestbuilding = new HttpPost("http://irt-ap.cs.columbia.edu/api/get_buildings/");
-        requestbuilding.setEntity(entitybuildingJson);
+        BuildingNameByUserStrArray = new String[jsonarraybuildingreq.size()];
+        BuildingIDArray = new String[jsonarraybuildingreq.size()];
 
-        HttpResponse responsebuilding = null;
-        try {
-            responsebuilding = httpClientbuilding.execute(requestbuilding);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        String buildinghttpanswer = null;
-        try {
-            buildinghttpanswer = EntityUtils.toString(responsebuilding.getEntity());
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        System.out.println(buildinghttpanswer);
-
-
-        JsonObject JsonObjectFromStringbuildingArray = jsonParser.parse(buildinghttpanswer).getAsJsonObject();
-
-        String StringbuildingfromJson = String.valueOf(JsonObjectFromStringbuildingArray.getAsJsonArray("building"));
-
-        JsonArray Jsonarraybuildingsouterarray = jsonParser.parse(StringbuildingfromJson).getAsJsonArray();
-        JsonArray Jsonarraybuildingsinnerarray  = jsonParser.parse(String.valueOf(Jsonarraybuildingsouterarray)).getAsJsonArray();
-
-        for(int i=0;i<Jsonarraybuildingsinnerarray.size();i++){
-            BuildingNameByUserStrArray[i] = ""+Jsonarraybuildingsinnerarray.get(i).getAsJsonObject().get("name");
+        for(int i=0;i<jsonarraybuildingreq.size();i++){
+            String resultname = jsonarraybuildingreq.get(i).getAsJsonObject().get("name").toString();
+            BuildingNameByUserStrArray[i] = resultname.substring(1,resultname.length()-1);
         }
 
-        for(int j=0;j<Jsonarraybuildingsinnerarray.size();j++){
-            BuildingIDArray[j] = ""+Jsonarraybuildingsinnerarray.get(j).getAsJsonObject().get("_id");
+        for(int j=0;j<jsonarraybuildingreq.size();j++){
+            String resultid = jsonarraybuildingreq.get(j).getAsJsonObject().get("_id").toString();
+            BuildingIDArray[j] = resultid.substring(1,resultid.length()-1);
         }
-
     }
 
-    public static void floorrequest(){
+    public static void floorrequest() throws IOException {
         //getting the floors from the database
-        JsonObject FloorRequestJsonObj = new JsonObject();
-        FloorRequestJsonObj.addProperty("building", BuildingNameByUserStr);
+        PostRequest x = new PostRequest();
+        String Response =
+                x.executePost(
+                        "http://irt-ap.cs.columbia.edu/api/floorsByBuilding",
+                        "{\n"
+                                + " \"building\" :"+"\""+BuildingID+"\"" +"\n"
+                                + "}","POST");
 
-        StringEntity entityfloorJson = new StringEntity(FloorRequestJsonObj.toString(),
-                ContentType.APPLICATION_JSON);
+        System.out.println("FLOORREQ: "+Response);
+        JsonObject jsonObjectfloorreq = new JsonParser().parse(Response).getAsJsonObject();
+        JsonArray jsonarrayfloorreq = jsonObjectfloorreq.getAsJsonArray("data");
 
-        HttpClient httpClientfloor = HttpClientBuilder.create().build();
-        HttpPost requestfloor = new HttpPost("http://irt-ap.cs.columbia.edu/api/get_floors/");
-        requestfloor.setEntity(entityfloorJson);
+        FloorNameByUserStrArray = new String[jsonarrayfloorreq.size()];
+        FloorIDArray = new String[jsonarrayfloorreq.size()];
 
-        HttpResponse responsefloor = null;
-        try {
-            responsefloor = httpClientfloor.execute(requestfloor);
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        String floorhttpanswer = null;
-        try {
-            floorhttpanswer = EntityUtils.toString(responsefloor.getEntity());
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-        System.out.println(floorhttpanswer);
-
-
-        JsonObject JsonObjectFromStringfloorArray = jsonParser.parse(floorhttpanswer).getAsJsonObject();
-
-        String StringArrayStringfloors = String.valueOf(JsonObjectFromStringfloorArray.getAsJsonArray("floors"));
-
-        JsonArray JsonarrayFromStringfloorsouterarray = jsonParser.parse(StringArrayStringfloors).getAsJsonArray();
-        System.out.println("JSON arrayString: "+JsonarrayFromStringfloorsouterarray.toString());
-
-        JsonArray JsonarrayFromStringfloorsinnerarray  = jsonParser.parse(String.valueOf(JsonarrayFromStringfloorsouterarray)).getAsJsonArray();
-
-        for(int i=0;i<JsonarrayFromStringfloorsinnerarray.size();i++){
-            FloorNameByUserStrArray[i] = ""+JsonarrayFromStringfloorsinnerarray.get(i).getAsJsonObject().get("name");
+        for(int i=0;i<jsonarrayfloorreq.size();i++){
+            String resultname = jsonarrayfloorreq.get(i).getAsJsonObject().get("name").toString();
+            FloorNameByUserStrArray[i] = resultname.substring(1,resultname.length()-1);
         }
 
-        for(int i=0;i<JsonarrayFromStringfloorsinnerarray.size();i++){
-            FloorIDArray[i] = ""+JsonarrayFromStringfloorsinnerarray.get(i).getAsJsonObject().get("_id");
+        for(int i=0;i<jsonarrayfloorreq.size();i++){
+            String resultid = jsonarrayfloorreq.get(i).getAsJsonObject().get("_id").toString();
+            FloorIDArray[i] = resultid.substring(1,resultid.length()-1);
         }
-
     }
+
+    public static void deletepolygonrequest() throws IOException {
+        // deleting polygons from the database
+        GetRequest x = new GetRequest();
+        String Response =
+                x.sendGET(
+                        "http://irt-ap.cs.columbia.edu/api/room/"+PolygonID,
+                        "{"
+                                + "}","DELETE");
+
+        JsonObject jsonObjectdeletereq = new JsonParser().parse(Response).getAsJsonObject();
+
+        System.out.println("DELETEREQ: "+jsonObjectdeletereq.getAsJsonObject().get("success"));
+    }
+
 
     protected static void initUI() {
+        Drawing Drawinginst = new Drawing();
+
         frame = new JFrame("DrawPolygons");
 
         //DropDown Menu
@@ -580,13 +733,18 @@ public class DrawPolygons {
         floorSelectionbox.setBounds(350, 830, 200, 40);
         floorSelectionbox.setFont(new Font("Arial", Font.BOLD, 16));
 
-
         //when selecting a building getting the floorselection via http post request
         buildingSelectionbox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Object BuildingItembefore = buildingSelectionbox.getItemAt(buildingSelectionbox.getSelectedIndex());
+                buildingSelectionbox.setSelectedItem(BuildingItembefore);
 
-                buildingrequest();
+                try {
+                    buildingrequest();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
 
                 //deleting the old dropdown list and adding the items from new selection of building
                 buildingSelectionbox.removeAllItems();
@@ -594,8 +752,15 @@ public class DrawPolygons {
                     buildingSelectionbox.addItem(BuildingNameByUserStrArray[i]);
                 }
 
+                buildingSelectionbox.setSelectedItem(BuildingItembefore);
 
-                BuildingNameByUserStr = BuildingIDArray[buildingSelectionbox.getSelectedIndex()];
+                BuildingID = BuildingIDArray[buildingSelectionbox.getSelectedIndex()];
+                BuildingNameByUserStr = BuildingNameByUserStrArray[buildingSelectionbox.getSelectedIndex()];
+
+                floorSelectionbox.removeAllItems();
+
+                //Drawinginst.getimage(FloorID);
+
 
                 // new floorplanimage when changing building
                 // deleting of the currentpolygon and the already drawn polygons as well as loading the
@@ -603,21 +768,134 @@ public class DrawPolygons {
             }
         });
 
+        JTextField advicefield1 = new JTextField();
+        JTextField advicefield2 = new JTextField();
+
+        Font adviceFont = new Font("Serif",Font.BOLD,20);
+        advicefield1.setFont(adviceFont);
+        advicefield2.setFont(adviceFont);
+
+        String LeftClickT1 = "Left Mouse Click - setting Point of Polygon";
+        String EnterT2 = "Enter - save Polygon";
+        String BackspaceT1 = "Backspace - undo last Point";
+        String RightClickT2 = "Right Mouse Click - clear current polygon";
+        String DoubleClickT1 = "Double Left Click in Polygon - update mode and normal functions";
+        String EscT2 = "Esc - back without saving (only in update mode)";
+        String DeleteT1 = "Delete - delete Polygon (only in update mode)";
+        String SpaceT2 = "Space - see wheter point is inside a polygon";
+
+        String[] T1list = {LeftClickT1,BackspaceT1,DoubleClickT1,DeleteT1};
+        String[] T2list = {EnterT2,RightClickT2,EscT2,SpaceT2};
+
+        advicefield1.setText(LeftClickT1);
+        advicefield2.setText(EnterT2);
+
+        advicefield1.setEditable(false);
+        advicefield2.setEditable(false);
+
+        advicefield2.setBackground(Color.LIGHT_GRAY);
+        advicefield2.setBounds(100,920,700,40);
+        advicefield2.setVisible(true);
+
+        advicefield1.setBackground(Color.LIGHT_GRAY);
+        advicefield1.setBounds(100,880,700,40);
+        advicefield1.setVisible(true);
+
+        JButton nextAdviceBtn = new JButton("Next advice");
+        nextAdviceBtn.setBounds(850,830, 200,40);
+        nextAdviceBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                advicefield1.setText(T1list[txtcnt%4]);
+                advicefield2.setText(T2list[txtcnt%4]);
+                txtcnt+=1;
+            }
+        });
+
+
+
+        class NewFrame extends JFrame implements ActionListener {
+
+            public NewFrame() {
+                JTextPane helptext = new JTextPane();
+
+                Font helptextFont = new Font("Serif",Font.BOLD,22);
+                helptext.setFont(helptextFont);
+                        helptext.setText(
+                        "This is the help menu.\n\n"+
+                        "You can create polygons here, which are directly stored in the data base.\n\n"+
+                        "When clicking on the floorplan with the left mouse click, " +
+                        "you create a point. A polygon must have at least 3 points.\n\n"+
+                        "If you want to save a polygon, press the \"Enter\"-Key. \n\n"+
+                        "When you want to undo your last point, press the \"Backspace\"-Key.\n\n"+
+                        "While creating the polygon, you can click the right mouse button, " +
+                        "which will delete your whole polygon before being saved. \n\n" +
+                        "You can edit or delete a polygon any time when making a double click into it. \n\n" +
+                        "Then you are in the update mode and you are able to undo the already drew lines by the \"Backspace\"-Key" +
+                        "or delete it by pressing the \"Delete\"-Key.\n\n"+"If you accidentially got in the update mode, just press" +
+                                "the \"Escape\"-Key to leave the update mode without saving anything.\n\n"+
+                        "If you want to see, whether a point is inside a polygon, click on the floorplan and press the \"Space\"-Key.");
+                helptext.setBackground(Color.LIGHT_GRAY);
+                add(helptext);
+                setBounds(500,100,900,900);
+                setVisible(true);
+            }
+
+            public void actionPerformed(ActionEvent event) {
+                new NewFrame();
+            }
+        }
+        JLabel buildinglabel = new JLabel("Buildings");
+        buildinglabel.setFont(FONT);
+        buildinglabel.setBounds(160,795,200,40);
+        buildinglabel.setVisible(true);
+
+        JLabel floorlabel = new JLabel("Floors");
+        floorlabel.setFont(FONT);
+        floorlabel.setBounds(420,795,200,40);
+        floorlabel.setVisible(true);
+
+        JButton Helpbtn = new JButton("Help");
+        Helpbtn.setBounds(600,830,200,40);
+        Helpbtn.setVisible(true);
+        Helpbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new NewFrame();
+            }
+        });
 
         //when selecting a floor getting the floorplan via http post request
         floorSelectionbox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                floorrequest();
+                Object FloorItembefore = floorSelectionbox.getItemAt(floorSelectionbox.getSelectedIndex());
+                floorSelectionbox.setSelectedItem(FloorItembefore);
+
+                try {
+                    floorrequest();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
 
                 //deleting the old dropdown list and adding the items from new selection of building
                 floorSelectionbox.removeAllItems();
                 for (int i = 0; i < FloorNameByUserStrArray.length; i++) {
                     floorSelectionbox.addItem(FloorNameByUserStrArray[i]);}
 
-                    FloorNameByUserStr = FloorIDArray[floorSelectionbox.getSelectedIndex()];
 
+                floorSelectionbox.setSelectedItem(FloorItembefore);
+            try {
+                FloorID = FloorIDArray[floorSelectionbox.getSelectedIndex()];
+                FloorNameByUserStr = FloorNameByUserStrArray[floorSelectionbox.getSelectedIndex()];
+            } catch (Exception e1){
+            }
+
+            //    Drawing Drawinginstfloor = new Drawing();
+            //    Drawinginstfloor.Newfloorimage();
+                Newfloorimage();
+                FrameRepaint();
 
                 // deleting of the currentpolygon and the already drawn polygons as well as loading the
                 // already drawn already drawn polygons of the new selected floor
@@ -633,12 +911,17 @@ public class DrawPolygons {
             }
         });
 
+        frame.add(buildinglabel);
+        frame.add(floorlabel);
+        frame.add(nextAdviceBtn);
+        frame.add(advicefield2);
+        frame.add(advicefield1);
+        frame.add(Helpbtn);
         frame.add(buildingSelectionbox);
         frame.add(floorSelectionbox);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Drawing Drawinginst = new Drawing();
         InputMap im = Drawinginst.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 
         //enter handling
@@ -674,20 +957,76 @@ public class DrawPolygons {
                         }
                         IntPolyPoints.remove(IntPolyPoints.size() - 1);
                         IntPolyPoints.remove(IntPolyPoints.size() - 1);
-             /*           ellipsecnt -=1;
-                        dellipsecnt -=1;
-                        ellipse2DArrayList.remove(ellipse2DArrayList.size()-1); */
+      /*                  ellipsecnt -= 1;
+                        dellipsecnt -= 1;
+                        ellipse2DArrayList.remove(ellipse2DArrayList.size() - 1); */
 
-                    } /*else {
+                    } else {
                         Polyboolcnt = 0;
-                        IntPolyPoints.clear(); */
-          /*              ellipsecnt = 0;
-                        dellipsecnt =0;
-                        ellipse2DArrayList.remove(ellipse2DArrayList.size()-1); */
+                        IntPolyPoints.clear();
+    /*                    ellipsecnt = 0;
+                        dellipsecnt = 0;
+                        ellipse2DArrayList.remove(ellipse2DArrayList.size() - 1); */
+                    }
                 }
             }
         });
 
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0, true), "Delete");
+        ap.put("Delete", new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Pressed Delete");
+                        if(updatebool){
+                            PolygonID = PolygonIDArray.get(polygonIDcnt);
+                            try {
+                                deletepolygonrequest();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                            clearCurrentPolygon();
+
+                            PolygonnameArray.remove(polygonIDcnt);
+                            PolygonIDArray.remove(polygonIDcnt);
+                            polygons.remove(polygonIDcnt);
+
+                            IntPolyPoints = new ArrayList<Integer>();
+                            Polyboolcnt=0;
+                            updatepolygon = new Polygon();
+                            updatebool = false;
+                        }
+                    }
+            }
+        );
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true), "Space");
+        ap.put("Space", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Pressed Space");
+                if (containsbool) {
+                    try {
+                        Drawinginst.PolygonContains(Drawinginst.getGraphics());
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                    containsbool = false;
+                }
+            }
+        });
+
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true), "ESCAPE");
+        ap.put("ESCAPE", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Pressed Escape");
+                if(updatebool){
+                    updatebool = false;
+                    clearCurrentPolygon();
+                    IntPolyPoints = new ArrayList<Integer>();
+                    Polyboolcnt = 0;
+                }
+            }
+        });
 
         frame.add(Drawinginst);
 
@@ -698,6 +1037,16 @@ public class DrawPolygons {
 
     static void FrameRepaint() {
         frame.repaint();
+    }
+
+    public static void Newfloorimage(){
+        clearCurrentPolygon();
+        IntPolyPoints = new ArrayList<Integer>();
+        try {
+            GetGivenPolygons();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -719,23 +1068,25 @@ public class DrawPolygons {
         CloseBtnW.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Int list: " + IntPolyPoints);
                 NewPolyBool = false;
                 KeyAllowedSavingPolygon = false;
                 Fillpolygon = true;
          /*       ellipse2DArrayList.removeAll(ellipse2DArrayList);
                 ellipsecnt = 0;
                 dellipsecnt = 0; */
+
                 try {
                     PolygonFinished();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
+
                 wframe.dispose();
             }
         });
 
         JButton button = new JButton("Please type in the name of the room.");
+        final JLabel labeladvice = new JLabel("Last line will be drawn automatically after saving name.");
         final JLabel label = new JLabel();
 
         button.addActionListener(new ActionListener() {
@@ -760,80 +1111,27 @@ public class DrawPolygons {
                 }
             }
         });
-
         panel.add(CloseBtnW);
         panel.add(button);
         panel.add(label);
+        panel.add(labeladvice);
         wframe.getContentPane().add(panel, BorderLayout.CENTER);
     }
 
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
 
 
         //   urlfloorplan = new URL("https://www.study-in-bavaria.de/fileadmin/_migrated/pics/Geb33_a_02.jpg");
 
         //initial settings
-        BuildingNameByUserStr = "5de68a3f756b75438fbec5f6"; //Schapiro Building
+        BuildingID = "5de68a3f756b75438fbec5f6"; //Schapiro Building
 
-        FloorNameByUserStr = "5de68ab0756b75438fbec5f8"; //7th Floor
+        FloorID = "5de68ab0756b75438fbec5f8"; //7th Floor
+        //FloorID = "5de6c47ec2569658e7a0a132"; //8th Floor
 
         buildingrequest();
         floorrequest();
-
-        /*
-        //old code for string split in buildings
-        String[] arrOfStrbuilding = buildinghttpanswer.split("[?+?]",0);
-        int j=0;
-
-        char letter = '?';
-        String str = buildinghttpanswer.toLowerCase();
-        letter = Character.toLowerCase(letter);
-        int buildingarraylength = 0;
-
-        for (int i = 0; i < str.length(); i++) {
-            char currentLetter = str.charAt(i);
-            if (currentLetter == letter)
-                buildingarraylength++;
-        }
-
-        buildingarraylength = buildingarraylength/2;
-        BuildingNameByUserStrArray = new String[buildingarraylength];
-        buildingarraylength=buildingarraylength*2;
-        for(int i=0;i<buildingarraylength;i++){
-            i+=1;
-            BuildingNameByUserStrArray[j] = arrOfStrbuilding[i];
-            j+=1;
-        } */
-
-
-
-
-
-
-
-
-
-
-
-/*
-//old code for string splitting in floors
-        j=0;
-        String[] arrOfStrfloors = floorhttpanswer.split("[{+:]",0);
-        int floorarraylength = arrOfStrfloors.length-1;
-        FloorNameByUserStrArray = new String[floorarraylength/2];
-        String[] CopyfloorStr = new String[floorarraylength];
-        for(int i=1;i<floorarraylength;i++){
-            arrOfStrfloors[i] = arrOfStrfloors[i].substring(1,arrOfStrfloors[i].length()-1);
-            CopyfloorStr[j] = arrOfStrfloors[i];
-            j+=1;
-            i=i+1;
-        }
-
-        for(int k=0;k<floorarraylength/2;k++) {
-            FloorNameByUserStrArray[k] = CopyfloorStr[k];
-        }
-        */
 
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -842,24 +1140,6 @@ public class DrawPolygons {
                 initUI();
             }
         });
-
-
-
-        /*
-//--------------------------------------------------------------------------------
-
-
-
-//---------------------------------------------------------------------------------
-
-*/
-
-
-
-
-
-
-
 
 
     }
@@ -888,7 +1168,7 @@ no buttons! let the "x" lead to continue                            *[finished]*
 
 send array to server and delete local one                           *[finished]*
 
-create json object for each room !!!!!
+create json object for each room !!!!!                              *[finished]*
 
 dropdown list with floor, building                                  *[finished]*
 
@@ -907,8 +1187,9 @@ geocalculation through two ref points
 
 
 /*
-
 node --experimental-modules main.js
-
-
  */
+
+/*
+
+*/
