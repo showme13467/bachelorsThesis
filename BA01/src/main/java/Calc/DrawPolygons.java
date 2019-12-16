@@ -15,8 +15,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.*;
 import java.net.URL;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
+import java.util.spi.LocaleServiceProvider;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -25,54 +29,56 @@ import static Calc.DrawPolygons.Drawing.*;
 
 public class DrawPolygons {
 
-    public static String RoomNameByUserStr;
-    public static Boolean firstdrawing = true;
-    public static Boolean containsbool = false;
+    public static String RoomNameByUserStr=""; // name of the current polygon the user created
+    public static Boolean firstdrawing = true; // bool for checking whether the program is started for loading gui
+    public static Boolean containsbool = false; // bool for checking whether a selected point is inside a polygon
 
-    public static String[] FloorNameByUserStrArray;
-    public static String FloorNameByUserStr;
-    public static String[] FloorIDArray;
-    public static String FloorID;
+    public static String[] FloorNameByUserStrArray; // contains all floor names
+    public static String FloorNameByUserStr; // floor name selected in the Selectionbox
+    public static String[] FloorIDArray; // contains all IDs of floors
+    public static String FloorID; // current floor ID
 
-    public static String[] BuildingNameByUserStrArray;
-    public static String BuildingNameByUserStr;
-    public static String[] BuildingIDArray;
-    public static String BuildingID;
+    public static String[] BuildingNameByUserStrArray; // contains all building names
+    public static String BuildingNameByUserStr; // building name selected in the Selectionbox
+    public static String[] BuildingIDArray; // contains all IDs of buildings
+    public static String BuildingID; // current building ID
 
-    public static String PolygonID = "";
-    private static List<String> PolygonIDArray = new ArrayList<String>();
-    public static int polygonIDcnt;
-    public static ArrayList<String> PolygonnameArray = new ArrayList<String>();
-    public static String[][] PolygonGeoCoords = new String[][]{};
+    public static String PolygonID = ""; // current Polygon ID
+    private static List<String> PolygonIDArray = new ArrayList<String>(); // contains all IDs of polygons
+    public static int polygonIDcnt; // cnt for ID while removing ID when deleting a polygon
+    public static ArrayList<String> PolygonnameArray = new ArrayList<String>(); // contains all names of polygons
+    public static String[][] PolygonGeoCoords = new String[][]{}; // Array of geo Coords of a polygon
 
-    public static Boolean updatebool = false;
-    public static Boolean updateboolM = false;
+    public static Boolean updatebool = false; // bool for checking, whether polygon is in updatemode
+    public static Boolean updateboolM = false; // bool for checking, whether updatemode is already selected
 
-    public static File urlfloorplan;
+    public static File urlfloorplan; // file where the image of the current floorplan is saved to
 
-    protected static int xpos =0;
-    protected static int ypos =0;
+    protected static int xpos =0; // x position of mouse while checking whether a point selected by user is inside a polygon
+    protected static int ypos =0; // y position of mouse while checking whether a point selected by user is inside a polygon
 
-    public static Boolean NewPolyBool = true;
-    public static Boolean KeyAllowedSavingPolygon = false;
-    public static Boolean Fillpolygon = false;
+    public static Boolean NewPolyBool = true; // bool whether there is a new poylgon after saving one
+    public static Boolean KeyAllowedSavingPolygon = false; // bool whether KeyBoardInput is Allowed
+    public static Boolean Fillpolygon = false; // bool whether polygon is selected and should be filled out
+
+    public static Boolean txtcurrentpolygon = false;
 
 /*    public static Boolean ellipsenbool = false;
     public static int ellipsecnt = 0;
     public static int dellipsecnt = 0;
     public static Boolean dellipsebool = false; */
 
-    static int txtcnt = 1;
+    static int txtcnt = 1; // cnt for advices
 
     public static JFrame frame = new JFrame();
 
-    static List<Integer> IntPolyPoints = new ArrayList<Integer>();//list of coord points of current polygon
+    static List<Integer> IntPolyPoints = new ArrayList<Integer>(); // list of coord points of current polygon
 
-    public static int Polyboolcnt = 0; //cnt for whether a polygon is drew completely or canceled
+    public static int Polyboolcnt = 0; // cnt for whether a polygon is drew completely or canceled
 
 
-    protected static final int Window_width = 1210;
-    protected static final int Window_height = 1200;
+    protected static final int Window_width = 1210; // width of window
+    protected static final int Window_height = 1200; // height of window
 
     public static class Drawing extends JPanel {
 
@@ -80,15 +86,21 @@ public class DrawPolygons {
         static Ellipse2D ellipse = new Ellipse2D.Double();
         static ArrayList<Ellipse2D> ellipse2DArrayList = new ArrayList<>(); */
 
-        protected static final Font FONT = new Font("Arial", Font.BOLD, 18);
+        protected static final Font FONT = new Font("Arial", Font.BOLD, 18); // basic font
 
-        protected static List<Polygon> polygons = new ArrayList<Polygon>();
+        protected static List<Polygon> polygons = new ArrayList<Polygon>(); // list of all polygons
 
-        protected static Polygon currentPolygon = new Polygon();
-        protected static Polygon updatepolygon = new Polygon();
-        protected static Polygon fillpolygon = new Polygon();
+        protected static Polygon currentPolygon = new Polygon(); // polygon user is creating at the moment
+        protected static Polygon updatepolygon = new Polygon(); // polygon which is changed in updatemode
+        protected static Polygon fillpolygon = new Polygon(); // polygon which is filled in updatemode
 
 
+        /*
+        Method which is called when Polygon is finished and should to be created and drawn
+
+        @param helpintx - gets x coord of point of beginning of polygon for drawing it completely
+        @param helpinty - gets y coord of point of beginning of polygon for drawing it completely
+         */
         public static void PolygonFinished() throws IOException {
             NewPolyBool = true;
             int helpintx = currentPolygon.xpoints[0];
@@ -99,6 +111,9 @@ public class DrawPolygons {
             createPolygon();
         }
 
+        /*
+        Mouseclick handling , when user clicks on floor plan
+         */
         private MouseAdapter mouseListener = new MouseAdapter() {
 
             @Override
@@ -240,6 +255,8 @@ public class DrawPolygons {
         public static void createPolygon() throws IOException { //protected
             if (currentPolygon.npoints > 2) {
                 if(updatebool){
+                    txtcurrentpolygon = true;
+
                     System.out.println("CURRENTPOLYGON POINTS: "+currentPolygon.npoints);
                     updaterequest();
                     polygons.add(polygonIDcnt,currentPolygon);
@@ -269,7 +286,7 @@ public class DrawPolygons {
             return new Dimension(Window_width, Window_height);
         }
 
-
+        // getting the image of the current floor plan
         private void getimage(String name) {
 
 
@@ -324,6 +341,7 @@ public class DrawPolygons {
 
         }
 
+        //method runs all the time, handling of drawing and setting up the drawing area
         @Override
         protected void paintComponent(Graphics g) {
             // super.paintComponent(g);
@@ -332,16 +350,16 @@ public class DrawPolygons {
 
             //setting the floorplan as the background
 
-            getimage(FloorID);
+     /*       getimage(FloorID);
 
                 try {
                     BufferedImage image = ImageIO.read(urlfloorplan);
                     g.drawImage(image,0,0,null);
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                } */
 
-/*
+
             File originalimage = new File("C:\\Users\\alexa\\Desktop\\BA\\floor plans\\7th\\coordpainting3.png");
 
             BufferedImage img = null;
@@ -350,7 +368,7 @@ public class DrawPolygons {
                 g.drawImage(img, 0, 0, null);
             } catch (IOException e) {
                 e.printStackTrace();
-            } */
+            }
 
             if(firstdrawing){
                 try {
@@ -362,15 +380,63 @@ public class DrawPolygons {
 
            g.setFont(FONT);
 
-            for (Polygon polygon : polygons) {
+            // placing the name of the polygon next to the polygon
+            int lowestx; // lowest x coord of polygon
+            int lowesty; // lowest y coord of polygon
+            for (int i=0;i<polygons.size();i++){
                 g.setColor(Color.RED);
-                drawPolygon(g, polygon); }
+                drawPolygon(g,polygons.get(i));
+
+                lowestx = 0;
+                lowesty = 0;
+
+                for(int k=0;k<polygons.get(i).xpoints.length;k++) {
+                    if(polygons.get(i).xpoints[k] != 0) {
+                        lowestx = polygons.get(i).xpoints[k];
+                    }
+                    if(polygons.get(i).ypoints[k] != 0){
+                        lowesty = polygons.get(i).ypoints[k];
+                    }
+                }
+
+                for(int j=0;j<polygons.get(i).xpoints.length;j++){
+                    if(lowestx > polygons.get(i).xpoints[j] && polygons.get(i).xpoints[j] != 0){
+                        lowestx = polygons.get(i).xpoints[j];
+                    }
+                    if(lowesty > polygons.get(i).ypoints[j] && polygons.get(i).ypoints [j]!= 0){
+                        lowesty = polygons.get(i).ypoints[j];
+                    }
+                }
+
+                g.setColor(Color.DARK_GRAY);
+                g.drawString(PolygonnameArray.get(i),lowestx+40,lowesty+40);
+                }
 
             g.setColor(Color.GREEN);
 
             drawPolygon(g, currentPolygon);
+          /*  if(txtcurrentpolygon) {
+                int lowestxCP = currentPolygon.xpoints[0];
+                int lowestyCP = currentPolygon.ypoints[0];
+                for (int j = 0; j < currentPolygon.xpoints.length; j++) {
+                    if (lowestxCP > currentPolygon.xpoints[j]) {
+                        lowestxCP = currentPolygon.xpoints[j];
+                    }
+                    if (lowestyCP > currentPolygon.ypoints[j]) {
+                        lowestyCP = currentPolygon.ypoints[j];
+                    }
+                }
+                g.setColor(Color.DARK_GRAY);
+                if (lowestxCP == 0 && lowestyCP == 0) {
+                    lowestxCP = polygons.get(polygons.lastIndexOf(polygons) + 1).xpoints[0];
+                    lowestyCP = polygons.get(polygons.lastIndexOf(polygons) + 1).ypoints[0];
+                }
+                g.drawString(RoomNameByUserStr, lowestxCP + 40, lowestyCP + 40);
+            }
+            txtcurrentpolygon = false; */
         }
 
+        //drawing current polygon and lines
         private void drawPolygon(Graphics g, Polygon polygon) {
             Graphics2D g2 = (Graphics2D) g;
             g2.setStroke(new BasicStroke(3)); //thickness of lines
@@ -440,6 +506,7 @@ public class DrawPolygons {
                 ellipsecnt +=1;
                 }
 */
+        // convert pixel coords into geo coords
         public void convertCoords(){
             Point2D.Double ref1 = new Point2D.Double(40.809855, -73.961014); //45,113
             Point2D.Double ref2 = new Point2D.Double(40.809445, -73.960636); //1174,690
@@ -448,6 +515,7 @@ public class DrawPolygons {
             Double rotation = 0.0;
         }
 
+        // when Polygon contains point selected by mouse click, polygon is filled out
         public void PolygonContains(Graphics g) throws InterruptedException {
             Graphics2D g2 = (Graphics2D) g;
             g2.setColor(Color.GREEN);
@@ -458,7 +526,7 @@ public class DrawPolygons {
             fillpolygon = new Polygon();
         }
 
-
+        // setting up the already in the database stored polygons
         public static void GetGivenPolygons() throws IOException{
             polygons.clear();
             PolygonnameArray.clear();
@@ -516,7 +584,7 @@ public class DrawPolygons {
             firstdrawing = false;
         }
 
-        //updating a polygon
+        // request for updating a polygon
         public static void updaterequest() throws IOException {
 
             PostRequest x = new PostRequest();
@@ -554,7 +622,11 @@ public class DrawPolygons {
 
         }
 
+        // request for sending the current polygon to the database
         public static void sendPolygon(){
+
+            LocalTime Timebefore = LocalTime.now();
+
 
             String pixelcoordsOfPolygon = "";
             for (int i = 0; i < currentPolygon.npoints; i++) {
@@ -569,6 +641,7 @@ public class DrawPolygons {
             geocoordsOfPolygon = geocoordsOfPolygon.substring(0,geocoordsOfPolygon.length()-1);
 
             PostRequest x = new PostRequest();
+
             //getting the buildings from the database
             String Response =
                     x.executePost(
@@ -583,10 +656,26 @@ public class DrawPolygons {
                                     + "}", "POST");
 
             System.out.println("SENDPOLYGONREQ"+Response);
+
+            LocalTime TimeAfter = LocalTime.now();
+
             JsonObject jsonObjectsendpolygonreq = new JsonParser().parse(Response).getAsJsonObject();
 
             PolygonID = jsonObjectsendpolygonreq.getAsJsonObject().get("id").toString();
             PolygonIDArray.add(PolygonID.substring(1,PolygonID.length()-1));
+
+
+            long ns = Duration.between(Timebefore, TimeAfter).toMillis();
+
+            System.out.println("Duration: "+ns);
+
+            /*
+            1:  4 points:  ms
+            2: 10 points:  ms
+            3: 20 points:  ms
+
+             */
+
         }
 
     }
@@ -614,6 +703,7 @@ public class DrawPolygons {
 
     }
 
+    // request for checking whether Polygon contains point selected by mouse click
     public static void containspointrequest(){
         PostRequest x = new PostRequest();
 
@@ -644,6 +734,7 @@ public class DrawPolygons {
         fillpolygon = polygons.get(IDcnt);
     }
 
+    // request for getting all the buildings from the database
     public static void buildingrequest() throws IOException {
 
         GetRequest x = new GetRequest();
@@ -672,6 +763,7 @@ public class DrawPolygons {
         }
     }
 
+    // request for getting all the floor of the selected building from the database
     public static void floorrequest() throws IOException {
         //getting the floors from the database
         PostRequest x = new PostRequest();
@@ -700,6 +792,7 @@ public class DrawPolygons {
         }
     }
 
+    // request for deleting a polygon
     public static void deletepolygonrequest() throws IOException {
         // deleting polygons from the database
         GetRequest x = new GetRequest();
@@ -714,7 +807,7 @@ public class DrawPolygons {
         System.out.println("DELETEREQ: "+jsonObjectdeletereq.getAsJsonObject().get("success"));
     }
 
-
+    // handling the main frame
     protected static void initUI() {
         Drawing Drawinginst = new Drawing();
 
@@ -768,6 +861,7 @@ public class DrawPolygons {
             }
         });
 
+        // advice fields
         JTextField advicefield1 = new JTextField();
         JTextField advicefield2 = new JTextField();
 
@@ -782,7 +876,7 @@ public class DrawPolygons {
         String DoubleClickT1 = "Double Left Click in Polygon - update mode and normal functions";
         String EscT2 = "Esc - back without saving (only in update mode)";
         String DeleteT1 = "Delete - delete Polygon (only in update mode)";
-        String SpaceT2 = "Space - see wheter point is inside a polygon";
+        String SpaceT2 = "Control - see wheter point is inside a polygon";
 
         String[] T1list = {LeftClickT1,BackspaceT1,DoubleClickT1,DeleteT1};
         String[] T2list = {EnterT2,RightClickT2,EscT2,SpaceT2};
@@ -801,6 +895,7 @@ public class DrawPolygons {
         advicefield1.setBounds(100,880,700,40);
         advicefield1.setVisible(true);
 
+        // advice button, shows next advice
         JButton nextAdviceBtn = new JButton("Next advice");
         nextAdviceBtn.setBounds(850,830, 200,40);
         nextAdviceBtn.addActionListener(new ActionListener() {
@@ -813,7 +908,7 @@ public class DrawPolygons {
         });
 
 
-
+        // help text with detailed explanation
         class NewFrame extends JFrame implements ActionListener {
 
             public NewFrame() {
@@ -834,8 +929,9 @@ public class DrawPolygons {
                         "Then you are in the update mode and you are able to undo the already drew lines by the \"Backspace\"-Key" +
                         "or delete it by pressing the \"Delete\"-Key.\n\n"+"If you accidentially got in the update mode, just press" +
                                 "the \"Escape\"-Key to leave the update mode without saving anything.\n\n"+
-                        "If you want to see, whether a point is inside a polygon, click on the floorplan and press the \"Space\"-Key.");
+                        "If you want to see, whether a point is inside a polygon, click on the floorplan and press the \"Control\"-Key.");
                 helptext.setBackground(Color.LIGHT_GRAY);
+                helptext.setEditable(false);
                 add(helptext);
                 setBounds(500,100,900,900);
                 setVisible(true);
@@ -845,16 +941,20 @@ public class DrawPolygons {
                 new NewFrame();
             }
         }
+
+        // building label
         JLabel buildinglabel = new JLabel("Buildings");
         buildinglabel.setFont(FONT);
         buildinglabel.setBounds(160,795,200,40);
         buildinglabel.setVisible(true);
 
+        // floor label
         JLabel floorlabel = new JLabel("Floors");
         floorlabel.setFont(FONT);
         floorlabel.setBounds(420,795,200,40);
         floorlabel.setVisible(true);
 
+        // Help button to help text
         JButton Helpbtn = new JButton("Help");
         Helpbtn.setBounds(600,830,200,40);
         Helpbtn.setVisible(true);
@@ -924,7 +1024,7 @@ public class DrawPolygons {
 
         InputMap im = Drawinginst.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-        //enter handling
+        // enter handling
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "Enter");
         ActionMap ap = Drawinginst.getActionMap();
         ap.put("Enter", new AbstractAction() {
@@ -937,7 +1037,7 @@ public class DrawPolygons {
             }
         });
 
-        //backspace handling
+        // backspace handling
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0, true), "Backspace");
         ap.put("Backspace", new AbstractAction() {
             @Override
@@ -972,6 +1072,7 @@ public class DrawPolygons {
             }
         });
 
+        // delete handling
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0, true), "Delete");
         ap.put("Delete", new AbstractAction() {
                     @Override
@@ -998,11 +1099,13 @@ public class DrawPolygons {
                     }
             }
         );
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, true), "Space");
-        ap.put("Space", new AbstractAction() {
+
+        // control handling
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_CONTROL, 0, true), "Control");
+        ap.put("Control", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Pressed Space");
+                System.out.println("Pressed Control");
                 if (containsbool) {
                     try {
                         Drawinginst.PolygonContains(Drawinginst.getGraphics());
@@ -1014,6 +1117,7 @@ public class DrawPolygons {
             }
         });
 
+        // escape handling
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, true), "ESCAPE");
         ap.put("ESCAPE", new AbstractAction() {
             @Override
@@ -1035,10 +1139,13 @@ public class DrawPolygons {
         frame.setVisible(true);
     }
 
+    // repaint function
     static void FrameRepaint() {
         frame.repaint();
     }
 
+    // when a new floor is selected, the current polygon has to be deleted and the already
+    // stored ones have to be drawn
     public static void Newfloorimage(){
         clearCurrentPolygon();
         IntPolyPoints = new ArrayList<Integer>();
@@ -1049,7 +1156,7 @@ public class DrawPolygons {
         }
     }
 
-
+    // creating window after pressing enter to save the polygon
     private static void createWindow() {
         JFrame wframe = new JFrame("Name of room");
         createUI(wframe);
@@ -1058,14 +1165,16 @@ public class DrawPolygons {
         wframe.setVisible(true);
     }
 
+    // handling the different parts of the window
     private static void createUI(final JFrame wframe) {
         JPanel panel = new JPanel();
         LayoutManager layout = new FlowLayout();
         panel.setLayout(layout);
 
-        final JButton CloseBtnW = new JButton("Save this name");
-        CloseBtnW.setVisible(false);
-        CloseBtnW.addActionListener(new ActionListener() {
+        // Save button
+        final JButton SaveBtn = new JButton("Save this name");
+        SaveBtn.setVisible(false);
+        SaveBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 NewPolyBool = false;
@@ -1085,6 +1194,7 @@ public class DrawPolygons {
             }
         });
 
+        // Enter name button
         JButton button = new JButton("Please type in the name of the room.");
         final JLabel labeladvice = new JLabel("Last line will be drawn automatically after saving name.");
         final JLabel label = new JLabel();
@@ -1105,20 +1215,20 @@ public class DrawPolygons {
                 if (result != null && result.length() > 0) {
                     label.setText("You selected: " + result);
                     RoomNameByUserStr = result;
-                    CloseBtnW.setVisible(true);
+                    SaveBtn.setVisible(true);
                 } else {
                     label.setText("None selected");
                 }
             }
         });
-        panel.add(CloseBtnW);
+        panel.add(SaveBtn);
         panel.add(button);
         panel.add(label);
         panel.add(labeladvice);
         wframe.getContentPane().add(panel, BorderLayout.CENTER);
     }
 
-
+    // main method
     public static void main(String[] args) throws IOException {
 
 

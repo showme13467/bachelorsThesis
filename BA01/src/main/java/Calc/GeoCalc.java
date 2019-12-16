@@ -37,7 +37,7 @@ public class GeoCalc {
   //  double [][][] convcoordHH = new double[20][60][3];
 
 
-
+/*
     //for calculating the geo coords into int values used for putting them in an own coordinate system later
     Mercator mercator = new Mercator.EllipticalMercator() {
         @Override
@@ -61,7 +61,7 @@ public class GeoCalc {
         double xAxisProjection(double input) {
             return Mercator.RADIUS_MAJOR * Math.toRadians(input);
         }
-    };
+    }; */
 
     //function for distance between two geo coordinates according to the code from:
     // https://dzone.com/articles/distance-calculation-using-3
@@ -169,8 +169,8 @@ public class GeoCalc {
                         case 0: //no wall
                             break;
                         case 1: //wall
-                                arrayconv[i][j][0] = mercator.xAxisProjection(arrayGeo[i][j][0]) - 4542500;  //converting geo coordinates
-                                arrayconv[i][j][1] = (((mercator.yAxisProjection(arrayGeo[i][j][1])) * (-0.00001)) - 124) * 10000 - 5400;
+                          //      arrayconv[i][j][0] = mercator.xAxisProjection(arrayGeo[i][j][0]) - 4542500;  //converting geo coordinates
+                          //      arrayconv[i][j][1] = (((mercator.yAxisProjection(arrayGeo[i][j][1])) * (-0.00001)) - 124) * 10000 - 5400;
                                 arrayconv[i][j][2] = 1; //boolean-value remains unaffected
 
                             //first try, way more simple, but not that accurate. But it works ^^
@@ -179,14 +179,14 @@ public class GeoCalc {
                             convcoord[i][j][2] = 1; //boolean-value remains unaffected  */
                             break;
                         case 2: //wall with device
-                            arrayconv[i][j][0] = mercator.xAxisProjection(arrayGeo[i][j][0]) - 4542500;
-                            arrayconv[i][j][1] = (((mercator.yAxisProjection(arrayGeo[i][j][1])) * (-0.00001)) - 124) * 10000 - 5400;
+                   //         arrayconv[i][j][0] = mercator.xAxisProjection(arrayGeo[i][j][0]) - 4542500;
+                 //           arrayconv[i][j][1] = (((mercator.yAxisProjection(arrayGeo[i][j][1])) * (-0.00001)) - 124) * 10000 - 5400;
                             arrayconv[i][j][2] = 2;
                             writerIoTdevices.println("lat: "+arrayconv[i][j][0]+", long: "+arrayconv[i][j][1]);
                             break;
                         case 3: //no wall but device
-                            arrayconv[i][j][0] = mercator.xAxisProjection(arrayGeo[i][j][0]) - 4542500;
-                            arrayconv[i][j][1] = (((mercator.yAxisProjection(arrayGeo[i][j][1])) * (-0.00001)) - 124) * 10000 - 5400;
+                 //           arrayconv[i][j][0] = mercator.xAxisProjection(arrayGeo[i][j][0]) - 4542500;
+                 //           arrayconv[i][j][1] = (((mercator.yAxisProjection(arrayGeo[i][j][1])) * (-0.00001)) - 124) * 10000 - 5400;
                             arrayconv[i][j][2] = 3;
                             writerIoTdevices.println("lat: "+arrayconv[i][j][0]+", long: "+arrayconv[i][j][1]+"\n");
                             break;
