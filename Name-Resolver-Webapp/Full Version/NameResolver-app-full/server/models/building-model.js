@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const Building =  mongoose.Schema(
     {
-        name: { type: String, require: true },
+        name: { type: String, required: true },
         geometry: {type: {
                      type: String,
                      enum: ['Polygon'],

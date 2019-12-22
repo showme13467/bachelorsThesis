@@ -134,6 +134,7 @@ updateDevicePixel  = async (req, res) => {
             })
         }
         device.pixel = body.pixel;
+        device.location.coordinates = body.coordinates;
  device
             .save()
             .then(() => {
@@ -184,7 +185,7 @@ getDeviceById = async (req, res) => {
         return res.status(200).json({ success: true, data: device })
     }).catch(err => console.log(err))
 }
-
+//TODO change notification from here
 getDevices = async (req, res) => {
     await Device.find({}, (err, devices) => {
         if (err) {
@@ -195,7 +196,7 @@ getDevices = async (req, res) => {
                 .status(404)
                 .json({ success: false, error: `Device not found` })
         }
-        return res.status(200).json({ success: true, data: devices })
+        return res.status(200).json({ success: true, data: devices, })
     }).catch(err => console.log(err))
 }
 

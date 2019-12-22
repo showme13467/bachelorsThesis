@@ -1,5 +1,8 @@
 const Floor = require('../models/floor-model')
 const Building = require('../models/building-model')
+const fs = require('fs')
+const multer = require ('multer')
+const busboy = require ('connect-busboy')
 
 
 
@@ -21,12 +24,14 @@ createFloor = (req, res) => {
 
     Building.findOne({_id : req.body.building}, (err,building) => {
       if (err){
+        console.log(err)
         return res.status(400).json({
           err,
           message: 'There is no Building with that Id'
 })
 }
       floor.building =  building._id
+      floor.coordinates = body.coordinates
       console.log(floor);
       floor
         .save()
@@ -38,6 +43,7 @@ createFloor = (req, res) => {
             })
         })
         .catch(error => {
+            console.log(error)
             return res.status(400).json({
                 error,
                 message: 'Floor not created!',
@@ -95,7 +101,6 @@ err,
 
 updateFloorPlan = async (req, res) => {
     const body = req.body
-    console.log(body)
     if (!body) {
         return res.status(400).json({
             success: false,
@@ -127,6 +132,50 @@ err,
             })
 })    
 }
+
+
+uploadFloorPlan = async (req, res) => {
+  
+    const body = req.body
+  
+  
+   
+   console.log(req.file) 
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+       Floor.findOne({ _id: req.params.id }, (err, floor) => {
+        if (err) {
+            return res.status(404).json({
+err,
+                message: 'Floor not found!',
+            })
+        }
+        
+      //  floor.image.data = fs.readFileSync(req.file.path);
+      //  floor.image.contentType = 'image/jpg';
+       // floor
+       //     .save()
+        //    .then(() => {
+                return res.status(200).json({
+                    success: true,
+                    id: floor._id,
+                    message: 'Floor updated!',
+                })
+          //  })
+            .catch(error => {
+                return res.status(404).json({
+                    error,
+                    message: 'Floor not updated!',
+                })
+            })
+})
+
+}
+
 
 deleteFloor = async (req, res) => {
     await Floor.findOneAndDelete({ _id: req.params.id }, (err, floor) => {
@@ -191,6 +240,7 @@ module.exports = {
     createFloor,
     updateFloor,
     updateFloorPlan,
+    uploadFloorPlan,
     deleteFloor,
     getFloors,
     getFloorById,
