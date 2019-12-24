@@ -154,6 +154,45 @@ updateDevicePixel  = async (req, res) => {
 
 }
 
+updateDeviceName  = async (req, res) => {
+    const body = req.body
+    console.log(body)
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+
+    Device.findOne({ _id: req.params.id }, (err, device) => {
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'Device not found!',
+            })
+        }
+        device.name = body.name;
+
+ device
+            .save()
+            .then(() => {
+                return res.status(200).json({
+                    success: true,
+                    id: device._id,
+                    message: 'Device updated!',
+                })
+            })
+            .catch(error => {
+                return res.status(404).json({
+                    error,
+                    message: 'Device not updated!',
+                })
+            })
+    })
+
+}
+
+
 
 deleteDevice = async (req, res) => {
     await Device.findOneAndDelete({ _id: req.params.id }, (err, device) => {
@@ -250,6 +289,7 @@ module.exports = {
     createDevice,
     updateDevice,
     updateDevicePixel,
+    updateDeviceName,
     deleteDevice,
     getDevices,
     getDeviceById,
