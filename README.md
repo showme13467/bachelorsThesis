@@ -26,7 +26,7 @@ Install the requirements :
 cd NameResolver-app-full/client && npm install && ../server/ && npm install
 ```
 
-Create MongoDB Database and name it *'NameResolver-Full'* or update index.js in db Folder:
+Create MongoDB Database and name it *'NameResolver-Full'* or update [index.js](./NameResolver-app-full/server/db/index.js):
 
 `mongoose
     .connect('mongodb://127.0.0.1:27017/your-db-name', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -42,7 +42,7 @@ npm run dev
 ```
 
 The project will be available at **0.0.0.0:80**.
-Change it by editing index.js:
+Change it by editing [index.js](./NameResolver-app-full/server/index.js):
 
 `
 const apiPort = 80
@@ -73,7 +73,7 @@ Afterwards you have the possibility to create either new buildings or floors for
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage2.PNG)
 
-After creating a new floor, an image must be uploaded to have the matching floor plan for the floor. Make sure that the floor plan is not in blue or red, otherwise it would be counterproductive for the clarity. It is also recommended to upload an image with the dimensions 1200 x 800 pixels. If this should not be possible, the image will be automatically stretched or shrunk to 1200 x 800.
+After creating a new floor, an image must be uploaded to have the matching floor plan for the floor. Make sure that the floor plan is not in blue or red, otherwise it would be counterproductive for the clarity. It is also recommended to upload an image with the dimensions **1200 x 800 pixels**. If this should not be possible, the image will be automatically stretched or shrunk to 1200 x 800.
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage3.PNG)
 
@@ -96,15 +96,15 @@ To create a room quickly, it is only necessary to draw the room with the help of
 After you have created a room you only have to press Enter and name the room. After saving the room, it will be automatically transferred to the database and thanks to the created reference points, the pixels will be converted into coordinates.
 
 The created room can be viewed only by selecting the appropriate room on the website. 
-Now it is also possible to create a Device for this room. Just click on "create Device" to add a new Device.
+Now it is also possible to create a device for this room. Just click on "create device" to add a new device.
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage5.PNG)
 
-Here it is not important how it is named. An algorithm names the corresponding Device according to its position. But it is important that you give the device the correct position. To do this, you can simply select the appropriate locations in the dropdown menus.
+Here it is not important how it is named. An algorithm names the corresponding device according to its position. But it is important that you give the device the correct position. To do this, you can simply select the appropriate locations in the dropdown menus.
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage6.PNG)
 
-After confirming the entered data, it is now possible to move your device to the appropriate place in your room. First the new device is displayed in the upper left corner of the screen. By keeping the left mouse button pressed, you can move the device and place it in your room. The room where the Device should be is named and even if you place the device outside the room a query will intercept this and place it back into the room. (when you move the device a blue dot is placed at the old position. This symbolizes the previous position of the device and plays an important role later during the update).
+After confirming the entered data, it is now possible to move your device to the appropriate place in your room. First the new device is displayed in the upper left corner of the screen. By keeping the left mouse button pressed, you can move the device and place it in your room. The room where the device should be is named and even if you place the device outside the room a query will intercept this and place it back into the room. (when you move the device a blue dot is placed at the old position. This symbolizes the previous position of the device and plays an important role later during the update).
 It is possible that other blue dots are already in the room. These signalize already existing devices in the specific room.
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage7.PNG)
