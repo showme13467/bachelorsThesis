@@ -2,7 +2,8 @@
 Name Resolver for IoT Devices
 
 [![npm Version](https://img.shields.io/badge/npm-6.13.4-brightgreen.svg)](https://www.npmjs.com/)
-[![Node Version](https://img.shields.io/badge/node-12.14.0-brightgreen.svg)](https://nodejs.org/en/)
+[![Node Version](https://img.shields.io/badge/node-12.14.0-brightgreen.svg)](https://nodejs.org)
+[![MongoDb Version](https://img.shields.io/badge/mongodb-4.2-brightgreen.svg)](https://www.mongodb.com)
 
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/Website.png)
