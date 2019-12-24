@@ -5,7 +5,7 @@ Name Resolver for IoT Devices
 [![Node Version](https://img.shields.io/badge/node-12.14.0-brightgreen.svg)](https://nodejs.org/en/)
 
 
-![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/website.PNG)
+![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/Website.PNG)
 
 
 ## Running the Project Locally
