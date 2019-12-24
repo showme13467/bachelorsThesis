@@ -45,3 +45,14 @@ Change it by editing index.js:
 const apiPort = 80
 const apiHost = '0.0.0.0'
 `
+
+You can edit the frontend by running the client:
+```bash
+cd client/ && npm start
+```
+
+After editing all stuff type in your console:
+
+```bash
+ npm run build && cd ../server/ && rm build && cd ../client && cp -R /build ../server/
+```
