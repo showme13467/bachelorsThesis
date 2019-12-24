@@ -1,11 +1,11 @@
 # bachelorsThesis
 Name Resolver for IoT Devices
 
-[![Python Version](https://img.shields.io/badge/python-3.7.2-brightgreen.svg)](https://python.org)
-[![Django Version](https://img.shields.io/badge/django-2.2.6-brightgreen.svg)](https://djangoproject.com)
+[![npm Version](https://img.shields.io/badge/npm-6.13.4-brightgreen.svg)](https://www.npmjs.com/)
+[![Node Version](https://img.shields.io/badge/node-12.14.0-brightgreen.svg)](https://nodejs.org/en/)
 
 
-![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/screenshotHomepage.PNG)
+![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/website.PNG)
 
 
 ## Running the Project Locally
@@ -16,26 +16,31 @@ First, clone the repository to your local machine:
 git clone https://github.com/showme13467/bachelorsThesis.git
 ```
 
-Install the requirements:
+Install the requirements :
 
 ```bash
-pip install -r requirements.txt
+cd Name-Resolver-Webapp/Full\ Version/NameResolver-app-full/client && rm package-lock.json && npm install && cd ../server/ && rm package-lock.json && npm install
 ```
 
-Create MongoDB Cluster and name it *'mongoDB'* or update settings.py:
+Create MongoDB Database and name it *'NameResolver-Full'* or update index.js in db Folder:
 
-`DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': '<your DB name in MongoDB>',
-    }
-}`
+`mongoose
+    .connect('mongodb://127.0.0.1:27017/your-db-name', { useNewUrlParser: true, useUnifiedTopology: true })
+    .catch(e => {
+        console.error('Connection error', e.message)
+    })`
 
 
-Finally, run the development server in NameResolver folder:
+Finally, run the development server in server folder:
 
 ```bash
-python manage.py runserver
+npm run dev
 ```
 
-The project will be available at **127.0.0.1:8000**.
+The project will be available at **0.0.0.0:80**.
+Change it by editing index.js:
+
+`
+const apiPort = 80
+const apiHost = '0.0.0.0'
+`
