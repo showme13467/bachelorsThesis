@@ -1,35 +1,34 @@
 package Calc;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.javafx.iio.ImageStorage;
-import javafx.scene.transform.Scale;
+import com.sun.prism.shader.AlphaOne_Color_Loader;
 
 import java.awt.*;
+import java.awt.color.ColorSpace;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
+import java.awt.image.*;
 import java.io.*;
 import java.net.URL;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
-import java.util.spi.LocaleServiceProvider;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import static Calc.DrawPolygons.Drawing.*;
+import static java.lang.Math.*;
 
 
 public class DrawPolygons {
 
-    public static String RoomNameByUserStr=""; // name of the current polygon the user created
+    public static String RoomNameByUserStr = ""; // name of the current polygon the user created
     public static Boolean firstdrawing = true; // bool for checking whether the program is started for loading gui
     public static Boolean containsbool = false; // bool for checking whether a selected point is inside a polygon
 
@@ -54,14 +53,31 @@ public class DrawPolygons {
 
     public static File urlfloorplan; // file where the image of the current floorplan is saved to
 
-    protected static int xpos =0; // x position of mouse while checking whether a point selected by user is inside a polygon
-    protected static int ypos =0; // y position of mouse while checking whether a point selected by user is inside a polygon
+    protected static int xpos = 0; // x position of mouse while checking whether a point selected by user is inside a polygon
+    protected static int ypos = 0; // y position of mouse while checking whether a point selected by user is inside a polygon
 
     public static Boolean NewPolyBool = true; // bool whether there is a new poylgon after saving one
     public static Boolean KeyAllowedSavingPolygon = false; // bool whether KeyBoardInput is Allowed
     public static Boolean Fillpolygon = false; // bool whether polygon is selected and should be filled out
 
     public static Boolean txtcurrentpolygon = false;
+    public static Boolean updateAll = false;
+    public static Boolean newimagebool = true;
+
+    private static double refgeoaX = 0;//40.809840;
+    private static double refgeoaY = 0;//-73.960924;
+    private static double refgeobX = 0;//40.809445;
+    private static double refgeobY = 0;//-73.960636;
+
+    private static double newgeoX = 0; // c(x)
+    private static double newgeoY = 0; // c(y)
+
+
+    private static float refpixelaX = 0;//171; // a(x)
+    private static float refpixelaY = 0;//113; // a(y)
+    private static float refpixelbX = 0;//1169; // b(x)
+    private static float refpixelbY = 0;//690; // b(y)
+
 
 /*    public static Boolean ellipsenbool = false;
     public static int ellipsecnt = 0;
@@ -82,6 +98,7 @@ public class DrawPolygons {
 
     public static class Drawing extends JPanel {
 
+
      /*   static Ellipse2D dellipse = new Ellipse2D.Double();
         static Ellipse2D ellipse = new Ellipse2D.Double();
         static ArrayList<Ellipse2D> ellipse2DArrayList = new ArrayList<>(); */
@@ -93,7 +110,6 @@ public class DrawPolygons {
         protected static Polygon currentPolygon = new Polygon(); // polygon user is creating at the moment
         protected static Polygon updatepolygon = new Polygon(); // polygon which is changed in updatemode
         protected static Polygon fillpolygon = new Polygon(); // polygon which is filled in updatemode
-
 
         /*
         Method which is called when Polygon is finished and should to be created and drawn
@@ -111,9 +127,9 @@ public class DrawPolygons {
             createPolygon();
         }
 
-        /*
-        Mouseclick handling , when user clicks on floor plan
-         */
+
+        //Mouseclick handling , when user clicks on floor plan
+
         private MouseAdapter mouseListener = new MouseAdapter() {
 
             @Override
@@ -121,37 +137,35 @@ public class DrawPolygons {
 
                 //LeftMouseButton handling => draw
                 if (e.getY() < 800 && NewPolyBool == true && SwingUtilities.isLeftMouseButton(e)) {
-                    if(e.getClickCount() ==2){
-                    for(int i=0;i<polygons.size();i++) {
-                        if (polygons.get(i).contains(e.getX(), e.getY())) {
+                    if (e.getClickCount() == 2) {
+                        for (int i = 0; i < polygons.size(); i++) {
+                            if (polygons.get(i).contains(e.getX(), e.getY())) {
 
-                            updatebool = true;
-                            updatepolygon = polygons.get(i);
-                            polygonIDcnt = i;
-                            clearCurrentPolygon();
-                            Polyboolcnt = 0;
-                            IntPolyPoints = new ArrayList<Integer>();
-                            if(!updateboolM) {
-                                updateboolM = true;
+                                updatebool = true;
+                                updatepolygon = polygons.get(i);
+                                polygonIDcnt = i;
+                                clearCurrentPolygon();
+                                Polyboolcnt = 0;
+                                IntPolyPoints = new ArrayList<Integer>();
+                                if (!updateboolM) {
+                                    updateboolM = true;
+                                }
                             }
                         }
-                    }
-                    //giving currentpolygon the points of the restored polygon
-                    if(updateboolM){
-                        for(int j=0;j<updatepolygon.npoints;j++){
-                            addPoint(updatepolygon.xpoints[j],updatepolygon.ypoints[j]);
-                             }
-                             updateboolM = false;
+                        //giving currentpolygon the points of the restored polygon
+                        if (updateboolM) {
+                            for (int j = 0; j < updatepolygon.npoints; j++) {
+                                addPoint(updatepolygon.xpoints[j], updatepolygon.ypoints[j]);
+                            }
+                            updateboolM = false;
                         }
-                    }
+                    } else if (e.getClickCount() == 1) {
+                        containsbool = true;
+                        xpos = e.getX();
+                        ypos = e.getY();
 
-                    else if (e.getClickCount() == 1) {
-                                    containsbool = true;
-                                    xpos = e.getX();
-                                    ypos = e.getY();
-
-                            addPoint(e.getX(), e.getY());
-                            KeyAllowedSavingPolygon = true;
+                        addPoint(e.getX(), e.getY());
+                        KeyAllowedSavingPolygon = true;
                     }
 
                     //RightMouseButton handling => cancel drawing
@@ -219,7 +233,7 @@ public class DrawPolygons {
 
         public Drawing() {
             this.addMouseListener(mouseListener);
-        //      this.addMouseMotionListener(mouseMotionListener);
+            //      this.addMouseMotionListener(mouseMotionListener);
         }
 
         public void addNotify() {
@@ -229,7 +243,7 @@ public class DrawPolygons {
 
         //adding a point to the current poylgon
         protected void addPoint(int x, int y) {
-          //   ellipsenbool = true;
+            //   ellipsenbool = true;
 
             currentPolygon.addPoint(x, y);
             System.out.println("x + y: " + x + ", " + y);
@@ -254,20 +268,19 @@ public class DrawPolygons {
         //polygon must consist out of at least 3 points minimum
         public static void createPolygon() throws IOException { //protected
             if (currentPolygon.npoints > 2) {
-                if(updatebool){
+                if (updatebool) {
                     txtcurrentpolygon = true;
 
-                    System.out.println("CURRENTPOLYGON POINTS: "+currentPolygon.npoints);
-                    updaterequest();
-                    polygons.add(polygonIDcnt,currentPolygon);
-                    PolygonnameArray.add(polygonIDcnt,RoomNameByUserStr);
+                    System.out.println("CURRENTPOLYGON POINTS: " + currentPolygon.npoints);
+                    updatepolygonrequest();
+                    polygons.add(polygonIDcnt, currentPolygon);
+                    PolygonnameArray.add(polygonIDcnt, RoomNameByUserStr);
                     IntPolyPoints = new ArrayList<Integer>();
                     Polyboolcnt = 0;
-                    polygons.remove(polygonIDcnt+1);
-                    PolygonnameArray.remove(polygonIDcnt+1);
+                    polygons.remove(polygonIDcnt + 1);
+                    PolygonnameArray.remove(polygonIDcnt + 1);
                     GetGivenPolygons();
-                }
-                else {
+                } else {
                     polygons.add(currentPolygon);
                     PolygonnameArray.add(RoomNameByUserStr);
                     System.out.println("Polygon finished! \n \n");
@@ -286,81 +299,136 @@ public class DrawPolygons {
             return new Dimension(Window_width, Window_height);
         }
 
-        // getting the image of the current floor plan
-        private void getimage(String name) {
-
-
-            String filename = "https://www.study-in-bavaria.de/fileadmin/_migrated/pics/Geb33_a_02";//+"/"+name;
+        //saving all the images from the database
+        protected static void loadimages(String name) {
 
             name = name + ".jpg";
+
+            String filename = "http://irt-beagle.cs.columbia.edu/images/" + name;
 
             BufferedImage image = null;
             try {
 
-                URL url = new URL(filename + ".jpg");
+                URL url = new URL(filename);
                 image = ImageIO.read(url);
 
-                BufferedImage blackwhiteImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                BufferedImage blackwhiteImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
 
                 for (int i = 0; i < image.getWidth(); i++) {
                     for (int j = 0; j < image.getHeight(); j++) {
-                        Color c = new Color(image.getRGB(i, j));
+                        int p = image.getRGB(i,j);
+                        int a = (p>>24)&0xff;
+                        int r = (p>>16)&0xff;
+                        int g = (p>>8)&0xff;
+                        int b = p&0xff;
+
+                        double rr = Math.pow(r / 255.0 , 2.2);
+                        double gg = Math.pow(g / 255.0 , 2.2);
+                        double bb = Math.pow(b / 255.0 , 2.2);
+                        double lum = 0.2126 * rr + 0.7152 * gg + 0.0722 * bb;
+
+                        lum = lum;
+
+                        int graylevel = (int) (255.0*Math.pow(lum,1.0 / 2.2));
+                        int gray = (graylevel<<16) + (graylevel<<8) + graylevel;
+
+                        int avg = (r+g+b)/3;
+                        p = (avg<<24) | (avg<<16) | (avg<<8) | avg;
+
+                /*        Color c = new Color(image.getRGB(i, j));
+                        int red = c.getRed();
+                        int green = c.getGreen();
+                        int blue = c.getBlue();
+                        int alpha = c.getAlpha();
+
+                        int gray = (red+green+blue)/3; */
+
+                        blackwhiteImage.setRGB(i,j,gray);
+
+                        /*
                         Color myWhite = new Color(255, 255, 255);
                         Color myBlack = new Color(0, 0, 0);
 
+//135 at all positions
                         //if the pixel is black(wall), set as black in new image
-                        if (c.getRed() < 135 && c.getGreen() < 135 && c.getBlue() < 135) {
+                        if (c.getRed() < 85 && c.getGreen() < 85 && c.getBlue() < 85) {
                             blackwhiteImage.setRGB(i, j, myBlack.getRGB());
 
                         } else {
                             blackwhiteImage.setRGB(i, j, myWhite.getRGB());
-                        }
+                        } */
                     }
                 }
 
-                BufferedImage scaledImage = new BufferedImage(1211,800, BufferedImage.TYPE_INT_ARGB);
+               /* BufferedImage scaledImage = new BufferedImage(1211,800, BufferedImage.TYPE_INT_ARGB);
                 final AffineTransform at = AffineTransform.getScaleInstance(2.0, 2.0);
                 final AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
                 scaledImage = ato.filter(blackwhiteImage, scaledImage);
 
-                BufferedImage newimage= scaledImage;
-
+                BufferedImage newimage= scaledImage; */
 
 
                 File imagefile = new File(name);
-                if(imagefile.exists() && !imagefile.isDirectory()) {}
-                else {
-                    ImageIO.write(newimage, "jpg", imagefile);
-                }
+                ImageIO.write(/*newimage*/blackwhiteImage, "jpg", imagefile);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
 
-         urlfloorplan = new File(name);
-
-
+        //getting the image of the current floor plan
+        private static void getimage(String name) {
+            name = name + ".jpg";
+            urlfloorplan = new File(name);
         }
 
         //method runs all the time, handling of drawing and setting up the drawing area
         @Override
         protected void paintComponent(Graphics g) {
-            // super.paintComponent(g);
+            getimage(FloorID);
+            try {
+                BufferedImage image = ImageIO.read(urlfloorplan);
+                g.drawImage(image, 0, 0,1211,800, null);
+            } catch (IOException e) {
+                System.out.println("ERROR 404, FLOOR PLAN NOT FOUND");
 
-//convertCoords();
+                JFrame wframe = new JFrame("ERROR 404, FLOOR PLAN NOT FOUND");
+                JButton CloseBtn = new JButton("OK");
+                CloseBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        wframe.dispose();
+                        frame.dispose();
+                    }
+                });
+                JTextField Errormsg1 = new JTextField("Please upload the corresponding floor plan");
+                JTextField Errormsg2 = new JTextField("to the selected floor to create polygons here!");
 
-            //setting the floorplan as the background
+                Errormsg1.setEditable(false);
+                Errormsg2.setEditable(false);
+                CloseBtn.setVisible(true);
+                Errormsg1.setVisible(true);
+                Errormsg2.setVisible(true);
+                CloseBtn.setFont(new Font("Serif",Font.BOLD,16));
+                Errormsg1.setFont(new Font("Serif",Font.BOLD,18));
+                Errormsg2.setFont(new Font("Serif",Font.BOLD,18));
+                CloseBtn.setBounds(250,20,100,40);
+                Errormsg1.setBounds(125,80,350,60);
+                Errormsg2.setBounds(125,135,350,60);
 
-     /*       getimage(FloorID);
 
-                try {
-                    BufferedImage image = ImageIO.read(urlfloorplan);
-                    g.drawImage(image,0,0,null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } */
+                wframe.setDefaultCloseOperation(0);
+                wframe.add(Errormsg2);
+                wframe.add(Errormsg1);
+                wframe.add(CloseBtn);
+                wframe.setLayout(new BorderLayout());
+                wframe.setSize(600, 300);
+                wframe.setLocationRelativeTo(null);
+                wframe.setVisible(true);
+            }
 
 
-            File originalimage = new File("C:\\Users\\alexa\\Desktop\\BA\\floor plans\\7th\\coordpainting3.png");
+   /*         File originalimage = new File("C:\\Users\\alexa\\Desktop\\BA\\floor plans\\7th\\coordpainting3.png");
 
             BufferedImage img = null;
             try {
@@ -368,72 +436,68 @@ public class DrawPolygons {
                 g.drawImage(img, 0, 0, null);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            } */
 
-            if(firstdrawing){
+            if (firstdrawing) {
                 try {
                     GetGivenPolygons();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                try {
+                    for (int j = 0; j < FloorIDArray.length; j++) {
+                        File deleteoldimagefile = new File(FloorIDArray[j]);
+                        deleteoldimagefile.delete();
+                    }
+                } catch (Exception e1) {
+                }
+
+                try {
+                    for (int i = 0; i < FloorIDArray.length; i++) {
+                        loadimages(FloorIDArray[i]);
+                    }
+                } catch (Exception e1) {
+                    //frame.dispose();
+                }
             }
 
-           g.setFont(FONT);
+            g.setFont(FONT);
 
             // placing the name of the polygon next to the polygon
             int lowestx; // lowest x coord of polygon
             int lowesty; // lowest y coord of polygon
-            for (int i=0;i<polygons.size();i++){
+            for (int i = 0; i < polygons.size(); i++) {
                 g.setColor(Color.RED);
-                drawPolygon(g,polygons.get(i));
+                drawPolygon(g, polygons.get(i));
 
                 lowestx = 0;
                 lowesty = 0;
 
-                for(int k=0;k<polygons.get(i).xpoints.length;k++) {
-                    if(polygons.get(i).xpoints[k] != 0) {
+                for (int k = 0; k < polygons.get(i).xpoints.length; k++) {
+                    if (polygons.get(i).xpoints[k] != 0) {
                         lowestx = polygons.get(i).xpoints[k];
                     }
-                    if(polygons.get(i).ypoints[k] != 0){
+                    if (polygons.get(i).ypoints[k] != 0) {
                         lowesty = polygons.get(i).ypoints[k];
                     }
                 }
 
-                for(int j=0;j<polygons.get(i).xpoints.length;j++){
-                    if(lowestx > polygons.get(i).xpoints[j] && polygons.get(i).xpoints[j] != 0){
+                for (int j = 0; j < polygons.get(i).xpoints.length; j++) {
+                    if (lowestx > polygons.get(i).xpoints[j] && polygons.get(i).xpoints[j] != 0) {
                         lowestx = polygons.get(i).xpoints[j];
                     }
-                    if(lowesty > polygons.get(i).ypoints[j] && polygons.get(i).ypoints [j]!= 0){
+                    if (lowesty > polygons.get(i).ypoints[j] && polygons.get(i).ypoints[j] != 0) {
                         lowesty = polygons.get(i).ypoints[j];
                     }
                 }
 
-                g.setColor(Color.DARK_GRAY);
-                g.drawString(PolygonnameArray.get(i),lowestx+40,lowesty+40);
-                }
-
+                g.setColor(Color.blue);
+                g.drawString(PolygonnameArray.get(i), lowestx + 40, lowesty + 40);
+            }
             g.setColor(Color.GREEN);
 
             drawPolygon(g, currentPolygon);
-          /*  if(txtcurrentpolygon) {
-                int lowestxCP = currentPolygon.xpoints[0];
-                int lowestyCP = currentPolygon.ypoints[0];
-                for (int j = 0; j < currentPolygon.xpoints.length; j++) {
-                    if (lowestxCP > currentPolygon.xpoints[j]) {
-                        lowestxCP = currentPolygon.xpoints[j];
-                    }
-                    if (lowestyCP > currentPolygon.ypoints[j]) {
-                        lowestyCP = currentPolygon.ypoints[j];
-                    }
-                }
-                g.setColor(Color.DARK_GRAY);
-                if (lowestxCP == 0 && lowestyCP == 0) {
-                    lowestxCP = polygons.get(polygons.lastIndexOf(polygons) + 1).xpoints[0];
-                    lowestyCP = polygons.get(polygons.lastIndexOf(polygons) + 1).ypoints[0];
-                }
-                g.drawString(RoomNameByUserStr, lowestxCP + 40, lowestyCP + 40);
-            }
-            txtcurrentpolygon = false; */
         }
 
         //drawing current polygon and lines
@@ -494,180 +558,245 @@ public class DrawPolygons {
             g2.drawString(name, x + 10, y);
         }
 
-    /*        private static void setDellipse(Graphics g, Polygon polygon, int nth){
-                Graphics2D g2 = (Graphics2D) g;
-                int x = polygon.xpoints[nth];
-                int height = g2.getFontMetrics().getHeight();
-                int y = polygon.ypoints[nth] < height ? polygon.ypoints[nth] + height : polygon.ypoints[nth];
-                ellipse = new Ellipse2D.Double(x-10,y-10,20,20);
-                g2.draw(ellipse);
-                ellipse2DArrayList.add(ellipse);
-                System.out.println("Ellipse added! Size of ellipsearray: "+ellipse2DArrayList.size());
-                ellipsecnt +=1;
-                }
-*/
+        /*        private static void setDellipse(Graphics g, Polygon polygon, int nth){
+                    Graphics2D g2 = (Graphics2D) g;
+                    int x = polygon.xpoints[nth];
+                    int height = g2.getFontMetrics().getHeight();
+                    int y = polygon.ypoints[nth] < height ? polygon.ypoints[nth] + height : polygon.ypoints[nth];
+                    ellipse = new Ellipse2D.Double(x-10,y-10,20,20);
+                    g2.draw(ellipse);
+                    ellipse2DArrayList.add(ellipse);
+                    System.out.println("Ellipse added! Size of ellipsearray: "+ellipse2DArrayList.size());
+                    ellipsecnt +=1;
+                    }
+    */
         // convert pixel coords into geo coords
-        public void convertCoords(){
-            Point2D.Double ref1 = new Point2D.Double(40.809855, -73.961014); //45,113
-            Point2D.Double ref2 = new Point2D.Double(40.809445, -73.960636); //1174,690
-            Double stretchx1 = 0.0;
-            Double stretchy = 0.0;
-            Double rotation = 0.0;
+        public static void convertCoords(float refpixelcX, float refpixelcY) {
+            double p = 0;
+            double q = 0;
+            double alpha = 0;
+            double lambda = 0;
+            double delta = 0;
+
+            lambda = Math.abs((refpixelaX - refpixelbX) / (refgeoaY - refgeobY));
+            delta = Math.abs((refpixelaY - refpixelbY) / (refgeoaX - refgeobX));
+
+            double help1 = lambda * (refgeoaY - refgeobY) * (refpixelaX - refpixelbX);
+            double help2 = delta * (refgeoaX - refgeobX) * (refpixelaY - refpixelbY);
+            double help3 = Math.pow((refpixelaX-refpixelbX),2);
+            double help4 = Math.pow((refpixelaY-refpixelbY),2);
+
+            alpha = asin(-1* ((help1 + help2) / (help3 + help4)) );
+
+            p = ((refpixelaX * sin(alpha) + refpixelaY * cos(alpha)) / lambda) + refgeoaY;
+
+            q = ((- refpixelaX * cos(alpha) + refpixelaY * sin(alpha)) / delta) + refgeoaX;
+
+            newgeoY = ((- refpixelcX * sin(alpha) - refpixelcY * cos(alpha)) / lambda) + p;
+            newgeoX = ((refpixelcX * cos(alpha) - refpixelcY * sin(alpha)) / delta) + q;
         }
+    }
 
-        // when Polygon contains point selected by mouse click, polygon is filled out
-        public void PolygonContains(Graphics g) throws InterruptedException {
-            Graphics2D g2 = (Graphics2D) g;
-            g2.setColor(Color.GREEN);
+    public static void setFrame(JFrame frame) {
+        DrawPolygons.frame = frame;
+        JButton BlackWhiteBtn = new JButton("Change to Black White Image");
+        frame.add(BlackWhiteBtn);
+    }
 
-            containspointrequest();
-            g2.fill(fillpolygon);
-            g2.setColor(Color.GREEN);
-            fillpolygon = new Polygon();
-        }
+    // when Polygon contains point selected by mouse click, polygon is filled out
+    protected static void PolygonContains(Graphics g) throws InterruptedException {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(Color.GREEN);
 
-        // setting up the already in the database stored polygons
-        public static void GetGivenPolygons() throws IOException{
-            polygons.clear();
-            PolygonnameArray.clear();
-            PolygonIDArray.clear();
+        containspointrequest();
+        g2.fill(fillpolygon);
+        g2.setColor(Color.GREEN);
+        fillpolygon = new Polygon();
+    }
 
-            PostRequest x = new PostRequest();
+    // setting up the already in the database stored polygons
+    protected static void GetGivenPolygons() throws IOException {
+        polygons = new ArrayList<>();
+        PolygonnameArray = new ArrayList<>();
+        PolygonIDArray = new ArrayList<>();
 
-                //drawing the polygons which are already in the database
-                String Response =
-                        x.executePost(
-                              "http://irt-ap.cs.columbia.edu/api/roomsByFloor",
-                              "{\n"
-                                      + " \"floor\" :" + "\"" + FloorID + "\"" + "\n"
-                                      + "}", "POST");
+        newimagebool = true;
+
+        PostRequest x = new PostRequest();
+
+        //drawing the polygons which are already in the database
+        String Response =
+                x.executePost(
+                        "http://irt-beagle.cs.columbia.edu/api/roomsByFloor",
+                        "{\n"
+                                + " \"floor\" :" + "\"" + FloorID + "\"" + "\n"
+                                + "}", "POST");
 
 
-            System.out.println("GETGIVENPOLYGONSREQ: "+Response);
+        if(Response == "false") {
+        } else {
+
+            System.out.println("GETGIVENPOLYGONSREQ: " + Response);
             JsonObject jsonObjectgivenpolygonsreq = new JsonParser().parse(Response).getAsJsonObject();
             JsonArray jsonarraygivenpolygonsreq = jsonObjectgivenpolygonsreq.getAsJsonArray("data");
 
 
-    for (int i = 0; i < jsonarraygivenpolygonsreq.size(); i++) {
-        String response = jsonarraygivenpolygonsreq.get(i).getAsJsonObject().get("name").toString();
-        PolygonnameArray.add(response.substring(1, response.length() - 1));
-    }
-    for (int i = 0; i < jsonarraygivenpolygonsreq.size(); i++) {
-        String response = jsonarraygivenpolygonsreq.get(i).getAsJsonObject().get("_id").toString();
-        PolygonIDArray.add(response.substring(1, response.length() - 1));
-    }
+            for (int i = 0; i < jsonarraygivenpolygonsreq.size(); i++) {
+                String response = jsonarraygivenpolygonsreq.get(i).getAsJsonObject().get("name").toString();
+                PolygonnameArray.add(response.substring(1, response.length() - 1));
+            }
+            for (int i = 0; i < jsonarraygivenpolygonsreq.size(); i++) {
+                String response = jsonarraygivenpolygonsreq.get(i).getAsJsonObject().get("_id").toString();
+                PolygonIDArray.add(response.substring(1, response.length() - 1));
+            }
 
-    for (int i = 0; i < jsonarraygivenpolygonsreq.size(); i++) {
-        JsonArray pixeljsonarray = jsonarraygivenpolygonsreq.get(i).getAsJsonObject().get("pixel").getAsJsonArray();
-        int[] points = new int[pixeljsonarray.size()];
-        for(int h=0;h<pixeljsonarray.size();h++){
-            points[h] = pixeljsonarray.get(h).getAsInt();
-        }
-                    int n = points.length;
-                    int[] xp = new int[n / 2];
-                    int[] yp = new int[n / 2];
-                    int xcnt = 0;
-                    int ycnt = 0;
-                    for (int z = 0; z < n; z++) {
-                        if (z % 2 == 0) {
-                            xp[xcnt] = points[z];
-                            xcnt += 1;
-                        } else {
-                            yp[ycnt] = points[z];
-                            ycnt += 1;
-                        }
+            for (int i = 0; i < jsonarraygivenpolygonsreq.size(); i++) {
+                JsonArray pixeljsonarray = jsonarraygivenpolygonsreq.get(i).getAsJsonObject().get("pixel").getAsJsonArray();
+                int[] points = new int[pixeljsonarray.size()];
+                for (int h = 0; h < pixeljsonarray.size(); h++) {
+                    points[h] = pixeljsonarray.get(h).getAsInt();
+                }
+                int n = points.length;
+                int[] xp = new int[n / 2];
+                int[] yp = new int[n / 2];
+                int xcnt = 0;
+                int ycnt = 0;
+                for (int z = 0; z < n; z++) {
+                    if (z % 2 == 0) {
+                        xp[xcnt] = points[z];
+                        xcnt += 1;
+                    } else {
+                        yp[ycnt] = points[z];
+                        ycnt += 1;
                     }
+                }
 
-                    Polygon poly = new Polygon(xp, yp, n / 2);
-                    polygons.add(poly);
+                Polygon poly = new Polygon(xp, yp, n / 2);
+                polygons.add(poly);
             }
-            firstdrawing = false;
         }
+        firstdrawing = false;
+    }
 
-        // request for updating a polygon
-        public static void updaterequest() throws IOException {
+    // request for updating a polygon
+    private static void updatepolygonrequest() throws IOException {
 
-            PostRequest x = new PostRequest();
+        PostRequest x = new PostRequest();
 
-            System.out.println("CURRENTPOLYGONS POINTS: "+currentPolygon.npoints);
-
-            String pixelcoordsOfPolygon = "";
-            for (int i = 0; i < currentPolygon.npoints; i++) {
-                pixelcoordsOfPolygon += currentPolygon.xpoints[i] + ", " + currentPolygon.ypoints[i] + ",";
-            }
-            pixelcoordsOfPolygon = pixelcoordsOfPolygon.substring(0, pixelcoordsOfPolygon.length() - 1);
-
-            String geocoordsOfPolygon ="";
-            for (int i = 0; i < currentPolygon.npoints; i++) {
-                geocoordsOfPolygon += "["+currentPolygon.xpoints[i] + ", " + currentPolygon.ypoints[i] + "],";
-            }
-            geocoordsOfPolygon = geocoordsOfPolygon.substring(0, geocoordsOfPolygon.length() - 1);
-
-            PolygonID = PolygonIDArray.get(polygonIDcnt);
-
-            String Response =
-                    x.executePost(
-                            "http://irt-ap.cs.columbia.edu/api/room/"+PolygonID,
-                            "{\n"
-                                    + "\"geometry\": {"+"\n"
-                                    + "\"type\": "+"\"Polygon\""+",\n"
-                                    + "\"coordinates\":"+"[["+geocoordsOfPolygon+"]]" +"\n},"
-                                    + "\"pixel\":"+"["+pixelcoordsOfPolygon+"]"+",\n"
-                                    + "\"name\" :"+"\""+RoomNameByUserStr+"\"" +"\n,"
-                                    + "\"floor\" :"+"\""+FloorID+"\""+"\n"
-                                    + "}", "PUT");
-
-            JsonObject jsonObjectdeletereq = new JsonParser().parse(Response).getAsJsonObject();
-            System.out.println("UPDATEREQ: "+jsonObjectdeletereq.getAsJsonObject().get("success"));
-
+        String pixelcoordsOfPolygon = "";
+        for (int i = 0; i < currentPolygon.npoints; i++) {
+            pixelcoordsOfPolygon += currentPolygon.xpoints[i] + ", " + currentPolygon.ypoints[i] + ",";
         }
+        pixelcoordsOfPolygon = pixelcoordsOfPolygon.substring(0, pixelcoordsOfPolygon.length() - 1);
 
-        // request for sending the current polygon to the database
-        public static void sendPolygon(){
+        String geocoordsOfPolygon = "";
+        for (int i = 0; i < currentPolygon.npoints; i++) {
+            convertCoords(currentPolygon.xpoints[i], currentPolygon.ypoints[i]);
+            geocoordsOfPolygon += "[" + newgeoX + "," + newgeoY + "],";
+        }
+        geocoordsOfPolygon = geocoordsOfPolygon.substring(0, geocoordsOfPolygon.length() - 1);
 
-            LocalTime Timebefore = LocalTime.now();
+        PolygonID = PolygonIDArray.get(polygonIDcnt);
 
+        String Response =
+                x.executePost(
+                        "http://irt-beagle.cs.columbia.edu/api/room/" + PolygonID,
+                        "{\n"
+                                + "\"geometry\": {" + "\n"
+                                + "\"type\": " + "\"Polygon\"" + ",\n"
+                                + "\"coordinates\":" + "[[" + geocoordsOfPolygon + "]]" + "\n},"
+                                + "\"pixel\":" + "[" + pixelcoordsOfPolygon + "]" + ",\n"
+                                + "\"name\" :" + "\"" + RoomNameByUserStr + "\"" + "\n,"
+                                + "\"floor\" :" + "\"" + FloorID + "\"" + "\n"
+                                + "}", "PUT");
 
-            String pixelcoordsOfPolygon = "";
-            for (int i = 0; i < currentPolygon.npoints; i++) {
-                pixelcoordsOfPolygon += currentPolygon.xpoints[i] + "," + currentPolygon.ypoints[i] + ",";
+        JsonObject jsonObjectdeletereq = new JsonParser().parse(Response).getAsJsonObject();
+        System.out.println("UPDATEPOLYGONREQ: " + jsonObjectdeletereq.getAsJsonObject().get("success"));
+
+    }
+
+    // request for checking whether new floors or buildings have been added
+    protected static void updateAllrequest() throws IOException {
+        GetRequest x = new GetRequest();
+        String Response =
+                x.sendGET(
+                        "http://irt-beagle.cs.columbia.edu/api/devices",
+                        "{"
+                                + "}", "GET");
+
+        System.out.println("UPDATEALLREQ: " + Response);
+
+        JsonObject jsonObjectUpdateallreq = new JsonParser().parse(Response).getAsJsonObject();
+        String Successbool = jsonObjectUpdateallreq.getAsJsonObject().get("notify").toString();
+
+        System.out.println("Successbool: " + Successbool);
+        //Successbool = "true";
+        if (Successbool.equals("true")) {
+
+            try {
+                for (int j = 0; j < FloorIDArray.length; j++) {
+                    File deleteoldimagefile = new File(FloorIDArray[j]);
+                    deleteoldimagefile.delete();
+                }
+            } catch (Exception e1) {
             }
-            pixelcoordsOfPolygon = pixelcoordsOfPolygon.substring(0, pixelcoordsOfPolygon.length() - 1);
 
-            String geocoordsOfPolygon = "";
-            for (int i = 0; i < currentPolygon.npoints; i++) {
-                geocoordsOfPolygon += "["+currentPolygon.xpoints[i]/10 + "," + currentPolygon.ypoints[i]/10 + "],";
+            floorrequest();
+            buildingrequest();
+            for (int i = 0; i < FloorIDArray.length; i++) {
+                loadimages(FloorIDArray[i]);
             }
-            geocoordsOfPolygon = geocoordsOfPolygon.substring(0,geocoordsOfPolygon.length()-1);
+        }
+    }
 
-            PostRequest x = new PostRequest();
+    // request for sending the current polygon to the database
+    private static void sendPolygon() {
 
-            //getting the buildings from the database
-            String Response =
-                    x.executePost(
-                            "http://irt-ap.cs.columbia.edu/api/room",
-                            "{\n"
-                                    + "\"geometry\": {"+"\n"
-                                    + "\"type\": "+"\"Polygon\""+",\n"
-                                    + "\"coordinates\":"+"[["+geocoordsOfPolygon+"]]" +"\n},"
-                                    + "\"pixel\":"+"["+pixelcoordsOfPolygon+"]"+"\n,"
-                                    + "\"name\" :"+"\""+RoomNameByUserStr+"\"" +"\n,"
-                                    + "\"floor\" :"+"\""+FloorID+"\""+"\n"
-                                    + "}", "POST");
-
-            System.out.println("SENDPOLYGONREQ"+Response);
-
-            LocalTime TimeAfter = LocalTime.now();
-
-            JsonObject jsonObjectsendpolygonreq = new JsonParser().parse(Response).getAsJsonObject();
-
-            PolygonID = jsonObjectsendpolygonreq.getAsJsonObject().get("id").toString();
-            PolygonIDArray.add(PolygonID.substring(1,PolygonID.length()-1));
+        LocalTime Timebefore = LocalTime.now();
 
 
-            long ns = Duration.between(Timebefore, TimeAfter).toMillis();
+        String pixelcoordsOfPolygon = "";
+        for (int i = 0; i < currentPolygon.npoints; i++) {
+            pixelcoordsOfPolygon += currentPolygon.xpoints[i] + "," + currentPolygon.ypoints[i] + ",";
+        }
+        pixelcoordsOfPolygon = pixelcoordsOfPolygon.substring(0, pixelcoordsOfPolygon.length() - 1);
 
-            System.out.println("Duration: "+ns);
+        String geocoordsOfPolygon = "";
+        for (int i = 0; i < currentPolygon.npoints; i++) {
+            convertCoords(currentPolygon.xpoints[i], currentPolygon.ypoints[i]);
+            geocoordsOfPolygon += "[" + newgeoX + "," + newgeoY + "],";
+        }
+        geocoordsOfPolygon = geocoordsOfPolygon.substring(0, geocoordsOfPolygon.length() - 1);
+
+
+        PostRequest x = new PostRequest();
+
+        //getting the buildings from the database
+        String Response =
+                x.executePost(
+                        "http://irt-beagle.cs.columbia.edu/api/room",
+                        "{\n"
+                                + "\"geometry\": {" + "\n"
+                                + "\"type\": " + "\"Polygon\"" + ",\n"
+                                + "\"coordinates\":" + "[[" + geocoordsOfPolygon + "]]" + "\n},"
+                                + "\"pixel\":" + "[" + pixelcoordsOfPolygon + "]" + "\n,"
+                                + "\"name\" :" + "\"" + RoomNameByUserStr + "\"" + "\n,"
+                                + "\"floor\" :" + "\"" + FloorID + "\"" + "\n"
+                                + "}", "POST");
+
+        System.out.println("SENDPOLYGONREQ" + Response);
+
+        LocalTime TimeAfter = LocalTime.now();
+
+        JsonObject jsonObjectsendpolygonreq = new JsonParser().parse(Response).getAsJsonObject();
+
+        PolygonID = jsonObjectsendpolygonreq.getAsJsonObject().get("id").toString();
+        PolygonIDArray.add(PolygonID.substring(1, PolygonID.length() - 1));
+
+
+        long ns = Duration.between(Timebefore, TimeAfter).toMillis();
+
+        System.out.println("Duration: " + ns);
 
             /*
             1:  4 points:  ms
@@ -676,136 +805,205 @@ public class DrawPolygons {
 
              */
 
-        }
-
     }
 
-    public static void containsroomrequest(){
+    public static void containsroomrequest() {
         PostRequest x = new PostRequest();
 
-        String geocoordsOfPolygon ="";
+        String geocoordsOfPolygon = "";
         for (int i = 0; i < fillpolygon.npoints; i++) {
-            geocoordsOfPolygon += "["+fillpolygon.xpoints[i]/10 + ", " + fillpolygon.ypoints[i]/10 + "],";
+            geocoordsOfPolygon += "[" + fillpolygon.xpoints[i] / 10 + ", " + fillpolygon.ypoints[i] / 10 + "],";
         }
         geocoordsOfPolygon = geocoordsOfPolygon.substring(0, geocoordsOfPolygon.length() - 1);
 
         String Response =
                 x.executePost(
-                        "http://irt-ap.cs.columbia.edu/api/roomsByPolygon",
+                        "http://irt-beagle.cs.columbia.edu/api/roomsByPolygon",
                         "{\n"
-                                + "\"geometry\": {"+"\n"
-                                + "\"type\": "+"\"Polygon\""+",\n"
-                                + "\"coordinates\":"+"[["+geocoordsOfPolygon+"]]" +"\n}"
+                                + "\"geometry\": {" + "\n"
+                                + "\"type\": " + "\"Polygon\"" + ",\n"
+                                + "\"coordinates\":" + "[[" + geocoordsOfPolygon + "]]" + "\n}"
                                 + "}", "POST");
 
         JsonObject jsonObjectdeletereq = new JsonParser().parse(Response).getAsJsonObject();
-        System.out.println("CONTAINSROOMREQ: "+jsonObjectdeletereq.getAsJsonObject().get("success"));
+        System.out.println("CONTAINSROOMREQ: " + jsonObjectdeletereq.getAsJsonObject().get("success"));
 
     }
 
     // request for checking whether Polygon contains point selected by mouse click
-    public static void containspointrequest(){
+    private static void containspointrequest() {
         PostRequest x = new PostRequest();
 
-        String coordinatesMousePos = xpos/10 + "," + ypos/10;
+        String coordinatesMousePos = xpos / 10 + "," + ypos / 10;
+        //convertCoords(xpos,ypos);
 
         String Response =
                 x.executePost(
-                        "http://irt-ap.cs.columbia.edu/api/roomsByMouse",
+                        "http://irt-beagle.cs.columbia.edu/api/roomsByMouse",
                         "{\n"
-                                + "\"location\": {"+"\n"
-                                + "\"type\": "+"\"Point\""+",\n"
-                                + "\"coordinates\": ["+coordinatesMousePos+"]\n}"
+                                + "\"location\": {" + "\n"
+                                + "\"type\": " + "\"Point\"" + ",\n"
+                                + "\"coordinates\": [" + coordinatesMousePos + "]\n}"
                                 + "}", "POST");
 
         JsonObject jsonObjectcontainsreq = new JsonParser().parse(Response).getAsJsonObject();
-        System.out.println("CONTAINSPOINTREQ: "+jsonObjectcontainsreq.getAsJsonObject().get("success"));
+        System.out.println("CONTAINSPOINTREQ: " + jsonObjectcontainsreq.getAsJsonObject().get("success"));
 
         JsonObject jsonarrayIDreq = jsonObjectcontainsreq.getAsJsonObject("data");
         String IDresponse = jsonarrayIDreq.getAsJsonObject().get("_id").toString();
-        IDresponse = IDresponse.substring(1,IDresponse.length()-1);
+        IDresponse = IDresponse.substring(1, IDresponse.length() - 1);
 
         int IDcnt = 0;
-        for(int i=0;i<PolygonIDArray.size();i++){
-            if(PolygonIDArray.get(i).equals(IDresponse)){
+        for (int i = 0; i < PolygonIDArray.size(); i++) {
+            if (PolygonIDArray.get(i).equals(IDresponse)) {
                 IDcnt = i;
-               }
+            }
         }
+        System.out.println("0: " + PolygonIDArray.get(0));
+        System.out.println("1: " + PolygonIDArray.get(1));
+        System.out.println("IDresponse: " + IDresponse);
+
+
         fillpolygon = polygons.get(IDcnt);
     }
 
     // request for getting all the buildings from the database
-    public static void buildingrequest() throws IOException {
+    protected static void buildingrequest() throws IOException {
 
         GetRequest x = new GetRequest();
         //getting the buildings from the database
         String Response =
                 x.sendGET(
-                        "http://irt-ap.cs.columbia.edu/api/buildings",
+                        "http://irt-beagle.cs.columbia.edu/api/buildings",
                         "{"
-                                + "}","GET");
+                                + "}", "GET");
 
-        System.out.println("BUILDINGREQ: "+Response);
+        //System.out.println("BUILDINGREQ: "+Response);
+        System.out.println("BUILDINGREQ");
         JsonObject jsonObjectbuildingreq = new JsonParser().parse(Response).getAsJsonObject();
         JsonArray jsonarraybuildingreq = jsonObjectbuildingreq.getAsJsonArray("data");
 
         BuildingNameByUserStrArray = new String[jsonarraybuildingreq.size()];
         BuildingIDArray = new String[jsonarraybuildingreq.size()];
 
-        for(int i=0;i<jsonarraybuildingreq.size();i++){
+        for (int i = 0; i < jsonarraybuildingreq.size(); i++) {
             String resultname = jsonarraybuildingreq.get(i).getAsJsonObject().get("name").toString();
-            BuildingNameByUserStrArray[i] = resultname.substring(1,resultname.length()-1);
+            BuildingNameByUserStrArray[i] = resultname.substring(1, resultname.length() - 1);
         }
 
-        for(int j=0;j<jsonarraybuildingreq.size();j++){
+        for (int j = 0; j < jsonarraybuildingreq.size(); j++) {
             String resultid = jsonarraybuildingreq.get(j).getAsJsonObject().get("_id").toString();
-            BuildingIDArray[j] = resultid.substring(1,resultid.length()-1);
+            BuildingIDArray[j] = resultid.substring(1, resultid.length() - 1);
         }
     }
 
     // request for getting all the floor of the selected building from the database
-    public static void floorrequest() throws IOException {
+    protected static void floorrequest() throws IOException {
         //getting the floors from the database
         PostRequest x = new PostRequest();
         String Response =
                 x.executePost(
-                        "http://irt-ap.cs.columbia.edu/api/floorsByBuilding",
+                        "http://irt-beagle.cs.columbia.edu/api/floorsByBuilding",
                         "{\n"
-                                + " \"building\" :"+"\""+BuildingID+"\"" +"\n"
-                                + "}","POST");
+                                + " \"building\" :" + "\"" + BuildingID + "\"" + "\n"
+                                + "}", "POST");
 
-        System.out.println("FLOORREQ: "+Response);
+        System.out.println("FLOORREQ: " + Response);
+        System.out.println("FLOORREQ");
         JsonObject jsonObjectfloorreq = new JsonParser().parse(Response).getAsJsonObject();
         JsonArray jsonarrayfloorreq = jsonObjectfloorreq.getAsJsonArray("data");
 
         FloorNameByUserStrArray = new String[jsonarrayfloorreq.size()];
         FloorIDArray = new String[jsonarrayfloorreq.size()];
+        polygons = new ArrayList<>(jsonarrayfloorreq.size());
 
-        for(int i=0;i<jsonarrayfloorreq.size();i++){
+        for (int i = 0; i < jsonarrayfloorreq.size(); i++) {
             String resultname = jsonarrayfloorreq.get(i).getAsJsonObject().get("name").toString();
-            FloorNameByUserStrArray[i] = resultname.substring(1,resultname.length()-1);
+            FloorNameByUserStrArray[i] = resultname.substring(1, resultname.length() - 1);
         }
 
-        for(int i=0;i<jsonarrayfloorreq.size();i++){
+        for (int i = 0; i < jsonarrayfloorreq.size(); i++) {
             String resultid = jsonarrayfloorreq.get(i).getAsJsonObject().get("_id").toString();
-            FloorIDArray[i] = resultid.substring(1,resultid.length()-1);
+            FloorIDArray[i] = resultid.substring(1, resultid.length() - 1);
         }
+
+        int[] refpixel = new int[]{};
+        double[] refgeo = new double[]{};
+        int cnt = 0;
+        for (int y = 0; y < FloorIDArray.length; y++) {
+            if (FloorIDArray[y] == FloorID) {
+                cnt = y;
+            }
+        }
+        JsonObject jsonfloorobj = jsonarrayfloorreq.get(cnt).getAsJsonObject();
+        JsonObject jsonrefobj = jsonfloorobj.get("refpoints").getAsJsonObject();
+        JsonArray jsonpixelarray = jsonrefobj.get("pixel").getAsJsonArray();
+        JsonArray jsongeoarray = jsonrefobj.get("geocoord").getAsJsonArray();
+
+        refpixel = new int[jsonpixelarray.size()];
+        for (int h = 0; h < jsonpixelarray.size(); h++) {
+            refpixel[h] = jsonpixelarray.get(h).getAsInt();
+        }
+
+        refgeo = new double[jsongeoarray.size()];
+        for (int h = 0; h < jsongeoarray.size(); h++) {
+            JsonElement ttt = jsongeoarray.get(h);
+            String help = ttt.getAsJsonObject().get("$numberDecimal").toString();
+            help = help.substring(1, help.length() - 1);
+            refgeo[h] = Double.parseDouble(help);
+        }
+if(refpixel.length != 0) {
+    if (refpixel[0] < refpixel[2]) {
+        refpixelaX = refpixel[0];
+        refpixelaY = refpixel[1];
+        refpixelbX = refpixel[2];
+        refpixelbY = refpixel[3];
+        refgeoaX = refgeo[0];
+        refgeoaY = refgeo[1];
+        refgeobX = refgeo[2];
+        refgeobY = refgeo[3];
+    } else {
+        refpixelaX = refpixel[2];
+        refpixelaY = refpixel[3];
+        refpixelbX = refpixel[0];
+        refpixelbY = refpixel[1];
+        refgeoaX = refgeo[2];
+        refgeoaY = refgeo[3];
+        refgeobX = refgeo[0];
+        refgeobY = refgeo[1];
+    }
+
+    System.out.println("Refpoints Pixel: " + refpixelaX + ", " + refpixelaY + ", " +
+            refpixelbX + ", " + refpixelbY + "\nGeo: " + refgeoaX + ", " + refgeoaY +
+            ", " + refgeobX + ", " + refgeobY);
+}
+        try {
+            File deleteoldimagefile = new File(FloorID);
+            deleteoldimagefile.delete();
+        } catch (Exception e1) {
+        }
+
+        loadimages(FloorID);
+
+
     }
 
     // request for deleting a polygon
-    public static void deletepolygonrequest() throws IOException {
+    protected static void deletepolygonrequest() throws IOException {
         // deleting polygons from the database
         GetRequest x = new GetRequest();
         String Response =
                 x.sendGET(
-                        "http://irt-ap.cs.columbia.edu/api/room/"+PolygonID,
+                        "http://irt-beagle.cs.columbia.edu/api/room/" + PolygonID,
                         "{"
-                                + "}","DELETE");
+                                + "}", "DELETE");
 
         JsonObject jsonObjectdeletereq = new JsonParser().parse(Response).getAsJsonObject();
 
-        System.out.println("DELETEREQ: "+jsonObjectdeletereq.getAsJsonObject().get("success"));
+        System.out.println("DELETEREQ: " + jsonObjectdeletereq.getAsJsonObject().get("success"));
     }
+
+
 
     // handling the main frame
     protected static void initUI() {
@@ -852,7 +1050,9 @@ public class DrawPolygons {
 
                 floorSelectionbox.removeAllItems();
 
-                //Drawinginst.getimage(FloorID);
+
+
+                //Drawinginst.loadimages(FloorID);
 
 
                 // new floorplanimage when changing building
@@ -1108,7 +1308,7 @@ public class DrawPolygons {
                 System.out.println("Pressed Control");
                 if (containsbool) {
                     try {
-                        Drawinginst.PolygonContains(Drawinginst.getGraphics());
+                        PolygonContains(Drawinginst.getGraphics());
                     } catch (InterruptedException e1) {
                         e1.printStackTrace();
                     }
@@ -1149,6 +1349,9 @@ public class DrawPolygons {
     public static void Newfloorimage(){
         clearCurrentPolygon();
         IntPolyPoints = new ArrayList<Integer>();
+        newimagebool = true;
+        loadimages(FloorID);
+        Drawing.getimage(FloorID);
         try {
             GetGivenPolygons();
         } catch (IOException e) {
@@ -1203,7 +1406,6 @@ public class DrawPolygons {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String result = (String) JOptionPane.showInputDialog(
-
                         wframe,
                         "Please type in the name of the room.",
                         "Name of room",
@@ -1231,7 +1433,6 @@ public class DrawPolygons {
     // main method
     public static void main(String[] args) throws IOException {
 
-
         //   urlfloorplan = new URL("https://www.study-in-bavaria.de/fileadmin/_migrated/pics/Geb33_a_02.jpg");
 
         //initial settings
@@ -1240,20 +1441,28 @@ public class DrawPolygons {
         FloorID = "5de68ab0756b75438fbec5f8"; //7th Floor
         //FloorID = "5de6c47ec2569658e7a0a132"; //8th Floor
 
+       // updateAllrequest();
+
         buildingrequest();
         floorrequest();
 
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
-            public void run() {
-                initUI();
+            public void run() {initUI();}});
+
+       /* while (true){
+            updateAllrequest();
+            try {
+                TimeUnit.SECONDS.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        });
-
+            System.out.println("UPDATEALLREQUEST");
+        } */
 
     }
-    }
+}
 
 
 
@@ -1285,21 +1494,3 @@ dropdown list with floor, building                                  *[finished]*
 geocalculation through two ref points
 
  */
-
-// different layout => buttons (less buttons)
-
-// java application and website hosted separate cause adding floorplans on the java application
-// might going to be uploaded through e.g. janitorial staff and adding IoT devices on the website
-// by people working in the rooms like in the IRT-Lab
-
-
-
-
-
-/*
-node --experimental-modules main.js
- */
-
-/*
-
-*/

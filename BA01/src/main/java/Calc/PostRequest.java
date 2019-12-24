@@ -26,7 +26,7 @@ class PostRequest {
             connection.setDoOutput(true);
 
             //Send request
-            DataOutputStream wr = new DataOutputStream (
+            DataOutputStream wr = new DataOutputStream(
                     connection.getOutputStream());
             wr.writeBytes(urlParameters);
             wr.close();
@@ -43,35 +43,14 @@ class PostRequest {
             rd.close();
             return response.toString();
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            //e.printStackTrace();
+            //return null;
+            return "false";
         } finally {
             if (connection != null) {
                 connection.disconnect();
             }
         }
     }
-
-    public static void main(String[] args){
-        PostRequest x = new PostRequest();
-        String Response =
-                x.executePost(
-                        "http://irt-ap.cs.columbia.edu/api/buildings",
-                        "{\n"
-                                + " \"name\" : \"test\",\n"
-                                + "  \"coordinates\": [[234,3422],[23123,244]]\n"
-                                + "}", "POST");
-
-
-        JsonObject jsonObject = new JsonParser().parse(Response).getAsJsonObject();
-        JsonArray test2 = jsonObject.getAsJsonArray("data");
-        System.out.println(test2);
-        System.out.println(test2.get(0).getAsJsonObject().get("name"));
-
-    }
-
-
-
-
 
 }
