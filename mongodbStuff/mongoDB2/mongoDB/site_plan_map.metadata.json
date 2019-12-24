@@ -1,1 +1,0 @@
-{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"mongoDB.site_plan_map"},{"v":2,"unique":true,"key":{"id":1},"name":"__primary_key__","ns":"mongoDB.site_plan_map"},{"v":2,"key":{"author_id":1},"name":"site_plan_map_author_id_57724031","ns":"mongoDB.site_plan_map"}],"uuid":"254e139df1a74a6d8d7b4b25187ec299"}
