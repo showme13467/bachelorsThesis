@@ -246,14 +246,14 @@ public class DrawPolygons {
             //   ellipsenbool = true;
 
             currentPolygon.addPoint(x, y);
-            System.out.println("x + y: " + x + ", " + y);
+            //System.out.println("x + y: " + x + ", " + y);
 
             IntPolyPoints.add(x); //x-coord of new point of polygon
             Polyboolcnt += 1;
 
             IntPolyPoints.add(y); //y-coord of new point of polygon
             Polyboolcnt += 1;
-            System.out.println("Polyboolcnt: " + Polyboolcnt);
+            //System.out.println("Polyboolcnt: " + Polyboolcnt);
 
             FrameRepaint();
         }
@@ -271,7 +271,7 @@ public class DrawPolygons {
                 if (updatebool) {
                     txtcurrentpolygon = true;
 
-                    System.out.println("CURRENTPOLYGON POINTS: " + currentPolygon.npoints);
+                    //System.out.println("CURRENTPOLYGON POINTS: " + currentPolygon.npoints);
                     updatepolygonrequest();
                     polygons.add(polygonIDcnt, currentPolygon);
                     PolygonnameArray.add(polygonIDcnt, RoomNameByUserStr);
@@ -349,7 +349,6 @@ public class DrawPolygons {
                         Color myWhite = new Color(255, 255, 255);
                         Color myBlack = new Color(0, 0, 0);
 
-//135 at all positions
                         //if the pixel is black(wall), set as black in new image
                         if (c.getRed() < 85 && c.getGreen() < 85 && c.getBlue() < 85) {
                             blackwhiteImage.setRGB(i, j, myBlack.getRGB());
@@ -412,9 +411,9 @@ public class DrawPolygons {
                 CloseBtn.setFont(new Font("Serif",Font.BOLD,16));
                 Errormsg1.setFont(new Font("Serif",Font.BOLD,18));
                 Errormsg2.setFont(new Font("Serif",Font.BOLD,18));
-                CloseBtn.setBounds(250,20,100,40);
-                Errormsg1.setBounds(125,80,350,60);
-                Errormsg2.setBounds(125,135,350,60);
+                CloseBtn.setBounds(350,20,100,40);
+                Errormsg1.setBounds(150,80,450,60);
+                Errormsg2.setBounds(150,135,450,60);
 
 
                 wframe.setDefaultCloseOperation(0);
@@ -422,7 +421,7 @@ public class DrawPolygons {
                 wframe.add(Errormsg1);
                 wframe.add(CloseBtn);
                 wframe.setLayout(new BorderLayout());
-                wframe.setSize(600, 300);
+                wframe.setSize(800, 300);
                 wframe.setLocationRelativeTo(null);
                 wframe.setVisible(true);
             }
@@ -597,12 +596,6 @@ public class DrawPolygons {
         }
     }
 
-    public static void setFrame(JFrame frame) {
-        DrawPolygons.frame = frame;
-        JButton BlackWhiteBtn = new JButton("Change to Black White Image");
-        frame.add(BlackWhiteBtn);
-    }
-
     // when Polygon contains point selected by mouse click, polygon is filled out
     protected static void PolygonContains(Graphics g) throws InterruptedException {
         Graphics2D g2 = (Graphics2D) g;
@@ -632,12 +625,13 @@ public class DrawPolygons {
                                 + " \"floor\" :" + "\"" + FloorID + "\"" + "\n"
                                 + "}", "POST");
 
-
-        if(Response == "false") {
+        if(Response.equals("false")) {
+            System.out.println("No Polygons");
         } else {
 
-            System.out.println("GETGIVENPOLYGONSREQ: " + Response);
+            //System.out.println("GETGIVENPOLYGONSREQ: " + Response);
             JsonObject jsonObjectgivenpolygonsreq = new JsonParser().parse(Response).getAsJsonObject();
+            System.out.println("GETGIVENPOLYGONSREQ: " + jsonObjectgivenpolygonsreq.getAsJsonObject().get("success"));
             JsonArray jsonarraygivenpolygonsreq = jsonObjectgivenpolygonsreq.getAsJsonArray("data");
 
 
@@ -715,40 +709,6 @@ public class DrawPolygons {
 
     }
 
-    // request for checking whether new floors or buildings have been added
-    protected static void updateAllrequest() throws IOException {
-        GetRequest x = new GetRequest();
-        String Response =
-                x.sendGET(
-                        "http://irt-beagle.cs.columbia.edu/api/devices",
-                        "{"
-                                + "}", "GET");
-
-        System.out.println("UPDATEALLREQ: " + Response);
-
-        JsonObject jsonObjectUpdateallreq = new JsonParser().parse(Response).getAsJsonObject();
-        String Successbool = jsonObjectUpdateallreq.getAsJsonObject().get("notify").toString();
-
-        System.out.println("Successbool: " + Successbool);
-        //Successbool = "true";
-        if (Successbool.equals("true")) {
-
-            try {
-                for (int j = 0; j < FloorIDArray.length; j++) {
-                    File deleteoldimagefile = new File(FloorIDArray[j]);
-                    deleteoldimagefile.delete();
-                }
-            } catch (Exception e1) {
-            }
-
-            floorrequest();
-            buildingrequest();
-            for (int i = 0; i < FloorIDArray.length; i++) {
-                loadimages(FloorIDArray[i]);
-            }
-        }
-    }
-
     // request for sending the current polygon to the database
     private static void sendPolygon() {
 
@@ -784,11 +744,12 @@ public class DrawPolygons {
                                 + "\"floor\" :" + "\"" + FloorID + "\"" + "\n"
                                 + "}", "POST");
 
-        System.out.println("SENDPOLYGONREQ" + Response);
+        //System.out.println("SENDPOLYGONREQ" + Response);
 
         LocalTime TimeAfter = LocalTime.now();
 
         JsonObject jsonObjectsendpolygonreq = new JsonParser().parse(Response).getAsJsonObject();
+        System.out.println("DELETEREQ: " + jsonObjectsendpolygonreq.getAsJsonObject().get("success"));
 
         PolygonID = jsonObjectsendpolygonreq.getAsJsonObject().get("id").toString();
         PolygonIDArray.add(PolygonID.substring(1, PolygonID.length() - 1));
@@ -869,7 +830,6 @@ public class DrawPolygons {
 
     // request for getting all the buildings from the database
     protected static void buildingrequest() throws IOException {
-
         GetRequest x = new GetRequest();
         //getting the buildings from the database
         String Response =
@@ -879,8 +839,9 @@ public class DrawPolygons {
                                 + "}", "GET");
 
         //System.out.println("BUILDINGREQ: "+Response);
-        System.out.println("BUILDINGREQ");
+
         JsonObject jsonObjectbuildingreq = new JsonParser().parse(Response).getAsJsonObject();
+        System.out.println("BUILDINGREQ: " + jsonObjectbuildingreq.getAsJsonObject().get("success"));
         JsonArray jsonarraybuildingreq = jsonObjectbuildingreq.getAsJsonArray("data");
 
         BuildingNameByUserStrArray = new String[jsonarraybuildingreq.size()];
@@ -908,10 +869,11 @@ public class DrawPolygons {
                                 + " \"building\" :" + "\"" + BuildingID + "\"" + "\n"
                                 + "}", "POST");
 
-        System.out.println("FLOORREQ: " + Response);
-        System.out.println("FLOORREQ");
+        //System.out.println("FLOORREQ: " + Response);
+
         JsonObject jsonObjectfloorreq = new JsonParser().parse(Response).getAsJsonObject();
         JsonArray jsonarrayfloorreq = jsonObjectfloorreq.getAsJsonArray("data");
+        System.out.println("FLOORREQ: " + jsonObjectfloorreq.getAsJsonObject().get("success"));
 
         FloorNameByUserStrArray = new String[jsonarrayfloorreq.size()];
         FloorIDArray = new String[jsonarrayfloorreq.size()];
@@ -935,6 +897,7 @@ public class DrawPolygons {
                 cnt = y;
             }
         }
+
         JsonObject jsonfloorobj = jsonarrayfloorreq.get(cnt).getAsJsonObject();
         JsonObject jsonrefobj = jsonfloorobj.get("refpoints").getAsJsonObject();
         JsonArray jsonpixelarray = jsonrefobj.get("pixel").getAsJsonArray();
@@ -972,10 +935,6 @@ if(refpixel.length != 0) {
         refgeobX = refgeo[0];
         refgeobY = refgeo[1];
     }
-
-    System.out.println("Refpoints Pixel: " + refpixelaX + ", " + refpixelaY + ", " +
-            refpixelbX + ", " + refpixelbY + "\nGeo: " + refgeoaX + ", " + refgeoaY +
-            ", " + refgeobX + ", " + refgeobY);
 }
         try {
             File deleteoldimagefile = new File(FloorID);
@@ -1088,11 +1047,11 @@ if(refpixel.length != 0) {
         advicefield2.setEditable(false);
 
         advicefield2.setBackground(Color.LIGHT_GRAY);
-        advicefield2.setBounds(100,920,700,40);
+        advicefield2.setBounds(100,920,950,40);
         advicefield2.setVisible(true);
 
         advicefield1.setBackground(Color.LIGHT_GRAY);
-        advicefield1.setBounds(100,880,700,40);
+        advicefield1.setBounds(100,880,950,40);
         advicefield1.setVisible(true);
 
         // advice button, shows next advice
@@ -1191,23 +1150,8 @@ if(refpixel.length != 0) {
                 FloorNameByUserStr = FloorNameByUserStrArray[floorSelectionbox.getSelectedIndex()];
             } catch (Exception e1){
             }
-
-            //    Drawing Drawinginstfloor = new Drawing();
-            //    Drawinginstfloor.Newfloorimage();
                 Newfloorimage();
                 FrameRepaint();
-
-                // deleting of the currentpolygon and the already drawn polygons as well as loading the
-                // already drawn already drawn polygons of the new selected floor
-
-
-/*                             try {
-                    urlfloorplan = new URL("https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Universit%C3%A4tsbibliothek.jpg/375px-Universit%C3%A4tsbibliothek.jpg");
-                } catch (MalformedURLException e1) {
-                    e1.printStackTrace();
-                }
-                frame.paintComponents(frame.getGraphics());
-                System.out.println("WORKSSSSSSSSSSSSSSSSSSS"); */
             }
         });
 
@@ -1231,7 +1175,7 @@ if(refpixel.length != 0) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (Drawinginst.currentPolygon.npoints > 2 && KeyAllowedSavingPolygon) {
-                    System.out.println("Pressed Enter");
+                    //System.out.println("Pressed Enter");
                     createWindow(); //new path, but don´t just open window and go to polygon finished
                 }
             }
@@ -1243,7 +1187,7 @@ if(refpixel.length != 0) {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (Drawinginst.currentPolygon.npoints >= 1 && KeyAllowedSavingPolygon) {
-                    System.out.println("Pressed Backspace");
+                    //System.out.println("Pressed Backspace");
                     int oldPtx = 0;
                     int oldPty = 0;
                     Drawinginst.clearCurrentPolygon();
@@ -1277,7 +1221,7 @@ if(refpixel.length != 0) {
         ap.put("Delete", new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("Pressed Delete");
+                        //System.out.println("Pressed Delete");
                         if(updatebool){
                             PolygonID = PolygonIDArray.get(polygonIDcnt);
                             try {
@@ -1305,7 +1249,7 @@ if(refpixel.length != 0) {
         ap.put("Control", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Pressed Control");
+                //System.out.println("Pressed Control");
                 if (containsbool) {
                     try {
                         PolygonContains(Drawinginst.getGraphics());
@@ -1322,7 +1266,7 @@ if(refpixel.length != 0) {
         ap.put("ESCAPE", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Pressed Escape");
+                //System.out.println("Pressed Escape");
                 if(updatebool){
                     updatebool = false;
                     clearCurrentPolygon();
@@ -1451,15 +1395,42 @@ if(refpixel.length != 0) {
             @Override
             public void run() {initUI();}});
 
-       /* while (true){
-            updateAllrequest();
-            try {
-                TimeUnit.SECONDS.sleep(30);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try{
+                    GetRequest x = new GetRequest();
+                        String Response =
+                                x.sendGET(
+                                        "http://irt-beagle.cs.columbia.edu/api/floors",
+                                        "{"
+                                                + "}", "GET");
+
+                        //System.out.println("ALLFLOORREQ: " + Response);
+                    JsonObject jsonObjectdeleteallreq = new JsonParser().parse(Response).getAsJsonObject();
+                    System.out.println("ALLFLOORDELETEREQ: " + jsonObjectdeleteallreq.getAsJsonObject().get("success"));
+
+                        JsonObject jsonObjectfloorreq = new JsonParser().parse(Response).getAsJsonObject();
+                        JsonArray jsonarrayfloorreq = jsonObjectfloorreq.getAsJsonArray("data");
+
+                        FloorIDArray = new String[jsonarrayfloorreq.size()];
+
+                        for (int i = 0; i < jsonarrayfloorreq.size(); i++) {
+                            String resultid = jsonarrayfloorreq.get(i).getAsJsonObject().get("_id").toString();
+                            FloorIDArray[i] = resultid.substring(1, resultid.length() - 1);
+                        }
+
+                        for (int i = 0; i < FloorIDArray.length; i++) {
+                            String deleteimage = FloorIDArray[i] + ".jpg";
+                            File deleteimagefile = new File(deleteimage);
+                            deleteimagefile.delete();
+
+                    }
+                } catch (Exception e1){}
             }
-            System.out.println("UPDATEALLREQUEST");
-        } */
+        });
 
     }
 }

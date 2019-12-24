@@ -30,7 +30,7 @@ public class GetRequest {
             in.close();
 
             // print result
-            System.out.println(response.toString());
+            //System.out.println(response.toString());
             return response.toString();
         } else {
             System.out.println("GET request not worked");
