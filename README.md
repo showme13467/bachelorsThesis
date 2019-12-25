@@ -1,6 +1,10 @@
 # bachelorsThesis
 Name Resolver for IoT Devices
 
+### Introduction
+
+The website serves to name and save IoT devices based on their geographical data. By a combination of the name of the room,the IoT device type, floor and building may be a natural way to name IoT devices. These IoT-devices should be placed in rooms represented by polygons and stored in a database. The database can then process this geospatial data to find out whether the IoT Device is in the polygon or not.
+
 [![npm Version](https://img.shields.io/badge/npm-6.13.4-brightgreen.svg)](https://www.npmjs.com/)
 [![Node Version](https://img.shields.io/badge/node-12.14.0-brightgreen.svg)](https://nodejs.org)
 [![MongoDb Version](https://img.shields.io/badge/mongodb-4.2-brightgreen.svg)](https://www.mongodb.com)
@@ -10,7 +14,7 @@ Name Resolver for IoT Devices
 
 ## Live Demo
 
-you can see a live demo at [NameResolver Page](http://irt-beagle.cs.columbia.edu) 
+you can see a live demo at the [NameResolver Page](http://irt-beagle.cs.columbia.edu) 
 
 ## Running the Project Locally
 
@@ -73,8 +77,7 @@ Afterwards you have the possibility to create either new buildings or floors for
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage2.PNG)
 
-After creating a new floor, an image must be uploaded to have the matching floor plan for the floor. Make sure that the floor plan is not in blue or red, otherwise it would be counterproductive for the clarity. It is also recommended to upload an image with the dimensions **1200 x 800 pixels**. If this should not be possible, the image will be automatically stretched or shrunk to 1200 x 800.
-
+After creating a new floor, an image must be uploaded to have the matching floor plan for the floor. Make sure that the floor plan is not in blue or red, otherwise it would be counterproductive for the clarity (the admin panel automatically greys out the images to provide a better overview). It is also recommended to upload an image with the dimensions **1200 x 800 pixels**. If this should not be possible, the image will be automatically stretched or shrunk to 1200 x 800.
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage3.PNG)
 
 Now comes the most important part of the whole web application. On the floor plan you can set a point by pressing once with the left mouse button. After that you can set another point by pressing the left mouse button again. Pressing the mouse button again will delete all points again. Here it is important to make a square of the points as big as possible to get exact results. So choose a point as far as possible at the edge of your picture and see if it is physically possible to reach it. When you have set all the points you can either use Google Maps or your mobile phone to find out the coordinates of these points and enter them next to your floor plan. Note that google maps shows the coordinates in latitude and then longitude.
@@ -95,7 +98,7 @@ To create a room quickly, it is only necessary to draw the room with the help of
 
 After you have created a room you only have to press Enter and name the room. After saving the room, it will be automatically transferred to the database and thanks to the created reference points, the pixels will be converted into coordinates.
 
-The created room can be viewed only by selecting the appropriate room on the website. 
+The created room can be viewed only by selecting the appropriate floor on the website. 
 Now it is also possible to create a device for this room. Just click on "create device" to add a new device.
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage5.PNG)
@@ -104,9 +107,9 @@ Here it is not important how it is named. An algorithm names the corresponding d
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage6.PNG)
 
-After confirming the entered data, it is now possible to move your device to the appropriate place in your room. First the new device is displayed in the upper left corner of the screen. By keeping the left mouse button pressed, you can move the device and place it in your room. The room where the device should be is named and even if you place the device outside the room a query will intercept this and place it back into the room. (when you move the device a blue dot is placed at the old position. This symbolizes the previous position of the device and plays an important role later during the update).
+After confirming the entered data, it is now possible to move your device to the appropriate place in your room. First the new device is displayed in the upper left corner of the screen. By keeping the left mouse button pressed, you can move the device and place it in your room. The room where the device should be is named and even if you place the device outside the room a query will intercept this and place it back into the room. (when you move the device, a blue dot is placed at the old position. This symbolizes the previous position of the device and plays an important role later during the update).
 It is possible that other blue dots are already in the room. These signalize already existing devices in the specific room.
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Webpage7.PNG)
 
-Now you can see all devices either on the homepage or go to devices List. You can also click on the devices within the homepage and also go to the rooms to see the devices within the room in a list. 
+Now you can see all devices either on the homepage or go to devices List. You can also click on the devices within the homepage and also go to the rooms to see the devices within the room in a list. Of course all previously created buildings, corridors and devices can be updated on the website. For the rooms you have to go back to the admin panel and edit the rooms there.
