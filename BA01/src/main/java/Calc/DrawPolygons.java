@@ -4,12 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.prism.shader.AlphaOne_Color_Loader;
 
 import java.awt.*;
-import java.awt.color.ColorSpace;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.io.*;
 import java.net.URL;
@@ -17,8 +14,6 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.List;
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -77,6 +72,9 @@ public class DrawPolygons {
     private static float refpixelaY = 0;//113; // a(y)
     private static float refpixelbX = 0;//1169; // b(x)
     private static float refpixelbY = 0;//690; // b(y)
+
+    public static String newname = "";
+
 
 
 /*    public static Boolean ellipsenbool = false;
@@ -141,6 +139,7 @@ public class DrawPolygons {
                         for (int i = 0; i < polygons.size(); i++) {
                             if (polygons.get(i).contains(e.getX(), e.getY())) {
 
+                                newname = PolygonnameArray.get(i);
                                 updatebool = true;
                                 updatepolygon = polygons.get(i);
                                 polygonIDcnt = i;
@@ -154,7 +153,7 @@ public class DrawPolygons {
                         }
                         //giving currentpolygon the points of the restored polygon
                         if (updateboolM) {
-                            for (int j = 0; j < updatepolygon.npoints; j++) {
+                            for (int j = 0; j < updatepolygon.npoints-1; j++) {
                                 addPoint(updatepolygon.xpoints[j], updatepolygon.ypoints[j]);
                             }
                             updateboolM = false;
@@ -706,7 +705,6 @@ public class DrawPolygons {
 
         JsonObject jsonObjectdeletereq = new JsonParser().parse(Response).getAsJsonObject();
         System.out.println("UPDATEPOLYGONREQ: " + jsonObjectdeletereq.getAsJsonObject().get("success"));
-
     }
 
     // request for sending the current polygon to the database
@@ -1346,6 +1344,12 @@ if(refpixel.length != 0) {
         final JLabel labeladvice = new JLabel("Last line will be drawn automatically after saving name.");
         final JLabel label = new JLabel();
 
+        String initialname = "Name of room";
+        if(updatebool){
+            initialname = newname;
+        }
+
+        String finalInitialname = initialname;
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1356,7 +1360,7 @@ if(refpixel.length != 0) {
                         JOptionPane.PLAIN_MESSAGE,
                         null,
                         null,
-                        "Name of room"
+                        finalInitialname
                 );
                 if (result != null && result.length() > 0) {
                     label.setText("You selected: " + result);
