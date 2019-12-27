@@ -96,6 +96,14 @@ To create a room quickly, it is only necessary to draw the room with the help of
 
 ![Admin Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Admin2.PNG)
 
+If the room is to be changed, this is easily done by double-clicking on the corresponding polygon.
+
+![Admin Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Admin3.PNG)
+
+This polygon will not be assigned a new ID in the database but can be edited and corrected according to the short tips in the admin panel.
+
+![Admin Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/example-images/Admin4.PNG)
+
 After you have created a room you only have to press Enter and name the room. After saving the room, it will be automatically transferred to the database and thanks to the created reference points, the pixels will be converted into coordinates.
 
 The created room can be viewed only by selecting the appropriate floor on the website. 
