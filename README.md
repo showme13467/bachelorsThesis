@@ -8,7 +8,7 @@ The website serves to name and save IoT devices based on their geographical data
 [![npm Version](https://img.shields.io/badge/npm-6.13.4-brightgreen.svg)](https://www.npmjs.com/)
 [![Node Version](https://img.shields.io/badge/node-12.14.0-brightgreen.svg)](https://nodejs.org)
 [![MongoDb Version](https://img.shields.io/badge/mongodb-4.2-brightgreen.svg)](https://www.mongodb.com)
-[![Java Version](https://img.shields.io/badge/java-1.8-brightgreen.svg)](https://www.java.com)
+[![Java Version](https://img.shields.io/badge/java-1.8-brightyellow.svg)](https://www.java.com)
 
 
 ![Homepage Example Screenshot](https://raw.githubusercontent.com/showme13467/bachelorsThesis/master/Website.png)
