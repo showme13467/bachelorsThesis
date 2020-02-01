@@ -3,7 +3,7 @@ Name Resolver for IoT Devices
 
 ### Introduction
 
-The website serves to name and save IoT devices based on their geographical data. By a combination of the name of the room,the IoT device type, floor and building may be a natural way to name IoT devices. These IoT-devices should be placed in rooms represented by polygons and stored in a database. The database can then process this geospatial data to find out whether the IoT Device is in the polygon or not.
+The website serves to name and save IoT devices based on their geographical data. By a combination of the name of the room, the IoT device type, floor and building may be a natural way to name IoT devices. These IoT devices should be placed in rooms represented by polygons and stored in a database. The database can then process this geospatial data to find out whether the IoT device is in the polygon or not.
 
 [![npm Version](https://img.shields.io/badge/npm-6.13.4-brightgreen.svg)](https://www.npmjs.com/)
 [![Node Version](https://img.shields.io/badge/node-12.14.0-brightgreen.svg)](https://nodejs.org)
