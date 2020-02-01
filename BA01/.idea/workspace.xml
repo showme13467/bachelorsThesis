@@ -8,20 +8,8 @@
   <component name="ChangeListManager">
     <list default="true" id="9cf9e094-cfcd-471a-9b7e-53790e193c94" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/BA01_jar2/5de68ab0756b75438fbec5f8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/BA01_jar2/BA01.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/BA01_jar2/BA01.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Calc/DrawPolygons.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Calc/DrawPolygons.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/GeoCalc.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/Loading.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/Pixel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/Readimage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/floorplan.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/openWebpage.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/roomIRTLabSetXY.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/roomIRTLabSetZ.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/sendpolygonreqtest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Graphic/WholeBuildingDraw.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Graphic/gui.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Calc/test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Calc/test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$10.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$11.class" afterDir="false" />
@@ -37,23 +25,9 @@
       <change beforePath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$8.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$9.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$Drawing$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$Drawing$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$Drawing$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$Drawing$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$Drawing.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons$Drawing.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/DrawPolygons.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/GeoCalc.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/Loading.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/Pixel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/Readimage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/floorplan$MouseDragTest$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/floorplan$MouseDragTest$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/floorplan$MouseDragTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/floorplan.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/openWebpage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/roomIRTLabSetXY.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/roomIRTLabSetZ$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/roomIRTLabSetZ.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Calc/sendpolygonreqtest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Graphic/WholeBuildingDraw.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Calc/test.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Calc/test.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -67,40 +41,40 @@
     <session id="-57333000">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="37" />
+          <entry key="project.closed" value="54" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.13" value="2" />
-          <entry key="project.open.time.14" value="2" />
-          <entry key="project.open.time.15" value="2" />
-          <entry key="project.open.time.16" value="4" />
-          <entry key="project.open.time.17" value="6" />
-          <entry key="project.open.time.18" value="3" />
-          <entry key="project.open.time.19" value="2" />
-          <entry key="project.open.time.20" value="3" />
-          <entry key="project.open.time.21" value="4" />
+          <entry key="project.open.time.14" value="3" />
+          <entry key="project.open.time.15" value="3" />
+          <entry key="project.open.time.16" value="6" />
+          <entry key="project.open.time.17" value="9" />
+          <entry key="project.open.time.18" value="6" />
+          <entry key="project.open.time.19" value="5" />
+          <entry key="project.open.time.20" value="4" />
+          <entry key="project.open.time.21" value="6" />
           <entry key="project.open.time.22" value="1" />
-          <entry key="project.open.time.23" value="2" />
+          <entry key="project.open.time.23" value="3" />
           <entry key="project.open.time.25" value="2" />
           <entry key="project.open.time.28" value="1" />
           <entry key="project.open.time.30" value="1" />
           <entry key="project.open.time.39" value="1" />
-          <entry key="project.opened" value="37" />
+          <entry key="project.opened" value="55" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="class" value="23" />
+          <entry key="class" value="24" />
           <entry key="html" value="1" />
-          <entry key="java" value="64" />
+          <entry key="java" value="67" />
           <entry key="js" value="3" />
           <entry key="xml" value="5" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CLASS" value="23" />
+          <entry key="CLASS" value="24" />
           <entry key="HTML" value="1" />
-          <entry key="JAVA" value="64" />
+          <entry key="JAVA" value="67" />
           <entry key="JavaScript" value="3" />
           <entry key="XML" value="5" />
         </counts>
@@ -109,7 +83,7 @@
         <counts>
           <entry key="dummy" value="11" />
           <entry key="html" value="185" />
-          <entry key="java" value="59026" />
+          <entry key="java" value="60170" />
           <entry key="js" value="3" />
           <entry key="xml" value="35" />
         </counts>
@@ -117,7 +91,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="185" />
-          <entry key="JAVA" value="59026" />
+          <entry key="JAVA" value="60170" />
           <entry key="JavaScript" value="3" />
           <entry key="PLAIN_TEXT" value="11" />
           <entry key="XML" value="35" />
@@ -130,54 +104,22 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Calc/DrawPolygons.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="101">
-              <caret line="155" column="71" selection-start-line="155" selection-start-column="71" selection-end-line="155" selection-end-column="71" />
+            <state relative-caret-position="8098">
+              <caret line="673" column="13" lean-forward="true" selection-start-line="673" selection-start-column="13" selection-end-line="673" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#5073#5759#0" />
-                <element signature="e#5727#8504#0" expanded="true" />
-                <element signature="e#8503#8504#0" expanded="true" />
-                <element signature="e#10328#10476#0" />
-                <element signature="e#10486#10580#0" />
-                <element signature="e#10590#11121#0" />
-                <element signature="e#11131#11328#0" />
-                <element signature="e#11338#12639#0" />
-                <element signature="e#12787#15834#0" />
-                <element signature="e#15844#16028#0" />
-                <element signature="e#16038#20666#0" />
-                <element signature="e#20676#22443#0" />
-                <element signature="e#22453#22986#0" />
-                <element signature="e#22996#24872#0" />
-                <element signature="e#24884#25259#0" />
-                <element signature="e#25265#28075#0" />
-                <element signature="e#29871#32201#0" />
-                <element signature="e#32207#33254#0" />
-                <element signature="e#33260#34822#0" />
-                <element signature="e#34828#36263#0" />
-                <element signature="e#36269#39728#0" />
-                <element signature="e#39734#40338#0" />
-                <element signature="e#40346#53864#0" />
-                <element signature="class#44729:46710" />
-                <element signature="e#46653#46654#0" expanded="true" />
-                <element signature="e#46699#46700#0" expanded="true" />
-                <element signature="e#47406#47407#0" expanded="true" />
-                <element signature="e#47452#47453#0" expanded="true" />
-                <element signature="e#49339#49732#0" expanded="true" />
-                <element signature="e#49731#49732#0" expanded="true" />
-                <element signature="e#49880#51348#0" expanded="true" />
-                <element signature="e#51347#51348#0" expanded="true" />
-                <element signature="e#51483#52533#0" expanded="true" />
-                <element signature="e#52532#52533#0" expanded="true" />
-                <element signature="e#52681#53177#0" expanded="true" />
-                <element signature="e#53176#53177#0" expanded="true" />
-                <element signature="e#53312#53725#0" expanded="true" />
-                <element signature="e#53724#53725#0" expanded="true" />
-                <element signature="e#53959#54424#0" />
-                <element signature="e#54430#54725#0" />
-                <element signature="method#actionPerformed#0;class#55112:55691" />
-                <element signature="e#56990#59359#0" />
-                <element signature="class#57521:57599" />
+                <element signature="e#10225#10373#0" />
+                <element signature="e#10383#10477#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Calc/test.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1003">
+              <caret line="59" column="26" selection-start-line="59" selection-start-column="26" selection-end-line="59" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -239,9 +181,9 @@
         <option value="$PROJECT_DIR$/src/main/java/Floorviewtest.html" />
         <option value="$PROJECT_DIR$/src/main/java/Calc/floorreqtest.java" />
         <option value="$PROJECT_DIR$/src/main/java/Calc/GeoCalc.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Calc/test.java" />
         <option value="$PROJECT_DIR$/src/main/java/Calc/PostRequest.java" />
         <option value="$PROJECT_DIR$/src/main/java/Calc/GetRequest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Calc/test.java" />
         <option value="$PROJECT_DIR$/src/main/java/Calc/DrawPolygons.java" />
       </list>
     </option>
@@ -265,7 +207,6 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -303,6 +244,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -310,11 +252,11 @@
     <property name="SearchEverywhereHistoryKey" value="KeyAllowedSavingPolygon&#9;PSI&#9;JAVA://Calc.DrawPolygons#KeyAllowedSavingPolygon" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1577234425477" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1580084207903" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
   </component>
@@ -442,16 +384,33 @@
       <workItem from="1577216642544" duration="8000" />
       <workItem from="1577223976907" duration="2557000" />
       <workItem from="1577226676601" duration="6923000" />
+      <workItem from="1577410065582" duration="903000" />
+      <workItem from="1577417825003" duration="1686000" />
+      <workItem from="1577476324782" duration="724000" />
+      <workItem from="1577513474476" duration="1210000" />
+      <workItem from="1578604115974" duration="6191000" />
+      <workItem from="1578663926649" duration="2225000" />
+      <workItem from="1578674340428" duration="1329000" />
+      <workItem from="1578692477597" duration="2004000" />
+      <workItem from="1578765866099" duration="2016000" />
+      <workItem from="1579276490589" duration="1475000" />
+      <workItem from="1579302901951" duration="2520000" />
+      <workItem from="1579305833616" duration="2343000" />
+      <workItem from="1579340398799" duration="1467000" />
+      <workItem from="1579358761723" duration="254000" />
+      <workItem from="1580053899075" duration="5621000" />
+      <workItem from="1580148219175" duration="634000" />
+      <workItem from="1580564022990" duration="973000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="370620000" />
+    <option name="totallyTimeSpent" value="404195000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27854252" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.37894738" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -523,13 +482,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Graphic/gui.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Graphic/gui.java" />
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpclient/4.5.10/httpclient-4.5.10.jar!/org/apache/http/impl/conn/PoolingHttpClientConnectionManager.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
@@ -628,13 +581,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.0/gson-2.8.0.jar!/com/google/gson/JsonElement.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="54" selection-start-line="54" selection-end-line="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_181/src.zip!/java/io/StringReader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
@@ -642,27 +588,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/roomIRTLabSetXY.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="935">
-          <caret line="55" column="29" selection-start-line="55" selection-start-column="19" selection-end-line="55" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/PostRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="703">
-          <caret line="47" column="26" selection-start-line="47" selection-start-column="26" selection-end-line="47" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/roomIRTLabSetXY.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/Calc/GetRequest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
@@ -670,119 +596,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/openWebpage.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/openWebpage.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/GeoCalc.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/floorplan.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/sendpolygonreqtest.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/roomIRTLabSetZ.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/Readimage.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/Pixel.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/Loading.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/Graphic/WholeBuildingDraw.java" />
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.0/gson-2.8.0.jar!/com/google/gson/JsonElement.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+        <state relative-caret-position="224">
+          <caret line="37" selection-start-line="37" selection-end-line="37" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/GeoCalc.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/PostRequest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3094">
-          <caret line="188" column="19" selection-start-line="188" selection-start-column="19" selection-end-line="188" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/floorplan.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-756">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/sendpolygonreqtest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="28" column="41" selection-start-line="28" selection-start-column="41" selection-end-line="28" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/roomIRTLabSetZ.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/Readimage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="50" column="13" selection-start-line="50" selection-start-column="13" selection-end-line="50" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/Pixel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/Loading.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Graphic/WholeBuildingDraw.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="65" column="8" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
+        <state relative-caret-position="442">
+          <caret line="47" column="26" selection-start-line="47" selection-start-column="26" selection-end-line="47" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Calc/DrawPolygons.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="155" column="71" selection-start-line="155" selection-start-column="71" selection-end-line="155" selection-end-column="71" />
+        <state relative-caret-position="8098">
+          <caret line="673" column="13" lean-forward="true" selection-start-line="673" selection-start-column="13" selection-end-line="673" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5073#5759#0" />
-            <element signature="e#5727#8504#0" expanded="true" />
-            <element signature="e#8503#8504#0" expanded="true" />
-            <element signature="e#10328#10476#0" />
-            <element signature="e#10486#10580#0" />
-            <element signature="e#10590#11121#0" />
-            <element signature="e#11131#11328#0" />
-            <element signature="e#11338#12639#0" />
-            <element signature="e#12787#15834#0" />
-            <element signature="e#15844#16028#0" />
-            <element signature="e#16038#20666#0" />
-            <element signature="e#20676#22443#0" />
-            <element signature="e#22453#22986#0" />
-            <element signature="e#22996#24872#0" />
-            <element signature="e#24884#25259#0" />
-            <element signature="e#25265#28075#0" />
-            <element signature="e#29871#32201#0" />
-            <element signature="e#32207#33254#0" />
-            <element signature="e#33260#34822#0" />
-            <element signature="e#34828#36263#0" />
-            <element signature="e#36269#39728#0" />
-            <element signature="e#39734#40338#0" />
-            <element signature="e#40346#53864#0" />
-            <element signature="class#44729:46710" />
-            <element signature="e#46653#46654#0" expanded="true" />
-            <element signature="e#46699#46700#0" expanded="true" />
-            <element signature="e#47406#47407#0" expanded="true" />
-            <element signature="e#47452#47453#0" expanded="true" />
-            <element signature="e#49339#49732#0" expanded="true" />
-            <element signature="e#49731#49732#0" expanded="true" />
-            <element signature="e#49880#51348#0" expanded="true" />
-            <element signature="e#51347#51348#0" expanded="true" />
-            <element signature="e#51483#52533#0" expanded="true" />
-            <element signature="e#52532#52533#0" expanded="true" />
-            <element signature="e#52681#53177#0" expanded="true" />
-            <element signature="e#53176#53177#0" expanded="true" />
-            <element signature="e#53312#53725#0" expanded="true" />
-            <element signature="e#53724#53725#0" expanded="true" />
-            <element signature="e#53959#54424#0" />
-            <element signature="e#54430#54725#0" />
-            <element signature="method#actionPerformed#0;class#55112:55691" />
-            <element signature="e#56990#59359#0" />
-            <element signature="class#57521:57599" />
+            <element signature="e#10225#10373#0" />
+            <element signature="e#10383#10477#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Calc/test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1003">
+          <caret line="59" column="26" selection-start-line="59" selection-start-column="26" selection-end-line="59" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -868,7 +720,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.44827586" />
               </list>
             </option>
           </splitter-proportions>

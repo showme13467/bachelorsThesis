@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import jdk.internal.util.xml.impl.Input;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -41,7 +42,6 @@ public class DrawPolygons {
     private static List<String> PolygonIDArray = new ArrayList<String>(); // contains all IDs of polygons
     public static int polygonIDcnt; // cnt for ID while removing ID when deleting a polygon
     public static ArrayList<String> PolygonnameArray = new ArrayList<String>(); // contains all names of polygons
-    public static String[][] PolygonGeoCoords = new String[][]{}; // Array of geo Coords of a polygon
 
     public static Boolean updatebool = false; // bool for checking, whether polygon is in updatemode
     public static Boolean updateboolM = false; // bool for checking, whether updatemode is already selected
@@ -56,8 +56,8 @@ public class DrawPolygons {
     public static Boolean Fillpolygon = false; // bool whether polygon is selected and should be filled out
 
     public static Boolean txtcurrentpolygon = false;
-    public static Boolean updateAll = false;
     public static Boolean newimagebool = true;
+    public static Boolean labelpoints = false;
 
     private static double refgeoaX = 0;//40.809840;
     private static double refgeoaY = 0;//-73.960924;
@@ -117,7 +117,7 @@ public class DrawPolygons {
          */
         public static void PolygonFinished() throws IOException {
             NewPolyBool = true;
-            int helpintx = currentPolygon.xpoints[0];
+            int helpintx = currentPolygon.xpoints[0]; //add first point to array in database
             int helpinty = currentPolygon.ypoints[0];
             currentPolygon.addPoint(helpintx, helpinty);
             IntPolyPoints.add(helpintx);
@@ -134,7 +134,7 @@ public class DrawPolygons {
             public void mouseClicked(java.awt.event.MouseEvent e) {
 
                 //LeftMouseButton handling => draw
-                if (e.getY() < 800 && NewPolyBool == true && SwingUtilities.isLeftMouseButton(e)) {
+                if (e.getY() < 800 && NewPolyBool && SwingUtilities.isLeftMouseButton(e)) {
                     if (e.getClickCount() == 2) {
                         for (int i = 0; i < polygons.size(); i++) {
                             if (polygons.get(i).contains(e.getX(), e.getY())) {
@@ -245,7 +245,7 @@ public class DrawPolygons {
             //   ellipsenbool = true;
 
             currentPolygon.addPoint(x, y);
-            //System.out.println("x + y: " + x + ", " + y);
+           // System.out.println("x + y: " + x + ", " + y);
 
             IntPolyPoints.add(x); //x-coord of new point of polygon
             Polyboolcnt += 1;
@@ -505,11 +505,13 @@ public class DrawPolygons {
             if (polygon.npoints < 3) {
                 if (polygon.npoints == 1) {
                     g2.fillOval(polygon.xpoints[0] - 2, polygon.ypoints[0] - 2, 4, 4);
-                    drawNthPoint(g2, polygon, 0);
+                    if(labelpoints) {drawNthPoint(g2, polygon, 0);}
                 } else if (polygon.npoints == 2) {
                     g2.drawLine(polygon.xpoints[0], polygon.ypoints[0], polygon.xpoints[1], polygon.ypoints[1]);
-                    drawNthPoint(g2, polygon, 0);
-                    drawNthPoint(g2, polygon, 1);
+                    if(labelpoints) {
+                        drawNthPoint(g2, polygon, 0);
+                        drawNthPoint(g2, polygon, 1);
+                    }
                 }
             } else {
                 int[] x = polygon.xpoints;
@@ -523,7 +525,7 @@ public class DrawPolygons {
 
             //calling the function for the letters
             for (int i = 0; i < polygon.npoints; i++) {
-                drawNthPoint(g2, polygon, i);
+                if(labelpoints){drawNthPoint(g2, polygon, i);}
             }
 
         /*    for (int i = 0; i < polygons.size(); i++) {
@@ -612,6 +614,8 @@ public class DrawPolygons {
         PolygonnameArray = new ArrayList<>();
         PolygonIDArray = new ArrayList<>();
 
+        LocalTime Timebefore = LocalTime.now();
+
         newimagebool = true;
 
         PostRequest x = new PostRequest();
@@ -628,7 +632,8 @@ public class DrawPolygons {
             System.out.println("No Polygons");
         } else {
 
-            //System.out.println("GETGIVENPOLYGONSREQ: " + Response);
+            System.out.println("GETGIVENPOLYGONSREQ: " + Response);
+
             JsonObject jsonObjectgivenpolygonsreq = new JsonParser().parse(Response).getAsJsonObject();
             System.out.println("GETGIVENPOLYGONSREQ: " + jsonObjectgivenpolygonsreq.getAsJsonObject().get("success"));
             JsonArray jsonarraygivenpolygonsreq = jsonObjectgivenpolygonsreq.getAsJsonArray("data");
@@ -668,11 +673,18 @@ public class DrawPolygons {
                 polygons.add(poly);
             }
         }
+
+        LocalTime TimeAfter = LocalTime.now();
+        long ns = Duration.between(Timebefore, TimeAfter).toMillis();
+
+       // System.out.println("Duration: " + ns);
+
         firstdrawing = false;
     }
 
     // request for updating a polygon
     private static void updatepolygonrequest() throws IOException {
+        LocalTime Timebefore = LocalTime.now();
 
         PostRequest x = new PostRequest();
 
@@ -705,6 +717,12 @@ public class DrawPolygons {
 
         JsonObject jsonObjectdeletereq = new JsonParser().parse(Response).getAsJsonObject();
         System.out.println("UPDATEPOLYGONREQ: " + jsonObjectdeletereq.getAsJsonObject().get("success"));
+
+        LocalTime TimeAfter = LocalTime.now();
+        long ns = Duration.between(Timebefore, TimeAfter).toMillis();
+
+        //System.out.println("Duration: " + ns);
+
     }
 
     // request for sending the current polygon to the database
@@ -752,16 +770,15 @@ public class DrawPolygons {
         PolygonID = jsonObjectsendpolygonreq.getAsJsonObject().get("id").toString();
         PolygonIDArray.add(PolygonID.substring(1, PolygonID.length() - 1));
 
-
         long ns = Duration.between(Timebefore, TimeAfter).toMillis();
 
-        System.out.println("Duration: " + ns);
+       // System.out.println("Duration: " + ns);
 
             /*
-            1:  4 points:  ms
-            2: 10 points:  ms
-            3: 20 points:  ms
-
+            testroom
+            1:  100 points:   954ms
+            2:  500 points:  1025ms
+            3: 1000 points:  1176ms
              */
 
     }
@@ -771,7 +788,8 @@ public class DrawPolygons {
 
         String geocoordsOfPolygon = "";
         for (int i = 0; i < fillpolygon.npoints; i++) {
-            geocoordsOfPolygon += "[" + fillpolygon.xpoints[i] / 10 + ", " + fillpolygon.ypoints[i] / 10 + "],";
+            convertCoords(currentPolygon.xpoints[i], currentPolygon.ypoints[i]);
+            geocoordsOfPolygon += "[" + newgeoX + "," + newgeoY + "],";
         }
         geocoordsOfPolygon = geocoordsOfPolygon.substring(0, geocoordsOfPolygon.length() - 1);
 
@@ -792,9 +810,8 @@ public class DrawPolygons {
     // request for checking whether Polygon contains point selected by mouse click
     private static void containspointrequest() {
         PostRequest x = new PostRequest();
-
-        String coordinatesMousePos = xpos / 10 + "," + ypos / 10;
-        //convertCoords(xpos,ypos);
+        convertCoords(xpos,ypos);
+        String coordinatesMousePos = newgeoX+","+newgeoY;
 
         String Response =
                 x.executePost(
@@ -818,9 +835,7 @@ public class DrawPolygons {
                 IDcnt = i;
             }
         }
-        System.out.println("0: " + PolygonIDArray.get(0));
-        System.out.println("1: " + PolygonIDArray.get(1));
-        System.out.println("IDresponse: " + IDresponse);
+        //System.out.println("IDresponse: " + IDresponse);
 
 
         fillpolygon = polygons.get(IDcnt);
@@ -867,10 +882,11 @@ public class DrawPolygons {
                                 + " \"building\" :" + "\"" + BuildingID + "\"" + "\n"
                                 + "}", "POST");
 
-        //System.out.println("FLOORREQ: " + Response);
+        System.out.println("FLOORREQ: " + Response);
 
         JsonObject jsonObjectfloorreq = new JsonParser().parse(Response).getAsJsonObject();
         JsonArray jsonarrayfloorreq = jsonObjectfloorreq.getAsJsonArray("data");
+
         System.out.println("FLOORREQ: " + jsonObjectfloorreq.getAsJsonObject().get("success"));
 
         FloorNameByUserStrArray = new String[jsonarrayfloorreq.size()];
@@ -908,8 +924,8 @@ public class DrawPolygons {
 
         refgeo = new double[jsongeoarray.size()];
         for (int h = 0; h < jsongeoarray.size(); h++) {
-            JsonElement ttt = jsongeoarray.get(h);
-            String help = ttt.getAsJsonObject().get("$numberDecimal").toString();
+            JsonElement geoelem = jsongeoarray.get(h);
+            String help = geoelem.getAsJsonObject().get("$numberDecimal").toString();
             help = help.substring(1, help.length() - 1);
             refgeo[h] = Double.parseDouble(help);
         }
@@ -1045,16 +1061,16 @@ if(refpixel.length != 0) {
         advicefield2.setEditable(false);
 
         advicefield2.setBackground(Color.LIGHT_GRAY);
-        advicefield2.setBounds(100,920,950,40);
+        advicefield2.setBounds(100,920,1050,40);
         advicefield2.setVisible(true);
 
         advicefield1.setBackground(Color.LIGHT_GRAY);
-        advicefield1.setBounds(100,880,950,40);
+        advicefield1.setBounds(100,880,1050,40);
         advicefield1.setVisible(true);
 
         // advice button, shows next advice
         JButton nextAdviceBtn = new JButton("Next advice");
-        nextAdviceBtn.setBounds(850,830, 200,40);
+        nextAdviceBtn.setBounds(810,830, 140,40);
         nextAdviceBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -1083,10 +1099,12 @@ if(refpixel.length != 0) {
                         "While creating the polygon, you can click the right mouse button, " +
                         "which will delete your whole polygon before being saved. \n\n" +
                         "You can edit or delete a polygon any time when making a double click into it. \n\n" +
-                        "Then you are in the update mode and you are able to undo the already drew lines by the \"Backspace\"-Key" +
-                        "or delete it by pressing the \"Delete\"-Key.\n\n"+"If you accidentially got in the update mode, just press" +
+                        "Then you are in the update mode and you are able to undo the already drew lines by the \"Backspace\"-Key " +
+                        "or delete it by pressing the \"Delete\"-Key.\n\n"+"If you accidentially got in the update mode, just press " +
                                 "the \"Escape\"-Key to leave the update mode without saving anything.\n\n"+
-                        "If you want to see, whether a point is inside a polygon, click on the floorplan and press the \"Control\"-Key.");
+                        "If you want to see, whether a point is inside a polygon, click on the floorplan and press the \"Control\"-Key.\n\n" +
+                                "When you want to get short advices, press the \"Advice\"-Button.\n\n" +
+                                "You can label the points by clicking on the \"Label Points\"-Button.");
                 helptext.setBackground(Color.LIGHT_GRAY);
                 helptext.setEditable(false);
                 add(helptext);
@@ -1113,7 +1131,7 @@ if(refpixel.length != 0) {
 
         // Help button to help text
         JButton Helpbtn = new JButton("Help");
-        Helpbtn.setBounds(600,830,200,40);
+        Helpbtn.setBounds(610,830,140,40);
         Helpbtn.setVisible(true);
         Helpbtn.addActionListener(new ActionListener() {
             @Override
@@ -1153,6 +1171,21 @@ if(refpixel.length != 0) {
             }
         });
 
+        // Labeling of the points button
+        JButton labelpointsbtn = new JButton("Label Points");
+        labelpointsbtn.setBounds(1010,830,140,40);
+        labelpointsbtn.setVisible(true);
+        labelpointsbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(labelpoints){labelpoints=false;}
+                else{labelpoints=true;}
+                Drawinginst.paintComponent(Drawinginst.getGraphics());
+            }
+        });
+
+
+        frame.add(labelpointsbtn);
         frame.add(buildinglabel);
         frame.add(floorlabel);
         frame.add(nextAdviceBtn);
@@ -1291,6 +1324,7 @@ if(refpixel.length != 0) {
     public static void Newfloorimage(){
         clearCurrentPolygon();
         IntPolyPoints = new ArrayList<Integer>();
+        Polyboolcnt = 0;
         newimagebool = true;
         loadimages(FloorID);
         Drawing.getimage(FloorID);
@@ -1466,6 +1500,6 @@ create json object for each room !!!!!                              *[finished]*
 
 dropdown list with floor, building                                  *[finished]*
 
-geocalculation through two ref points
+geocalculation through two ref points                               *[finished]*
 
  */

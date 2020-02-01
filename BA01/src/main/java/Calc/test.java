@@ -51,9 +51,13 @@ public class test {
         newgeoX = ((refpixelcX * cos(alpha) - refpixelcY * sin(alpha)) / delta) + q;
     }
 
+//    x + y: 212, 520
+//    x + y: 215, 331
+//    x + y: 417, 508
+
 
     public static void main(String[] args){
-    convertCoords(118*2,252*2);
+    convertCoords(417, 508);
     //convertCoords(208,528); //IRT-Lab, bottom left
     //convertCoords(600,400); //center point of schapiro building
     //convertCoords(940, 300); //room upper right
