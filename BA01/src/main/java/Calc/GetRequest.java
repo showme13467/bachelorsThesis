@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
+// HTTP-GET-REQUEST
 public class GetRequest {
 
     private static final String USER_AGENT = "Mozilla/5.0";
@@ -29,8 +31,6 @@ public class GetRequest {
             }
             in.close();
 
-            // print result
-            //System.out.println(response.toString());
             return response.toString();
         } else {
             System.out.println("GET request not worked");

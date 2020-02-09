@@ -1,11 +1,9 @@
 package Calc;
 
-import com.google.gson.*;
-
 import java.io.*;
 import java.net.*;
 
-
+// HTTP-POST-REQUEST
 class PostRequest {
     public static String executePost(String targetURL, String urlParameters, String PostType) {
         HttpURLConnection connection = null;
